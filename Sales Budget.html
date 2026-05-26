@@ -552,36 +552,51 @@ async function launchBudgetReportView(budgetId, targetText) {
 async function calculateCorporateReportMetrics(monthHeadersArray, duration, budgetId) {
     const tbody = document.getElementById('corporateBrandTableBody');
     if (!tbody) return;
+    tbody.innerHTML = "";
 
-    const masterDB = new Dexie("VimagMasterDB");
-    masterDB.version(1).stores({ brands: 'id, brand, customerName, artNo' });
-    
-    let allMasterProducts = [];
-    try { allMasterProducts = await masterDB.brands.toArray(); } catch(e) {}
-    const allActivityLogs = await localDB.logs.toArray();
-
-    // 1. மெமரியில் இருக்கும் லோக்கல் தரவை உடனடியாக 0.1 நொடியில் டேபிளில் காட்டுகிறது
-    let localBrandsList = [...new Set(allMasterProducts.map(p => (p.brand || "").toUpperCase().trim()))]
-                            .filter(b => b !== "" && b !== "_ID_LOCK" && b !== "SYSTEM" && b !== "SYSTEM_ID");
-
-    if (localBrandsList.length > 0) {
-        processAndRenderMetrics(localBrandsList, allMasterProducts, allActivityLogs, monthHeadersArray, duration, budgetId);
-    } else {
-        tbody.innerHTML = `<tr><td colspan="${5 + duration}" style="padding:25px; font-weight:bold; color:#7f8c8d; text-align:center;">ஆரம்ப நிலை தரவுகள் சேகரிக்கப்படுகிறது... ⏳</td></tr>`;
+    // 🎯 டேபிளின் லேஅவுட்டை கச்சிதமாக 'auto' ஆக்குகிறது
+    const mainTable = document.querySelector('#targetReportPage table');
+    if (mainTable) {
+        mainTable.style.tableLayout = "auto";
+        mainTable.style.width = "100%";
+        mainTable.style.minWidth = "100%";
     }
 
-    // 2. ⚡ FAST BACKGROUND LIGHTWEIGHT SYNC: ஃபயர்பேஸிலிருந்து ஒட்டுமொத்த மரத்தையும் லோடு செய்யாமல், மிக லேசான எடையில் டார்கெட்டுகளை மட்டும் சின்க் செய்கிறது
-    cloudDB.ref('vimag/brands').once('value', async (snapshot) => {
-        if (!snapshot.exists()) return;
+    try {
+        // 🔄 ஸ்டெப் 1: Brandwise பக்கத்தில் சேமிக்கப்படும் அசல் டார்கெட் மேட்ரிக்ஸ் நோட்டை ஃபயர்பேஸில் இருந்து எடுக்கிறோம்
+        const matrixSnapshot = await cloudDB.ref(`vimag_followup/budget_matrix/${budgetId}`).once('value');
+        const savedBudgetMatrix = matrixSnapshot.val() || {};
+
+        // 🔄 ஸ்டெப் 2: ஃபயர்பேஸ் மாஸ்டர் தயாரிப்பு மரத்தில் (vimag/brands) இருந்து விபரங்களை லோடு செய்கிறோம்
+        const snapshot = await cloudDB.ref('vimag/brands').once('value');
+        if (!snapshot.exists()) {
+            tbody.innerHTML = `<tr><td colspan="${5 + duration}" style="padding:25px; font-weight:bold; color:#7f8c8d; text-align:center;">மாஸ்டர் தயாரிப்பு விபரங்கள் கண்டறியப்படவில்லை... ⏳</td></tr>`;
+            return;
+        }
         const cloudBrandsTree = snapshot.val();
-        let bulkPayload = [];
+
+        let grandTotalTarget = 0;
+        let grandTotalAchieved = 0;
+        let monthlyGrandTotals = new Array(duration).fill(0);
+
+        // 📊 பிராண்ட் வாரியாகத் தொகுப்பதற்கான தனித்துவமான மேப் (டூப்ளிகேட் தவிப்பிற்கான இன்ஜின்)
+        const brandSummaryMap = new Map();
 
         const brandKeys = Object.keys(cloudBrandsTree);
         for (let i = 0; i < brandKeys.length; i++) {
             const brandKey = brandKeys[i];
-            const customerBranches = cloudBrandsTree[brandKey] || {};
             
+            // 🎯 பிக்ஸ் 1: எழுத்துக்களை முழுமையாக Uppercase ஆக மாற்றி, ஸ்பேஸ்களைச் சீரமைத்து டூப்ளிகேட் வராமல் தடுக்கிறது!
+            const cleanBrandName = brandKey.toUpperCase().replace(/\s+/g, ' ').trim();
+            if (cleanBrandName === "" || cleanBrandName === "_ID_LOCK" || cleanBrandName === "SYSTEM" || cleanBrandName === "SYSTEM_ID") continue;
+
+            const customerBranches = cloudBrandsTree[brandKey] || {};
             const customerKeys = Object.keys(customerBranches);
+            
+            let brandTargetSum = 0;
+            let brandAchievedSum = 0;
+            let brandMonthlySums = new Array(duration).fill(0);
+
             for (let j = 0; j < customerKeys.length; j++) {
                 const customerKey = customerKeys[j];
                 if (customerKey === "_id_lock" || customerKey === "SYSTEM_ID") continue;
@@ -595,50 +610,139 @@ async function calculateCorporateReportMetrics(monthHeadersArray, duration, budg
                     
                     if (itemData && itemData.id && itemData.artNo && itemData.artNo !== "SYSTEM") {
                         let price = parseFloat(itemData.price || 0);
-                        
-                        // 🎯 FIX 2: புதிய டார்கெட் பட்ஜெட்டாக இருந்தாலும், 11 பிராண்டுகளின் மாஸ்டர் லிஸ்ட்டை 0 கணக்குடன் மாஸ்டர் டேபிளில் காட்டும் Fallback!
-                        let budgetSpecificData = (itemData.budgets && itemData.budgets[budgetId]) ? itemData.budgets[budgetId] : { qty: 0, monthQty: 0, brandwise_target: 0, achieved: [] };
-                        
-                        let rawAchieved = budgetSpecificData.achieved || [];
-                        let safeAchieved = new Array(duration).fill(0);
-                        for (let m = 0; m < duration; m++) {
-                            safeAchieved[m] = parseFloat(rawAchieved[m] || 0);
-                        }
-                        
-                        let qtyAchievedArray = safeAchieved.map(val => price > 0 ? Math.round(val / price) : 0);
+                        let currentArtNo = itemData.artNo.toUpperCase().trim();
+                        let normalizedCustKey = customerKey.trim().toUpperCase();
 
-                        bulkPayload.push({
-                            id: `${itemData.id}_${budgetId}`,
-                            baseItemId: itemData.id,
-                            budgetId: budgetId,
-                            brand: brandKey.toUpperCase().trim(),
-                            customerName: customerKey,
-                            artNo: itemData.artNo,
-                            name: itemData.name || itemData.productName || "Industrial Tool Component",
-                            price: price,
-                            currency: itemData.currency || "€",
-                            targetQty: parseInt(budgetSpecificData.qty || 0),
-                            monthQty: parseInt(budgetSpecificData.monthQty || 0),
-                            brandwise_target: parseFloat(budgetSpecificData.brandwise_target || 0),
-                            achievedQty: qtyAchievedArray
-                        });
+                        // 🎯 உள்ளே இருக்கும் டேபிளின் அசல் டார்கெட் லாக் மேப்பிங் லுக்அப்
+                        let matrixLookupKey = `${normalizedCustKey}_${currentArtNo}`;
+                        let budgetSpecificData = savedBudgetMatrix[matrixLookupKey];
+
+                        if (budgetSpecificData) {
+                            let qty = parseInt(budgetSpecificData.qty || 0);
+                            let computedItemTargetVal = qty * price; 
+
+                            brandTargetSum += computedItemTargetVal;
+
+                            let rawAchievedQty = budgetSpecificData.achievedQty || [];
+                            for (let m = 0; m < duration; m++) {
+                                let qUnits = parseInt(rawAchievedQty[m] || 0);
+                                let cashMonthVal = qUnits * price;
+                                brandMonthlySums[m] += cashMonthVal;
+                                brandAchievedSum += cashMonthVal;
+                            }
+                        }
                     }
                 }
             }
+
+            // 🎯 பிக்ஸ் 2: ஒரே பெயர் சிறிய மற்றும் பெரிய எழுத்துக்களில் டூப்ளிகேட்டாக இருந்தால், அவற்றை ஒன்றாக இணைக்கிறது (Merge)!
+            if (brandSummaryMap.has(cleanBrandName)) {
+                let existingData = brandSummaryMap.get(cleanBrandName);
+                existingData.targetValue += brandTargetSum;
+                existingData.achievedValue += brandAchievedSum;
+                for (let m = 0; m < duration; m++) {
+                    existingData.monthlyDistribution[m] += brandMonthlySums[m];
+                }
+            } else {
+                brandSummaryMap.set(cleanBrandName, {
+                    brandName: cleanBrandName,
+                    targetValue: brandTargetSum,
+                    achievedValue: brandAchievedSum,
+                    monthlyDistribution: brandMonthlySums
+                });
+            }
         }
 
-        if (bulkPayload.length > 0) {
-            await masterDB.brands.bulkPut(bulkPayload);
+        // 🔄 ஸ்டெப் 3: கணக்கிடப்பட்ட அசல் பிராண்ட் டார்கெட் வரிசைகளை (Rows) அகரவரிசையில் (Alphabetical Order) அடுக்கிப் பொருத்துகிறது
+        let rowIdx = 1;
+        const sortedBrandNames = Array.from(brandSummaryMap.keys()).sort();
+        
+        sortedBrandNames.forEach((brandName) => {
+            const data = brandSummaryMap.get(brandName);
+            
+            grandTotalTarget += data.targetValue;
+            grandTotalAchieved += data.achievedValue;
+
+            for (let m = 0; m < duration; m++) {
+                monthlyGrandTotals[m] += data.monthlyDistribution[m];
+            }
+
+            let execPercentage = data.targetValue > 0 ? (data.achievedValue / data.targetValue) * 100 : 0;
+
+            const tr = document.createElement('tr');
+            tr.style.borderBottom = "1px solid black";
+            tr.style.backgroundColor = "white";
+            tr.style.fontWeight = "bold";
+            
+            let monthlyCellsHtml = data.monthlyDistribution.map(v => 
+                `<td style="padding:10px 12px; border: 1px solid black !important; color: #27ae60; text-align: right !important; padding-right: 14px !important; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums;">€ ${v.toFixed(2)}</td>`
+            ).join('');
+
+            // கிளிக் செய்யும் போது அந்தந்த பிராண்ட் பெயருடன் Brandwise பக்கத்திற்குப் போகும் டைனமிக் நேவிகேஷன்
+            const redirectUrl = `Brandwise.html?brand=${encodeURIComponent(brandName.toLowerCase())}&budgetId=${encodeURIComponent(budgetId)}`;
+
+            tr.innerHTML = `
+                <td style="padding:10px 8px; border: 1px solid black !important; font-size: 14px; text-align: center; color: black;">${rowIdx++}</td>
+                <td style="padding:10px 12px; border: 1px solid black !important; text-align: left !important; padding-left: 14px !important; font-size: 14px; color: #1d609c; cursor: pointer; white-space: nowrap;" onclick="window.location.href='${redirectUrl}'">🔷 ${brandName}</td>
+                <td style="padding:10px 12px; border: 1px solid black !important; color: #1d609c; text-align: right !important; padding-right: 14px !important; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums;">€ ${data.targetValue.toFixed(2)}</td>
+                ${monthlyCellsHtml}
+                <td style="padding:10px 12px; border: 1px solid black !important; color: green; text-align: right !important; padding-right: 14px !important; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums;">€ ${data.achievedValue.toFixed(2)}</td>
+                <td style="padding:10px 8px; border: 1px solid black !important; color: ${execPercentage >= 100 ? 'green' : (data.targetValue > 0 ? '#d94556' : '#7f8c8d')}; background-color: #fdf2f2; text-align: center; font-size: 14px; white-space: nowrap;">${execPercentage.toFixed(1)}%</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // 🏆 சம்மரி லெட்ஜர் (TFOOT) கூட்டுத்தொகை வரிசையை கச்சிதமாகப் புதுப்பிக்கிறது
+        const tfootRow = document.querySelector('#targetReportPage table tfoot tr');
+        if (tfootRow) {
+            let gtExecCalc = grandTotalTarget > 0 ? (grandTotalAchieved / grandTotalTarget) * 100 : 0;
+            
+            let footerMonthlyCellsHtml = monthlyGrandTotals.map(mTot => 
+                `<td style="color: #27ae60; padding: 12px 12px; border: 1px solid black !important; text-align: right !important; padding-right: 14px !important; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums;">€ ${mTot.toFixed(2)}</td>`
+            ).join('');
+
+            tfootRow.style.backgroundColor = "#fcf8f2";
+            tfootRow.style.borderTop = "2px solid #2c3e50";
+            tfootRow.style.borderBottom = "2px solid black";
+
+            tfootRow.innerHTML = `
+                <td style="text-align: center; padding: 15px 8px; border: 1px solid black !important; font-size: 16px; font-weight: bold; color: black;">Σ</td>
+                <td style="text-align: left !important; padding-left: 15px; border: 1px solid black !important; color: RED; font-size: 14px; font-weight: bold; text-transform: uppercase; white-space: nowrap; vertical-align: middle;">CONSOLIDATED LEDGER:</td>
+                <td style="color: #1d609c; font-weight: bold; border: 1px solid black !important; text-align: right !important; padding-right: 14px !important; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums;">€ ${grandTotalTarget.toFixed(2)}</td>
+                ${footerMonthlyCellsHtml}
+
+<td style="color: green; font-weight: bold; border: 1px solid black !important; text-align: right !important; padding-right: 14px !important; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums;">€ ${grandTotalAchieved.toFixed(2)}</td>
+                <td style="color: ${gtExecCalc >= 100 ? 'green' : (grandTotalTarget > 0 ? '#d94556' : '#7f8c8d')}; font-weight: bold; border: 1px solid black !important; background: #fdf2f2; text-align: center; font-size: 14px; white-space: nowrap; vertical-align: middle;">
+                    <div style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; width: 100%;">
+                        <span>${gtExecCalc.toFixed(1)}%</span><span style="font-size: 14px;">🚀</span>
+                    </div>
+                </td>
+            `;
         }
 
-        const freshProductsList = await masterDB.brands.toArray();
-        let updatedBrandsList = [...new Set(freshProductsList.map(p => (p.brand || "").toUpperCase().trim()))]
-                                .filter(b => b !== "" && b !== "_ID_LOCK" && b !== "SYSTEM" && b !== "SYSTEM_ID");
+        // ==================== மேல் பகுதி லைவ் விட்ஜெட்டுகள் அப்டேட் இன்ஜின் ====================
+        let gtExecPercent = grandTotalTarget > 0 ? (grandTotalAchieved / grandTotalTarget) * 100 : 0;
+        const portfolioEl = document.getElementById('corporatePortfolio');
+        const turnoverEl = document.getElementById('corporateTurnover');
+        const conversionEl = document.getElementById('corporateConversion');
 
-        processAndRenderMetrics(updatedBrandsList, freshProductsList, allActivityLogs, monthHeadersArray, duration, budgetId);
-        console.log("Master Budget Grid Seeding Engine Online! 🚀");
-    });
+        if(portfolioEl) portfolioEl.innerText = `€ ${grandTotalTarget.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        if(turnoverEl) turnoverEl.innerText = `€ ${grandTotalAchieved.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        if(conversionEl) conversionEl.innerText = `${gtExecPercent.toFixed(1)}%`;
+
+    } catch (err) {
+        console.error("Master Report Compilation Error: ", err);
+    }
 }
+
+// ==================== மாஸ்டர் ரிப்போர்ட் பக்கத்தை மூடி முதன்மைப் பக்கத்திற்குத் திரும்பும் ஃபங்க்ஷன் ====================
+function closeTargetReportPage() {
+    document.getElementById('targetReportPage').style.display = 'none';
+    document.getElementById('mainHubSection').style.display = 'block';
+    renderBudgetsCards();
+}
+
+
          // 📊 தரவுகளைக் கணக்கிட்டு மெயின் பட்ஜெட் டேபிளில் தனித்துவமாகப் பொருத்தும் சப்-இன்ஜின்
 function processAndRenderMetrics(brandsList, allMasterProducts, allActivityLogs, monthHeadersArray, duration, budgetId) {
     const tbody = document.getElementById('corporateBrandTableBody');
@@ -746,11 +850,6 @@ function processAndRenderMetrics(brandsList, allMasterProducts, allActivityLogs,
     if(turnoverEl) turnoverEl.innerText = `€ ${grandTotalAchieved.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
     if(conversionEl) conversionEl.innerText = `${gtExecPercent.toFixed(1)}%`;
 }
-        function closeTargetReportPage() {
-            document.getElementById('targetReportPage').style.display = 'none';
-            document.getElementById('mainHubSection').style.display = 'block';
-            renderBudgetsCards();
-        }
     </script>
 </body>
 </html>
