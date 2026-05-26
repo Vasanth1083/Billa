@@ -289,66 +289,85 @@ function loadUniversalCloudLiveData() {
         mainHeader.colSpan = activeMonthHeaders.length;
     }
 
-    db.ref(`vimag/brands/${currentBrandName}`).once('value', async (snapshot) => {
-        if (!snapshot.exists()) return;
-        const brandTreeData = snapshot.val() || {};
-        let bulkPayload = []; 
+    const safeFirebaseBrandKey = currentBrandName.trim();
 
-        const custNames = Object.keys(brandTreeData);
-        for (let i = 0; i < custNames.length; i++) {
-            const custName = custNames[i];
-            const normalizedCustKey = custName.trim().toUpperCase();
-            if (normalizedCustKey === "_ID_LOCK" || normalizedCustKey === "SYSTEM_ID") continue;
-            
-            const customerItems = brandTreeData[custName] || {};
-            const itemKeys = Object.keys(customerItems);
-            
-            for (let j = 0; j < itemKeys.length; j++) {
-                const itemKey = itemKeys[j];
-                const item = customerItems[itemKey];
+    // 🔄 ஸ்டெப் 1: முதலில் உங்க பட்ஜெட்டில் ஏற்கனவே நீங்க சேமித்து வைத்த டார்கெட்டுகளை ஃபயர்பேஸில் இருந்து எடுக்கிறோம்
+    db.ref(`vimag_followup/budget_matrix/${activeBudgetId}`).once('value', async (budgetSnapshot) => {
+        const savedBudgetMatrix = budgetSnapshot.val() || {};
+
+        // 🔄 ஸ்டெப் 2: ஃபயர்பேஸ் மாஸ்டர் டேபிளில் இருந்து விபரங்களை லோடு செய்கிறோம்
+        db.ref(`vimag/brands/${safeFirebaseBrandKey}`).once('value', async (snapshot) => {
+            if (!snapshot.exists()) return;
+            const brandTreeData = snapshot.val() || {};
+            let bulkPayload = []; 
+
+            const custNames = Object.keys(brandTreeData);
+            for (let i = 0; i < custNames.length; i++) {
+                const custName = custNames[i];
+                const normalizedCustKey = custName.trim().toUpperCase();
+                if (normalizedCustKey === "_ID_LOCK" || normalizedCustKey === "SYSTEM_ID") continue;
                 
-                if (item && item.id && item.artNo && item.artNo !== "SYSTEM" && item.id !== "_id_lock") {
+                const customerItems = brandTreeData[custName] || {};
+                const itemKeys = Object.keys(customerItems);
+                
+                for (let j = 0; j < itemKeys.length; j++) {
+                    const itemKey = itemKeys[j];
+                    const item = customerItems[itemKey];
                     
-                    let price = parseFloat(item.price || 0);
-                    
-                    // 🎯 FIX 1: புதிய பட்ஜெட் என்பதால் ஃபயர்பேஸில் பட்ஜெட் டேட்டா இல்லை என்றாலும், மாஸ்டர் தயாரிப்பு விபரங்களை (Brand, Art No, Price) 0 டார்கெட்டுடன் டேபிளுக்குள் பலவந்தமாக இழுத்துக் கொண்டு வரும் Fallback Logic!
-                    let budgetSpecificData = (item.budgets && item.budgets[activeBudgetId]) ? item.budgets[activeBudgetId] : { qty: 0, monthQty: 0, brandwise_target: 0, achieved: [] };
-                    
-                    let rawAchieved = budgetSpecificData.achieved || [];
-                    let safeAchieved = new Array(activeMonthHeaders.length).fill(0);
-                    for (let m = 0; m < activeMonthHeaders.length; m++) {
-                        safeAchieved[m] = parseFloat(rawAchieved[m] || 0);
+                    if (item && item.id && item.artNo && item.artNo !== "SYSTEM" && item.id !== "_id_lock") {
+                        let price = parseFloat(item.price || 0);
+                        let currentArtNo = item.artNo.toUpperCase().trim();
+                        
+                        // 🎯 தனித்துவமான மேட்சிங் கீ (கம்பெனி + ஆர்ட் நம்பர்)
+                        let matrixLookupKey = `${normalizedCustKey}_${currentArtNo}`;
+                        let savedItemData = savedBudgetMatrix[matrixLookupKey];
+
+                        let finalTargetQty = 0;
+                        let finalTargetVal = 0;
+                        let finalMonthQty = 0;
+                        let safeAchievedQty = new Array(activeMonthHeaders.length).fill(0);
+
+                        // 🌟 டார்கெட் விபரங்கள் ஏற்கனவே பட்ஜெட் மெமரியில் சேமிக்கப்பட்டிருந்தால் அதை அப்படியே எடுக்கிறது! 
+                        if (savedItemData) {
+                            finalTargetQty = parseInt(savedItemData.qty || 0);
+                            finalTargetVal = finalTargetQty * price;
+                            finalMonthQty = parseInt(savedItemData.monthQty || 0);
+                            
+                            let rawAchieved = savedItemData.achievedQty || [];
+                            for (let m = 0; m < activeMonthHeaders.length; m++) {
+                                safeAchievedQty[m] = Math.round(parseFloat(rawAchieved[m] || 0));
+                            }
+                        } 
+
+                        bulkPayload.push({
+                            id: `${item.id}_${activeBudgetId}`, 
+                            baseItemId: item.id,
+                            budgetId: activeBudgetId,
+                            brand: safeFirebaseBrandKey, // 🎯 நிலையான CamelCase பிராண்ட் நேம் லாக்
+                            customerName: custName,
+                            artNo: item.artNo,
+                            name: item.name || item.productName || "Industrial Tool Component",
+                            price: price,
+                            currency: item.currency || "€",
+                            targetQty: finalTargetQty,
+                            monthQty: finalMonthQty,
+                            brandwise_target: finalTargetVal,
+                            achievedQty: safeAchievedQty
+                        });
                     }
-
-                    let qtyAchievedArray = safeAchieved.map(val => price > 0 ? Math.round(val / price) : 0);
-
-                    bulkPayload.push({
-                        id: `${item.id}_${activeBudgetId}`, 
-                        baseItemId: item.id,
-                        budgetId: activeBudgetId,
-                        brand: currentBrandName,
-                        customerName: custName, 
-                        artNo: item.artNo,
-                        name: item.name || item.productName || "Industrial Tool Component",
-                        price: price,
-                        currency: item.currency || "€",
-                        targetQty: parseInt(budgetSpecificData.qty || 0),
-                        monthQty: parseInt(budgetSpecificData.monthQty || 0),
-                        brandwise_target: parseFloat(budgetSpecificData.brandwise_target || 0),
-                        achievedQty: qtyAchievedArray
-                    });
                 }
             }
-        }
-        
-        await vimagDB.brands.clear();
-        if (bulkPayload.length > 0) {
-            await vimagDB.brands.bulkPut(bulkPayload);
-        }
-        
-        const freshWarehouseItems = await vimagDB.brands.toArray();
-        processRawDataToTable(freshWarehouseItems);
-        console.log("Database Snapshot Locked & Loaded with Fresh Item Schemas! 🚀");
+
+            // 🎯 பிக்ஸ்: லோக்கல் மெமரியை புதுப்பிக்கும் போது கேசிங் மாறாமல் துல்லியமாக மேட்ச் செய்து அழிக்கிறது!
+            if (bulkPayload.length > 0) {
+                await vimagDB.brands.where('budgetId').equals(activeBudgetId).and(p => p.brand === safeFirebaseBrandKey).delete();
+                await vimagDB.brands.bulkPut(bulkPayload);
+            }
+            
+            const freshWarehouseItems = await vimagDB.brands.toArray();
+            processRawDataToTable(freshWarehouseItems);
+            console.log("பிராண்ட் விபரங்கள் கச்சிதமாக சின்க் செய்யப்பட்டது! டார்கெட் அழியாது 🚀🔐");
+        });
     });
 }
 function processRawDataToTable(rawList) {
@@ -523,9 +542,8 @@ async function saveRowValuesFirebase() {
     const index = document.getElementById("modalRowIndex").value;
     if (index === "" || !filteredArticles[index]) return;
 
-    // 🛡️ பாதுகாப்பு செக் 1: Budget ID இல்லை என்றால் கோடை உடனடியாக நிறுத்து! (Leak Prevention)
     if (!activeBudgetId || activeBudgetId.trim() === "") {
-        alert("பாதுகாப்பு எச்சரிக்கை: Budget ID கண்டறியப்படவில்லை! தரவு சேமிப்பு ரத்து செய்யப்பட்டது.");
+        alert("பாதுகாப்பு எச்சரிக்கை: Budget ID கண்டறியப்படவில்லை!");
         return;
     }
 
@@ -535,21 +553,14 @@ async function saveRowValuesFirebase() {
     const computedTargetVal = updatedQty * targetItem.price;
     
     let updatedAchievedQtyArray = new Array(activeMonthHeaders.length).fill(0);
-    let updatedAchievedValueArray = new Array(activeMonthHeaders.length).fill(0);
     const inputElements = document.querySelectorAll(".monthly-modal-input");
     
-    let computed_aV = 0;
     let computed_monthQty = 0; 
 
     inputElements.forEach(input => {
         const mIdx = parseInt(input.getAttribute("data-month-idx"));
         const qVal = parseInt(input.value) || 0;
-        let computedMonthVal = qVal * targetItem.price;
-        
         updatedAchievedQtyArray[mIdx] = qVal;
-        updatedAchievedValueArray[mIdx] = computedMonthVal;
-        
-        computed_aV += computedMonthVal;
         computed_monthQty += qVal;
     });
 
@@ -564,39 +575,32 @@ async function saveRowValuesFirebase() {
             return;
         }
 
-        // 🚀 அதிவேக அப்டேட்டிற்கான கன்டெய்னர்கள்
         const updatesContainer = {};
         const localDbBulkPayload = [];
 
-        // 🎯 முதலாவது என்ட்ரிக்கு மட்டும் அசல் மதிப்பு, மற்றவை 0 (Anti-Multiplication Logic)
         for (let i = 0; i < matchingEntries.length; i++) {
             const entry = matchingEntries[i];
             
             const finalQty = (i === 0) ? updatedQty : 0;
             const finalMonthQty = (i === 0) ? computed_monthQty : 0;
             const finalTargetVal = (i === 0) ? computedTargetVal : 0;
-            const final_aV = (i === 0) ? computed_aV : 0;
-            const finalAchievedArray = (i === 0) ? updatedAchievedValueArray : new Array(activeMonthHeaders.length).fill(0);
             const finalAchievedQtyArray = (i === 0) ? updatedAchievedQtyArray : new Array(activeMonthHeaders.length).fill(0);
 
-            // 🛡️ பாதுகாப்பு செக் 2: பாத்-க்குள் பிராண்ட் மற்றும் பட்ஜெட் ஐடி லாக் செய்யப்படுகிறது
-            const nodePath = `vimag/brands/${entry.brand}/${entry.customerName}/${entry.baseItemId}/budgets/${activeBudgetId}`;
+            // 🎯 மாஸ்டர் டேபிளைத் தொந்தரவு செய்யாமல், டார்கெட்டுகளைத் தனியாகப் பட்ஜெட் மேட்ரிக்ஸ் நோட்டுக்குள் லாக் செய்கிறது!
+            const targetMatrixLookupKey = `${entry.customerName.trim().toUpperCase()}_${targetArticleNo}`;
+            const nodePath = `vimag_followup/budget_matrix/${activeBudgetId}/${targetMatrixLookupKey}`;
             
-            // ஃபயர்பேஸ் சிங்கிள் ரெக்வஸ்ட் ஆப்ஜெக்ட் தயாரிப்பு
             updatesContainer[nodePath] = {
                 qty: finalQty,                        
                 monthQty: finalMonthQty,            
-                aV: final_aV,                        
-                brandwise_target: finalTargetVal,    
-                achieved: finalAchievedArray     
+                achievedQty: finalAchievedQtyArray     
             };
 
-            // லோக்கல் டேட்டாபேஸ் பல்க் பேலோடு தயாரிப்பு
             localDbBulkPayload.push({
                 id: entry.id,
                 baseItemId: entry.baseItemId,
                 budgetId: activeBudgetId,
-                brand: entry.brand,
+                brand: currentBrandName.trim(), 
                 customerName: entry.customerName,
                 artNo: targetItem.articleNo,
                 name: targetItem.description,
@@ -609,13 +613,10 @@ async function saveRowValuesFirebase() {
             });
         }
 
-        // 🚀 ஒரே ஒரு நெட்வொர்க் கால் மூலம் ஃபயர்பேஸில் அத்தனை கஸ்டமர் நோட்களும் ஒரே மில்லிசெகண்டில் அப்டேட் ஆகும்!
+        // ஃபயர்பேஸ் மற்றும் லோக்கல் டெபி இரண்டிலும் பாதுகாப்பாக ரைட் செய்கிறது
         await db.ref().update(updatesContainer);
-
-        // 🚀 லோக்கல் டேட்டாபேஸிலும் ஒரே முறையில் பல்க் ரைட்டிங் (Bulk Put) நடக்கும்
         await vimagDB.brands.bulkPut(localDbBulkPayload);
 
-        // UI-ல் உடனடியாக மாற்றங்களை பிரதிபலிக்க வைக்கிறோம்
         targetItem.targetQty = updatedQty;
         targetItem.targetValue = computedTargetVal;
         targetItem.monthQty = computed_monthQty;
@@ -623,15 +624,13 @@ async function saveRowValuesFirebase() {
 
         closeModal();
         
-        // ஸ்கிரீனில் இருக்கும் டேபிளை உடனடியாக ரிஃப்ரெஷ் செய்ய
         const freshWarehouseItems = await vimagDB.brands.toArray();
         processRawDataToTable(freshWarehouseItems);
-        
-        console.log(`Blazing Fast Broadcast Sync Lock Complete for Budget Profile: ${activeBudgetId} ⚡🔐`);
+        console.log("டேட்டா பாதுகாப்பாகப் பூட்டப்பட்டது! ⚡🔐");
 
     } catch (err) {
-        console.error("Critical Save Loop Error: ", err);
-        alert("ERROR(Network/DB Error): " + err.message);
+        console.error("Error: ", err);
+        alert("ERROR: " + err.message);
     }
 }
 window.onclick = function(event) {
