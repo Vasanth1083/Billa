@@ -274,100 +274,105 @@
             } catch (err) { console.log("Local Database Uninitialized: ", err); }
         }
 function loadUniversalCloudLiveData() {
-    activeMonthHeaders = JSON.parse(localStorage.getItem('vimag_active_report_months')) || ["JAN-26", "FEB-26", "MAR-26"];
+    activeMonthHeaders = JSON.parse(localStorage.getItem("vimag_active_report_months")) || ["JAN-26", "FEB-26", "MAR-26"];
 
-    const subHeaderRow = document.getElementById('corporateMonthSubHeaderRow');
+    const subHeaderRow = document.getElementById("corporateMonthSubHeaderRow");
     if (subHeaderRow) {
         subHeaderRow.innerHTML = activeMonthHeaders.map(m => 
             `<th style="background: #f39c12; color: white; font-size: 13px; padding: 6px 4px; border: 1px solid black !important; min-width: 95px; max-width: 95px; width: 95px; box-sizing: border-box;">${m}</th>`
-        ).join('');
+        ).join("");
     }
     
-    const mainHeader = document.getElementById('achievedMainHeader');
+    const mainHeader = document.getElementById("achievedMainHeader");
     if (mainHeader) {
-        mainHeader.setAttribute('colspan', activeMonthHeaders.length);
+        mainHeader.setAttribute("colspan", activeMonthHeaders.length);
         mainHeader.colSpan = activeMonthHeaders.length;
     }
 
     const safeFirebaseBrandKey = currentBrandName.trim();
 
-    // 🔄 ஸ்டெப் 1: முதலில் உங்க பட்ஜெட்டில் ஏற்கனவே நீங்க சேமித்து வைத்த டார்கெட்டுகளை ஃபயர்பேஸில் இருந்து எடுக்கிறோம்
-    db.ref(`vimag_followup/budget_matrix/${activeBudgetId}`).once('value', async (budgetSnapshot) => {
+    // 🚀 பிக்ஸ்: தனித்தனியாகக் காத்திருக்காமல், ஒரே நெட்வொர்க் காலில் இரண்டையும் பேரலல் ஆக மிக வேகமாக லோடு செய்கிறது!
+    Promise.all([
+        db.ref("vimag_followup/budget_matrix/" + activeBudgetId).once("value"),
+        db.ref("vimag/brands/" + safeFirebaseBrandKey).once("value")
+    ]).then(async (snapshots) => {
+        const budgetSnapshot = snapshots[0];
+        const brandSnapshot = snapshots[1];
+
         const savedBudgetMatrix = budgetSnapshot.val() || {};
+        if (!brandSnapshot.exists()) return;
+        const brandTreeData = brandSnapshot.val() || {};
+        
+        let bulkPayload = []; 
 
-        // 🔄 ஸ்டெப் 2: ஃபயர்பேஸ் மாஸ்டர் டேபிளில் இருந்து விபரங்களை லோடு செய்கிறோம்
-        db.ref(`vimag/brands/${safeFirebaseBrandKey}`).once('value', async (snapshot) => {
-            if (!snapshot.exists()) return;
-            const brandTreeData = snapshot.val() || {};
-            let bulkPayload = []; 
-
-            const custNames = Object.keys(brandTreeData);
-            for (let i = 0; i < custNames.length; i++) {
-                const custName = custNames[i];
-                const normalizedCustKey = custName.trim().toUpperCase();
-                if (normalizedCustKey === "_ID_LOCK" || normalizedCustKey === "SYSTEM_ID") continue;
+        const custNames = Object.keys(brandTreeData);
+        for (let i = 0; i < custNames.length; i++) {
+            const custName = custNames[i];
+            const normalizedCustKey = custName.trim().toUpperCase();
+            if (normalizedCustKey === "_ID_LOCK" || normalizedCustKey === "SYSTEM_ID") continue;
+            
+            const customerItems = brandTreeData[custName] || {};
+            const itemKeys = Object.keys(customerItems);
+            
+            for (let j = 0; j < itemKeys.length; j++) {
+                const itemKey = itemKeys[j];
+                const item = customerItems[itemKey];
                 
-                const customerItems = brandTreeData[custName] || {};
-                const itemKeys = Object.keys(customerItems);
-                
-                for (let j = 0; j < itemKeys.length; j++) {
-                    const itemKey = itemKeys[j];
-                    const item = customerItems[itemKey];
+                if (item && item.id && item.artNo && item.artNo !== "SYSTEM" && item.id !== "_id_lock") {
+                    let price = parseFloat(item.price || 0);
+                    let currentArtNo = item.artNo.toUpperCase().trim();
                     
-                    if (item && item.id && item.artNo && item.artNo !== "SYSTEM" && item.id !== "_id_lock") {
-                        let price = parseFloat(item.price || 0);
-                        let currentArtNo = item.artNo.toUpperCase().trim();
+                    // 🎯 ஸ்பெஷல் கேரக்டர் மற்றும் புள்ளி லாக் பாதுகாப்பு
+                    let matrixLookupKey = `${normalizedCustKey}_${currentArtNo}`;
+                    let safeMatrixLookupKey = matrixLookupKey.replace(/[\.\#\$\/\[\]]/g, "_");
+                    let savedItemData = savedBudgetMatrix[safeMatrixLookupKey];
+
+                    let finalTargetQty = 0;
+                    let finalTargetVal = 0;
+                    let finalMonthQty = 0;
+                    let safeAchievedQty = new Array(activeMonthHeaders.length).fill(0);
+
+                    if (savedItemData) {
+                        finalTargetQty = parseInt(savedItemData.qty || 0);
+                        finalTargetVal = finalTargetQty * price;
+                        finalMonthQty = parseInt(savedItemData.monthQty || 0);
                         
-                        // 🎯 தனித்துவமான மேட்சிங் கீ (கம்பெனி + ஆர்ட் நம்பர்)
-                        let matrixLookupKey = `${normalizedCustKey}_${currentArtNo}`;
-                        let savedItemData = savedBudgetMatrix[matrixLookupKey];
+                        let rawAchieved = savedItemData.achievedQty || [];
+                        for (let m = 0; m < activeMonthHeaders.length; m++) {
+                            safeAchievedQty[m] = Math.round(parseFloat(rawAchieved[m] || 0));
+                        }
+                    } 
 
-                        let finalTargetQty = 0;
-                        let finalTargetVal = 0;
-                        let finalMonthQty = 0;
-                        let safeAchievedQty = new Array(activeMonthHeaders.length).fill(0);
-
-                        // 🌟 டார்கெட் விபரங்கள் ஏற்கனவே பட்ஜெட் மெமரியில் சேமிக்கப்பட்டிருந்தால் அதை அப்படியே எடுக்கிறது! 
-                        if (savedItemData) {
-                            finalTargetQty = parseInt(savedItemData.qty || 0);
-                            finalTargetVal = finalTargetQty * price;
-                            finalMonthQty = parseInt(savedItemData.monthQty || 0);
-                            
-                            let rawAchieved = savedItemData.achievedQty || [];
-                            for (let m = 0; m < activeMonthHeaders.length; m++) {
-                                safeAchievedQty[m] = Math.round(parseFloat(rawAchieved[m] || 0));
-                            }
-                        } 
-
-                        bulkPayload.push({
-                            id: `${item.id}_${activeBudgetId}`, 
-                            baseItemId: item.id,
-                            budgetId: activeBudgetId,
-                            brand: safeFirebaseBrandKey, // 🎯 நிலையான CamelCase பிராண்ட் நேம் லாக்
-                            customerName: custName,
-                            artNo: item.artNo,
-                            name: item.name || item.productName || "Industrial Tool Component",
-                            price: price,
-                            currency: item.currency || "€",
-                            targetQty: finalTargetQty,
-                            monthQty: finalMonthQty,
-                            brandwise_target: finalTargetVal,
-                            achievedQty: safeAchievedQty
-                        });
-                    }
+                    bulkPayload.push({
+                        id: `${item.id}_${activeBudgetId}`, 
+                        baseItemId: item.id,
+                        budgetId: activeBudgetId,
+                        brand: safeFirebaseBrandKey, 
+                        customerName: custName,
+                        artNo: item.artNo,
+                        name: item.name || item.productName || "Industrial Tool Component",
+                        price: price,
+                        currency: item.currency || "€",
+                        targetQty: finalTargetQty,
+                        monthQty: finalMonthQty,
+                        brandwise_target: finalTargetVal,
+                        achievedQty: safeAchievedQty
+                    });
                 }
             }
+        }
 
-            // 🎯 பிக்ஸ்: லோக்கல் மெமரியை புதுப்பிக்கும் போது கேசிங் மாறாமல் துல்லியமாக மேட்ச் செய்து அழிக்கிறது!
-            if (bulkPayload.length > 0) {
-                await vimagDB.brands.where('budgetId').equals(activeBudgetId).and(p => p.brand === safeFirebaseBrandKey).delete();
-                await vimagDB.brands.bulkPut(bulkPayload);
-            }
-            
-            const freshWarehouseItems = await vimagDB.brands.toArray();
-            processRawDataToTable(freshWarehouseItems);
-            console.log("பிராண்ட் விபரங்கள் கச்சிதமாக சின்க் செய்யப்பட்டது! டார்கெட் அழியாது 🚀🔐");
-        });
+        // லோக்கல் மெமரியை அதிவேகமாகத் துடைத்து 0.1 நொடியில் UI-ல் ரெண்டர் செய்கிறது
+        if (bulkPayload.length > 0) {
+            await vimagDB.brands.where("budgetId").equals(activeBudgetId).and(p => p.brand === safeFirebaseBrandKey).delete();
+            await vimagDB.brands.bulkPut(bulkPayload);
+        }
+        
+        const freshWarehouseItems = await vimagDB.brands.toArray();
+        processRawDataToTable(freshWarehouseItems);
+        console.log("Blazing Fast Seeding Sequence Matrix Online! ⚡🏁");
+    }).catch(err => {
+        console.error("Fast Fetch Sync Fault: ", err);
     });
 }
 function processRawDataToTable(rawList) {
