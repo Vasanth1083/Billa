@@ -232,7 +232,7 @@
     
     <script>
         const vimagDB = new Dexie("VimagMasterDB");
-        vimagDB.version(1).stores({ brands: 'id, brand, customerName, artNo' });
+        vimagDB.version(2).stores({ brands: 'id, brand, customerName, artNo', budgetId'});
 
         const firebaseConfig = {
             apiKey: "AIzaSyBC9Ny5zLH2TBQK9r469OXAMeQ6AbiScn8",
@@ -642,3 +642,8 @@ window.onclick = function(event) {
 </script>
 </body>
 </html>
+
+
+
+
+
