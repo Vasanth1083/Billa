@@ -77,11 +77,63 @@
         .btn-discard { background: #cccccc; color: black; padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; }
         .btn-save-tgt { background: #e67e22; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; }
 
-      /* 🎯 பிரிண்ட் எடுக்கும் போது 12 மாதங்களும் ஒரே பக்கத்திற்குள் கச்சிதமாகப் பொருந்தும் புதிய விதி */
+#inputModal .btn-close, 
+#inputModal .btn-save {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding: 10px 24px !important;
+    border-radius: 30px !important; /* நவீன வளைந்த Pill-Shape முனைகள் */
+    border: none !important;
+    cursor: pointer !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+    width: auto !important;
+    height: auto !important;
+}
+
+/* ⚪ இந்த பாப்-அப் Cancel பொத்தான் மட்டும் மெட்டாலிக் கிரே நிறமாக மாறும் */
+#inputModal .btn-close {
+    background: linear-gradient(135deg, #bdc3c7, #2c3e50) !important;
+    color: white !important;
+}
+
+#inputModal .btn-close:hover {
+    background: linear-gradient(135deg, #a6b0b5, #213043) !important;
+    box-shadow: 0 6px 14px rgba(44, 62, 80, 0.25);
+    transform: translateY(-2px);
+}
+
+/* 🟠 இந்த பாப்-அப் Apply பொத்தான் மட்டும் பளபளப்பான சன்செட் ஆரஞ்சு நிறமாக மாறும் */
+#inputModal .btn-save {
+    background: linear-gradient(135deg, #f12711, #f5af19) !important;
+    color: white !important;
+}
+
+#inputModal .btn-save:hover {
+    background: linear-gradient(135deg, #da220f, #e19a12) !important;
+    box-shadow: 0 6px 14px rgba(245, 175, 25, 0.35);
+    transform: translateY(-2px);
+}
+
+/* அழுத்தும்போது லேசாக அமிழும் எஃபெக்ட் */
+#inputModal .btn-close:active, 
+#inputModal .btn-save:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
 @media print {
-    /* 1. பிரிண்ட் செய்யும் போது ஹோம் மற்றும் பிரிண்ட் பட்டன்களை முழுமையாக மறைக்கிறது */
-    .btn-back, .btn-print, #targetReportPage button { 
+    /* 1. பிரிண்ட் செய்யும் போது ஹோம், பிரிண்ட் பொத்தான்கள் மற்றும் செலக்சன் ரேடியோக்களை மறைக்கிறது */
+    .btn-back, .btn-print, #targetReportPage button, #inlineBrandwisePage button, .print-hidden-block, .col-pick, input[type="radio"] { 
         display: none !important; 
+        visibility: hidden !important;
     }
     
     body { 
@@ -89,10 +141,17 @@
         padding: 0 !important;
         margin: 0 !important;
     }
+
+    /* 2. 🎯 🚀 மிக முக்கியப் பகுதி: திரையில் தற்போது மறைக்கப்பட்டுள்ள (display: none ஆக உள்ள) 
+       பக்கம் பிரிண்ட் பிரேமிற்குள் வராமல் முழுமையாகப் பூட்டுகிறது! */
+    #mainHubSection,
+    #targetReportPage:not([style*="display: block"]),
+    #inlineBrandwisePage:not([style*="display: block"]) {
+        display: none !important;
+    }
     
-    /* 2. ஒட்டுமொத்தப் பக்கத்தையும் பிரிண்ட் காகிதத்தின் அளவிற்குள் (A4 Size) கட்டாயமாகச் சுருக்குகிறது */
-    #targetReportPage {
-        display: block !important;
+    /* 3. ஒட்டுமொத்தப் பக்கத்தையும் பிரிண்ட் காகிதத்தின் அளவிற்குள் (A4/A3 Size) கட்டாயமாகச் சுருக்குகிறது */
+    #targetReportPage, #inlineBrandwisePage {
         max-width: 100% !important;
         width: 100% !important;
         padding: 0 !important;
@@ -106,23 +165,22 @@
         overflow: visible !important; /* ஸ்க்ரோல் பாரை நீக்கி முழு டேபிளையும் காட்டுகிறது */
     }
 
-    /* 3. 🎯 மிக முக்கியப் பகுதி: table-layout: auto ஆக்கி, காலம்களின் பிக்சல் அகலங்களை நீக்கி, 
-       காகிதத்தின் அகலத்திற்குள் (Landscape A4 Width) கச்சிதமாகச் சுருக்கிப் பொருத்துகிறது */
-    #targetReportPage table {
+    /* 4. 🎯 table-layout: auto ஆக்கி, காலம்களின் பிக்சல் அகலங்களை நீக்கி, 
+       காகிதத்தின் அகலத்திற்குள் (Landscape Width) கச்சிதமாகச் சுருக்கிப் பொருத்துகிறது */
+    #targetReportPage table, #inlineBrandwisePage table {
         table-layout: auto !important;
         width: 100% !important;
         min-width: 100% !important;
         max-width: 100% !important;
     }
 
-    /* 4. 🎯 படத்திலிருப்பது போல தலைப்பு எண்கள், வார்த்தைகள் அனைத்தும் கட் ஆகாமல் 
+    /* 5. 🎯 தலைப்பு எண்கள், வார்த்தைகள் அனைத்தும் கட் ஆகாமல் 
        தானாகவே அடுத்தடுத்த வரிகளில் மடிந்து (Word Wrap) அழகாக அமரும்படியான ஸ்டைல் */
     th, td {
         border: 1px solid black !important;
         color: black !important;
         padding: 6px 3px !important; /* நெரிசலைத் தவிர்க்க உள் இடைவெளியைக் குறைக்கிறது */
         font-size: 11px !important;  /* எண்கள் ஒரே வரியில் தெரிய எழுத்தின் அளவைச் சிறிதாக்குகிறது */
-        
         white-space: normal !important; /* 🔄 கட்டாயமாக அடுத்த வரியில் மடிய வைக்கும் சிக்னல் */
         word-wrap: break-word !important; 
         word-break: break-all !important;
@@ -134,6 +192,7 @@
         box-shadow: none !important;
         background: white !important;
         padding: 10px !important;
+        margin-bottom: 15px !important;
     }
     
     .live-card {
@@ -141,6 +200,95 @@
         box-shadow: none !important;
         padding: 8px !important;
     }
+}
+#inlineBrandwisePage table { 
+    width: 100%; 
+    border-collapse: collapse !important; 
+    text-align: center; 
+    background: white; 
+    table-layout: auto !important;
+    margin-top: 15px;
+    border: 1px solid black !important;
+}
+#inlineBrandwisePage th { 
+    background: #e67e22 !important; 
+    color: white !important; 
+    font-size: 15px; 
+    font-weight: bold; 
+    padding: 10px 4px; 
+    border: 1px solid black !important; 
+    text-transform: uppercase; 
+    white-space: normal !important; 
+    word-wrap: break-word; 
+    vertical-align: middle; 
+    line-height: 1.2;
+}
+#inlineBrandwisePage .sub-header th { 
+    background: #f39c12 !important; 
+    font-size: 13px; 
+    padding: 6px 4px; 
+    border: 1px solid black !important; 
+}
+#inlineBrandwisePage td { 
+    border: 1px solid black !important; 
+    padding: 10px 8px; 
+    font-size: 14px; 
+    color: black !important; 
+    font-weight: bold; 
+    box-sizing: border-box; 
+}
+.month-input-row { display: grid; grid-template-columns: 1.2fr 2fr; gap: 8px; align-items: center; background: #fdfefe; padding: 5px; border: 1px solid #edf2f7; border-radius: 6px; margin-top: 4px; }
+
+#budgetModal .btn-discard, 
+#budgetModal .btn-save-tgt {
+    font-family: 'Times New Roman', serif !important; /* 🎯 எழுத்துருவை டைம்ஸ் நியூ ரோமனாக மாற்றுகிறது */
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 10px 24px !important;
+    border-radius: 30px !important; /* 🎯 பழைய வடிவத்தை மாற்றி கச்சிதமான Pill-Shape வளைவாக மாற்றுகிறது */
+    border: none !important;
+    cursor: pointer !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+    width: auto !important;
+    height: 38px !important;
+}
+
+/* ⚪ பளபளப்பான மெட்டாலிக் கிரே கிரேடியன்ட் DISCARD பொத்தான் */
+#budgetModal .btn-discard {
+    background: RED;
+    color: white !important;
+}
+
+#budgetModal .btn-discard:hover {
+    background: linear-gradient(135deg, #a6b0b5, #213043) !important;
+    box-shadow: 0 6px 14px rgba(44, 62, 80, 0.25);
+    transform: translateY(-2px); /* கர்சரை வைக்கும்போது லேசாக மேலே எழும்பும் */
+}
+
+/* 🟢 பளபளப்பான எலக்ட்ரிக் கிரீன் கிரேடியன்ட் ADD பொத்தான் */
+#budgetModal .btn-save-tgt {
+    background: GREEN;
+    color: white !important;
+}
+
+#budgetModal .btn-save-tgt:hover {
+    background: linear-gradient(135deg, #0f8b7e, #2ed870) !important;
+    box-shadow: 0 6px 14px rgba(56, 239, 125, 0.35);
+    transform: translateY(-2px); /* கர்சரை வைக்கும்போது லேசாக மேலே எழும்பும் */
+}
+
+/* கிளிக் செய்யும்போது லேசாக அமிழும் எஃபெக்ட் */
+#budgetModal .btn-discard:active, 
+#budgetModal .btn-save-tgt:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
     </style>
 </head>
@@ -156,7 +304,7 @@
                 <h2 style="color: orange; font-size: 22px;">🚀 Volume & Value Performance</h2>
             </div>
             <div class="btn-group-right">
-                <button class="btn-add-tgt" onclick="openBudgetModal()">🎯 ADD TARGET</button>
+                <button class="btn-add-tgt" onclick="openBudgetModal()">🎯 CREATE BUDGET</button>
                 <button class="btn-del-tgt" onclick="deleteSelectedBudgets()">🗑️ DELETE</button>
             </div>
         </div>
@@ -190,6 +338,8 @@
             <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: bold;"><span>🔶 CONVERSION RATE:</span> <span id="corporateConversion" style="color:#e67e22;">0.0%</span></div>
         </div>
     </div>
+
+
 
     <!-- 🔄 மாஸ்டர் ஸ்க்ரோல் கன்டெெய்னர்: 12 மாதங்கள் வரும்போது லேஅவுட் சிதையாமல் ஸ்க்ரோல் பாரை ஆன் செய்கிறது -->
     <div style="background: white; border-radius: 10px; border: 1px solid #2c3e50; box-shadow: 0 4px 15px rgba(0,0,0,0.06); width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; box-sizing: border-box;">
@@ -255,11 +405,81 @@
             </div>
 
             <div class="modal-btn-group">
-                <button class="btn-discard" onclick="closeBudgetModal()">Discard</button>
-                <button class="btn-save-tgt" onclick="saveSalesBudget()">SAVE TARGET</button>
+                <button class="btn-discard" onclick="closeBudgetModal()">DISCARD</button>
+                <button class="btn-save-tgt" onclick="saveSalesBudget()">GENERATE</button>
             </div>
         </div>
     </div>
+
+<div id="inlineBrandwisePage" style="display:none; max-width: 1500px; margin: 0 auto; padding: 0 10px;">
+    <div class="target-header-box">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn-back" onclick="backToMasterReport()" style="background: GREEN; font-family: 'Times New Roman', serif; font-weight: bold; cursor: pointer;">🏠 BACK</button>
+            <button class="btn-back" onclick="window.print()" style="background: RED; font-family: 'Times New Roman', serif; font-weight: bold; cursor: pointer;">🖨️ PRINT</button>
+        </div>
+         <div class="header-center" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-left: -40px; margin-right: -40px;">
+        <img src="Logo.jpeg" alt="Vimag Logo" width="120" style="height: auto; margin-bottom: 4px;">
+        <h1 class="company-title" style="margin: 0; font-size: 25px; color: #006064; font-weight: bold; text-transform: uppercase; line-height: 1.2;">Vimag Industrial Solutions</h1>
+        <div class="brand-subtitle" id="dynamicBrandSubtitle" style="margin-top: 4px; font-size: 21px; color: #e67e22; font-weight: bold; text-transform: uppercase;">🛠️ PERFORMANCE RESOURCE</div>
+    </div>
+
+
+        <div class="live-card" style="border: 1px solid #e0e0e0; border-radius: 16px; padding: 16px 24px; background: #ffffff; min-width: 280px; width: 280px; box-sizing: border-box; box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: left;">
+            <div style="color: #d60000; text-align: center; font-size: 13px; margin-bottom: 12px; font-weight: bold; text-transform: uppercase; border-bottom: 1px dashed #eee; padding-bottom: 4px;">LIVE PERFORMANCE OVERVIEW</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 15px; font-weight: bold; color: #000000;">
+                <span>🔷 PORTFOLIO:</span> <span id="overviewPortfolio" class="blue-text" style="color: #1d609c;">€ 0.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 15px; font-weight: bold; color: #000000;">
+                <span>🟢 TURNOVER:</span> <span id="overviewTurnover" style="color: #27ae60;">€ 0.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: bold; color: #000000;">
+                <span>🔶 CONVERSION RATE:</span> <span id="overviewConversion" class="red-text" style="color: #e67e22;">0.0%</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-pick" rowspan="2">PICK</th>
+                    <th class="col-sno" rowspan="2">S.NO</th>
+                    <th class="col-art" rowspan="2">ART NO</th>
+                    <th style="text-align: left; padding-left: 10px;" rowspan="2">📦 PRODUCT DESCRIPTION</th>
+                    <th class="col-price" rowspan="2">💰 PRICE</th>
+                    <th class="col-target" rowspan="2">🎯TARGET</th>
+                    <th id="brandwiseAchievedHeader" colspan="3">📊 ACHIEVED VALUE / MONTH</th>
+                    <th class="col-achieved" rowspan="2">Σ ACHIEVED</th>
+                    <th class="col-exec" rowspan="2">% EXEC</th>
+                </tr>
+                <tr class="sub-header" id="brandwiseMonthSubHeaderRow"></tr>
+            </thead>
+            <tbody id="brandwiseTableBody">
+                <tr><td colspan="11" style="padding: 15px;">Fetching details... ⏳</td></tr>
+            </tbody>
+            <tfoot id="brandwiseTableFoot"></tfoot>
+        </table>
+    </div>
+</div>
+
+<!-- டார்கெட் மாற்றும் பாப்-அப் விண்டோ (Modal) -->
+<div id="inputModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-title" id="modalProductTitle">Fix Row Target</div>
+        <div class="modal-body">
+            <input type="hidden" id="modalRowIndex">
+            <label style="color: #1d609c;">OVERALL TARGET QUANTITY (PCS) *</label>
+            <input type="number" id="inputTargetQty" placeholder="Enter Target Quantity" style="border: 2px solid #1d609c; margin-bottom: 5px;">
+            <div style="font-weight: bold; font-size: 11px; color: #e67e22; margin-top: 10px; border-bottom: 1px dashed #e67e22; padding-bottom: 2px;">📈 ACHIEVED QUANTITY PER MONTH (PCS)</div>
+            <div id="dynamicMonthlyInputContainer" style="max-height: 200px; overflow-y: auto; margin-top: 5px; padding-right: 3px;"></div>
+        </div>
+        <div class="modal-btn-group">
+            <button class="btn-save" onclick="saveRowValuesFirebase()">FIX🎯</button>
+
+            <button class="btn-close" onclick="closeInputModal()">DISCARD</button>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dexie/4.2.0/dexie.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.6.10/firebase-app-compat.js"></script>
@@ -284,7 +504,9 @@
 
         const monthNamesShort = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
         let isSaving = false;
+let filteredArticles = [];
         let activeReportBudgetId = null; 
+let activeMonthHeaders = JSON.parse(localStorage.getItem('vimag_active_report_months')) || ["JAN-26", "FEB-26", "MAR-26"];
 
         window.onload = function() {
             initYearDropdown();
@@ -532,9 +754,11 @@ async function launchBudgetReportView(budgetId, targetText) {
                 currentYear++;
             }
         }
-        
+        activeMonthHeaders = monthHeadersArray; 
         localStorage.setItem('vimag_active_report_months', JSON.stringify(monthHeadersArray));
         
+
+
         // 🎯 FIX 2: மெயின் ஹெடரின் (ACHIEVED VALUE / MONTH) colspan-ஐ மாதங்களின் எண்ணிக்கைக்கு ஏற்ப (உதாரணமாக 1) கச்சிதமாக மாற்றிப் பூட்டுகிறது
         const mainHeader = document.getElementById('achievedMainHeader');
         if (mainHeader) {
@@ -554,6 +778,7 @@ async function calculateCorporateReportMetrics(monthHeadersArray, duration, budg
     if (!tbody) return;
     tbody.innerHTML = "";
 
+    // 🎯 டேபிளின் லேஅவுட்டை கச்சிதமாக 'auto' ஆக்குகிறது
     const mainTable = document.querySelector('#targetReportPage table');
     if (mainTable) {
         mainTable.style.tableLayout = "auto";
@@ -562,29 +787,30 @@ async function calculateCorporateReportMetrics(monthHeadersArray, duration, budg
     }
 
     try {
-        // 🚀 பிக்ஸ்: தனித்தனியாகக் காத்திருக்காமல், ஒரே மில்லிசெகண்டில் பேரலல் ஆக மிக வேகமாக விபரங்களை இழுக்கிறது!
-        const [matrixSnapshot, brandsSnapshot, currentCard] = await Promise.all([
-            cloudDB.ref(`vimag_followup/budget_matrix/${budgetId}`).once('value'),
-            cloudDB.ref('vimag/brands').once('value'),
-            localDB.budgets.get(budgetId)
-        ]);
-
+        // 🔄 ஸ்டெப் 1: Brandwise பக்கத்தில் சேமிக்கப்படும் அசல் டார்கெட் மேட்ரிக்ஸ் நோட்டை ஃபயர்பேஸில் இருந்து எடுக்கிறோம்
+        const matrixSnapshot = await cloudDB.ref(`vimag_followup/budget_matrix/${budgetId}`).once('value');
         const savedBudgetMatrix = matrixSnapshot.val() || {};
-        if (!brandsSnapshot.exists() || !currentCard) {
-            tbody.innerHTML = `<tr><td colspan="${5 + duration}" style="padding:25px; font-weight:bold; color:#7f8c8d; text-align:center;">தயாரிப்பு விபரங்கள் சேகரிக்கப்படுகிறது... ⏳</td></tr>`;
+
+        // 🔄 ஸ்டெப் 2: ஃபயர்பேஸ் மாஸ்டர் தயாரிப்பு மரத்தில் (vimag/brands) இருந்து விபரங்களை லோடு செய்கிறோம்
+        const snapshot = await cloudDB.ref('vimag/brands').once('value');
+        if (!snapshot.exists()) {
+            tbody.innerHTML = `<tr><td colspan="${5 + duration}" style="padding:25px; font-weight:bold; color:#7f8c8d; text-align:center;">மாஸ்டர் தயாரிப்பு விபரங்கள் கண்டறியப்படவில்லை... ⏳</td></tr>`;
             return;
         }
-        const cloudBrandsTree = brandsSnapshot.val();
+        const cloudBrandsTree = snapshot.val();
 
         let grandTotalTarget = 0;
         let grandTotalAchieved = 0;
         let monthlyGrandTotals = new Array(duration).fill(0);
 
+        // 📊 பிராண்ட் வாரியாகத் தொகுப்பதற்கான தனித்துவமான மேப் (டூப்ளிகேட் தவிப்பிற்கான இன்ஜின்)
         const brandSummaryMap = new Map();
 
         const brandKeys = Object.keys(cloudBrandsTree);
         for (let i = 0; i < brandKeys.length; i++) {
             const brandKey = brandKeys[i];
+            
+            // 🎯 பிக்ஸ் 1: எழுத்துக்களை முழுமையாக Uppercase ஆக மாற்றி, ஸ்பேஸ்களைச் சீரமைத்து டூப்ளிகேட் வராமல் தடுக்கிறது!
             const cleanBrandName = brandKey.toUpperCase().replace(/\s+/g, ' ').trim();
             if (cleanBrandName === "" || cleanBrandName === "_ID_LOCK" || cleanBrandName === "SYSTEM" || cleanBrandName === "SYSTEM_ID") continue;
 
@@ -611,10 +837,9 @@ async function calculateCorporateReportMetrics(monthHeadersArray, duration, budg
                         let currentArtNo = itemData.artNo.toUpperCase().trim();
                         let normalizedCustKey = customerKey.trim().toUpperCase();
 
-                        // 🎯 ஸ்பெஷல் கேரக்டர் மற்றும் புள்ளி லாக் பாதுகாப்பு மேப்பிங் லுக்அப்
+                        // 🎯 உள்ளே இருக்கும் டேபிளின் அசல் டார்கெட் லாக் மேப்பிங் லுக்அப்
                         let matrixLookupKey = `${normalizedCustKey}_${currentArtNo}`;
-                        let safeMatrixLookupKey = matrixLookupKey.replace(/[\.\#\$\/\[\]]/g, "_");
-                        let budgetSpecificData = savedBudgetMatrix[safeMatrixLookupKey];
+                        let budgetSpecificData = savedBudgetMatrix[matrixLookupKey];
 
                         if (budgetSpecificData) {
                             let qty = parseInt(budgetSpecificData.qty || 0);
@@ -634,6 +859,7 @@ async function calculateCorporateReportMetrics(monthHeadersArray, duration, budg
                 }
             }
 
+            // 🎯 பிக்ஸ் 2: ஒரே பெயர் சிறிய மற்றும் பெரிய எழுத்துக்களில் டூப்ளிகேட்டாக இருந்தால், அவற்றை ஒன்றாக இணைக்கிறது (Merge)!
             if (brandSummaryMap.has(cleanBrandName)) {
                 let existingData = brandSummaryMap.get(cleanBrandName);
                 existingData.targetValue += brandTargetSum;
@@ -651,6 +877,7 @@ async function calculateCorporateReportMetrics(monthHeadersArray, duration, budg
             }
         }
 
+        // 🔄 ஸ்டெப் 3: கணக்கிடப்பட்ட அசல் பிராண்ட் டார்கெட் வரிசைகளை (Rows) அகரவரிசையில் (Alphabetical Order) அடுக்கிப் பொருத்துகிறது
         let rowIdx = 1;
         const sortedBrandNames = Array.from(brandSummaryMap.keys()).sort();
         
@@ -675,12 +902,15 @@ async function calculateCorporateReportMetrics(monthHeadersArray, duration, budg
                 `<td style="padding:10px 12px; border: 1px solid black !important; color: #27ae60; text-align: right !important; padding-right: 14px !important; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums;">€ ${v.toFixed(2)}</td>`
             ).join('');
 
+            // கிளிக் செய்யும் போது அந்தந்த பிராண்ட் பெயருடன் Brandwise பக்கத்திற்குப் போகும் டைனமிக் நேவிகேஷன்
             const redirectUrl = `Brandwise.html?brand=${encodeURIComponent(brandName.toLowerCase())}&budgetId=${encodeURIComponent(budgetId)}`;
 
             tr.innerHTML = `
                 <td style="padding:10px 8px; border: 1px solid black !important; font-size: 14px; text-align: center; color: black;">${rowIdx++}</td>
-                <td style="padding:10px 12px; border: 1px solid black !important; text-align: left !important; padding-left: 14px !important; font-size: 14px; color: #1d609c; cursor: pointer; white-space: nowrap;" onclick="window.location.href='${redirectUrl}'">🔷 ${brandName}</td>
-                <td style="padding:10px 12px; border: 1px solid black !important; color: #1d609c; text-align: right !important; padding-right: 14px !important; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums;">€ ${data.targetValue.toFixed(2)}</td>
+<td style="padding:10px 12px; border: 1px solid black !important; text-align: left !important; padding-left: 14px !important; font-size: 14px; color: #1d609c; cursor: pointer; white-space: nowrap;" 
+    onclick="launchInlineBrandwiseView('${brandName}', activeReportBudgetId)">🔷 ${brandName}</td>
+                
+ <td style="padding:10px 12px; border: 1px solid black !important; color: #1d609c; text-align: right !important; padding-right: 14px !important; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums;">€ ${data.targetValue.toFixed(2)}</td>
                 ${monthlyCellsHtml}
                 <td style="padding:10px 12px; border: 1px solid black !important; color: green; text-align: right !important; padding-right: 14px !important; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums;">€ ${data.achievedValue.toFixed(2)}</td>
                 <td style="padding:10px 8px; border: 1px solid black !important; color: ${execPercentage >= 100 ? 'green' : (data.targetValue > 0 ? '#d94556' : '#7f8c8d')}; background-color: #fdf2f2; text-align: center; font-size: 14px; white-space: nowrap;">${execPercentage.toFixed(1)}%</td>
@@ -688,7 +918,7 @@ async function calculateCorporateReportMetrics(monthHeadersArray, duration, budg
             tbody.appendChild(tr);
         });
 
-        // TFOOT சம்மரி லெட்ஜர் புதுப்பிப்பு
+        // 🏆 சம்மரி லெட்ஜர் (TFOOT) கூட்டுத்தொகை வரிசையை கச்சிதமாகப் புதுப்பிக்கிறது
         const tfootRow = document.querySelector('#targetReportPage table tfoot tr');
         if (tfootRow) {
             let gtExecCalc = grandTotalTarget > 0 ? (grandTotalAchieved / grandTotalTarget) * 100 : 0;
@@ -706,13 +936,14 @@ async function calculateCorporateReportMetrics(monthHeadersArray, duration, budg
                 <td style="text-align: left !important; padding-left: 15px; border: 1px solid black !important; color: RED; font-size: 14px; font-weight: bold; text-transform: uppercase; white-space: nowrap; vertical-align: middle;">CONSOLIDATED LEDGER:</td>
                 <td style="color: #1d609c; font-weight: bold; border: 1px solid black !important; text-align: right !important; padding-right: 14px !important; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums;">€ ${grandTotalTarget.toFixed(2)}</td>
                 ${footerMonthlyCellsHtml}
-                <td style="color: green; font-weight: bold; border: 1px solid black !important; text-align: right !important; padding-right: 14px !important; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums;">€ ${grandTotalAchieved.toFixed(2)}</td>
+
+<td style="color: green; font-weight: bold; border: 1px solid black !important; text-align: right !important; padding-right: 14px !important; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums;">€ ${grandTotalAchieved.toFixed(2)}</td>
                 <td style="color: ${gtExecCalc >= 100 ? 'green' : (grandTotalTarget > 0 ? '#d94556' : '#7f8c8d')}; font-weight: bold; border: 1px solid black !important; background: #fdf2f2; text-align: center; font-size: 14px; white-space: nowrap; vertical-align: middle;">
                     <div style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; width: 100%;">
                         <span>${gtExecCalc.toFixed(1)}%</span><span style="font-size: 14px;">🚀</span>
                     </div>
                 </td>
-                  `;
+            `;
         }
 
         // ==================== மேல் பகுதி லைவ் விட்ஜெட்டுகள் அப்டேட் இன்ஜின் ====================
@@ -721,14 +952,15 @@ async function calculateCorporateReportMetrics(monthHeadersArray, duration, budg
         const turnoverEl = document.getElementById('corporateTurnover');
         const conversionEl = document.getElementById('corporateConversion');
 
-        if (portfolioEl) portfolioEl.innerText = `€ ${grandTotalTarget.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-        if (turnoverEl) turnoverEl.innerText = `€ ${grandTotalAchieved.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-        if (conversionEl) conversionEl.innerText = `${gtExecPercent.toFixed(1)}%`;
+        if(portfolioEl) portfolioEl.innerText = `€ ${grandTotalTarget.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        if(turnoverEl) turnoverEl.innerText = `€ ${grandTotalAchieved.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        if(conversionEl) conversionEl.innerText = `${gtExecPercent.toFixed(1)}%`;
 
     } catch (err) {
         console.error("Master Report Compilation Error: ", err);
     }
 }
+
 // ==================== மாஸ்டர் ரிப்போர்ட் பக்கத்தை மூடி முதன்மைப் பக்கத்திற்குத் திரும்பும் ஃபங்க்ஷன் ====================
 function closeTargetReportPage() {
     document.getElementById('targetReportPage').style.display = 'none';
@@ -844,6 +1076,328 @@ function processAndRenderMetrics(brandsList, allMasterProducts, allActivityLogs,
     if(turnoverEl) turnoverEl.innerText = `€ ${grandTotalAchieved.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
     if(conversionEl) conversionEl.innerText = `${gtExecPercent.toFixed(1)}%`;
 }
+
+let currentBrandNameInline = "";
+
+async function launchInlineBrandwiseView(brandName, budgetId) {
+    currentBrandNameInline = brandName.trim();
+    document.getElementById('targetReportPage').style.display = 'none';
+    document.getElementById('inlineBrandwisePage').style.display = 'block';
+    document.getElementById("dynamicBrandSubtitle").textContent = `🛠️ ${currentBrandNameInline.toUpperCase()} PERFORMANCE`;
+
+    const subRow = document.getElementById('brandwiseMonthSubHeaderRow');
+    if (subRow) {
+        subRow.innerHTML = activeMonthHeaders.map(m => 
+            `<th style="background: #f39c12; color: white; font-size: 13px; padding: 6px 4px; border: 1px solid black !important; min-width: 95px; max-width: 95px; width: 95px; box-sizing: border-box;">${m}</th>`
+        ).join('');
+    }
+    
+    const mHeader = document.getElementById('brandwiseAchievedHeader');
+    if (mHeader) mHeader.setAttribute('colspan', activeMonthHeaders.length);
+
+    loadInlineUniversalCloudLiveData(budgetId);
+}
+
+function loadInlineUniversalCloudLiveData(budgetId) {
+    // 🎯 பிக்ஸ்: ஒப்பிடுவதற்காக தற்போதைய பிராண்ட் பெயரை முழுமையாக பெரிய எழுத்துக்களாக மாற்றி, தேவையற்ற இடைவெளிகளை நீக்குகிறது
+    const targetBrandFilter = currentBrandNameInline.toUpperCase().replace(/\s+/g, ' ').trim();
+
+    // 🔄 ஸ்டெப் 1: பட்ஜெட்டில் ஏற்கனவே நீங்க சேமித்து வைத்த டார்கெட் மேட்ரிக்ஸை ஃபயர்பேஸில் இருந்து எடுக்கிறோம்
+    cloudDB.ref(`vimag_followup/budget_matrix/${budgetId}`).once('value', (budgetSnapshot) => {
+        const savedBudgetMatrix = budgetSnapshot.val() || {};
+
+        // 🔄 ஸ்டெப் 2: அசல் மாஸ்டர் மரத்தின் ('vimag/brands') Root நோடை நேரடியாக லோடு செய்கிறது
+        cloudDB.ref('vimag/brands').once('value', async (snapshot) => {
+            if (!snapshot.exists()) {
+                document.getElementById('brandwiseTableBody').innerHTML = `<tr><td colspan="${7 + activeMonthHeaders.length}" style="padding:25px; font-weight:bold; color:#7f8c8d; text-align:center; border:1px solid black !important;">மாஸ்டர் தயாரிப்பு விபரங்கள் கிளவுடில் கண்டறியப்படவில்லை... ⏳</td></tr>`;
+                return;
+            }
+
+            const cloudBrandsTree = snapshot.val() || {};
+            let bulkPayload = []; 
+
+            // 🔄 ஸ்டெப் 3: ஃபயர்பேஸ் மாஸ்டர் மரத்தில் இருக்கும் அனைத்து கஸ்டமர் மற்றும் பிராண்ட் கிளைகளையும் ஆராய்கிறது
+            const brandKeys = Object.keys(cloudBrandsTree);
+            
+            for (let i = 0; i < brandKeys.length; i++) {
+                const brandKey = brandKeys[i];
+                
+                // கணினியின் சிஸ்டம் நோட்களைத் தவிர்க்கிறது
+                const cleanBrandKey = brandKey.toUpperCase().replace(/\s+/g, ' ').trim();
+                if (cleanBrandKey === "" || cleanBrandKey === "_ID_LOCK" || cleanBrandKey === "SYSTEM" || cleanBrandKey === "SYSTEM_ID") continue;
+
+                const customerBranches = cloudBrandsTree[brandKey] || {};
+                const customerKeys = Object.keys(customerBranches);
+                
+                for (let j = 0; j < customerKeys.length; j++) {
+                    const customerKey = customerKeys[j];
+                    if (customerKey === "_id_lock" || customerKey === "SYSTEM_ID") continue;
+                    
+                    const itemsMap = customerBranches[customerKey] || {};
+                    const itemKeys = Object.keys(itemsMap);
+                    
+                    for (let k = 0; k < itemKeys.length; k++) {
+                        const itemKey = itemKeys[k];
+                        const itemData = itemsMap[itemKey] || {};
+                        
+                        if (itemData && itemData.id && itemData.artNo && itemData.artNo !== "SYSTEM") {
+                            // 🌟 🎯 மிக முக்கியப் பகுதி: பொருட்களுக்குள் இருக்கும் பிராண்ட் பெயரையோ, அல்லது அதன் முதன்மைத் தலைப்பையோ எடுத்துச் சீரமைக்கிறது
+                            const itemBrandClean = (itemData.brand || brandKey || "").toUpperCase().replace(/\s+/g, ' ').trim();
+                            
+                            // 🔄 பிக்ஸ்: ஸ்பேசஸ் மற்றும் எழுத்து வடிவங்கள் (Case-Sensitivity) கச்சிதமாக மேட்ச் செய்யப்படுகிறது!
+                            if (itemBrandClean === targetBrandFilter || cleanBrandKey === targetBrandFilter) {
+                                let price = parseFloat(itemData.price || 0);
+                                let currentArtNo = itemData.artNo.toUpperCase().trim();
+                                let normalizedCustKey = customerKey.trim().toUpperCase();
+
+                                // அசல் பிராண்ட்வைஸ் மேட்சிங் கீ அமைப்பு (கம்பெனி கஸ்டமர் நேம் + ஆர்ட் நம்பர்)
+                                let matrixLookupKey = `${normalizedCustKey}_${currentArtNo}`;
+                                let savedItemData = savedBudgetMatrix[matrixLookupKey];
+
+                                let finalTargetQty = 0;
+                                let finalTargetVal = 0;
+                                let finalMonthQty = 0;
+                                let safeAchievedQty = new Array(activeMonthHeaders.length).fill(0);
+
+                                // விபரங்கள் ஏற்கனவே பட்ஜெட் மெமரியில் சேமிக்கப்பட்டிருந்தால் அதை அப்படியே எடுக்கிறது! 
+                                if (savedItemData) {
+                                    finalTargetQty = parseInt(savedItemData.qty || 0);
+                                    finalTargetVal = finalTargetQty * price;
+                                    finalMonthQty = parseInt(savedItemData.monthQty || 0);
+                                    
+                                    let rawAchieved = savedItemData.achievedQty || [];
+                                    for (let m = 0; m < activeMonthHeaders.length; m++) {
+                                        safeAchievedQty[m] = Math.round(parseFloat(rawAchieved[m] || 0));
+                                let isSaving = false;    }
+                                } 
+
+                                bulkPayload.push({
+                                    id: `${itemData.id}_${budgetId}`, 
+                                    baseItemId: itemData.id,
+                                    budgetId: budgetId,
+                                    brand: currentBrandNameInline.trim(), 
+                                    customerName: customerKey, 
+                                    articleNo: itemData.artNo, 
+                                    description: itemData.name || itemData.productName || itemData.description || "Industrial Tool Component",
+                                    price: price,
+                                    currency: itemData.currency || "€",
+                                    targetQty: finalTargetQty,
+                                    monthQty: finalMonthQty,
+                                    targetValue: finalTargetVal,
+                                    achievedQtyValues: safeAchievedQty
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 🎯 மாறிகளை இன்லைன் ரெண்டரிங் இன்ஜினுக்கு அனுப்புகிறது
+            filteredArticles = bulkPayload;
+            
+            // அட்டவணையைத் திரையில் கச்சிதமாக உருவாக்குகிறது!
+            renderInlineBrandwiseRows();
+            console.log("பிராண்ட் தரவுகள் கச்சிதமாகப் பிரிக்கப்பட்டு ஒத்திசைக்கப்பட்டது! 🚀🔐");
+        });
+    });
+}
+function renderInlineBrandwiseRows() {
+    const tbody = document.getElementById("brandwiseTableBody");
+    if (!tbody) return; tbody.innerHTML = "";
+
+    let globalTargetValue = 0, globalAchievedValue = 0;
+    let globalMonthTotals = new Array(activeMonthHeaders.length).fill(0);
+
+    if (filteredArticles.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="${7 + activeMonthHeaders.length}" style="padding: 25px; font-weight: bold; color: #7f8c8d; text-align: center; border: 1px solid black !important;">No Product Records Found</td></tr>`;
+        return;
+    }
+
+    filteredArticles.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        const sym = getCurrencySymbol(item.currency);
+        let totalVal = parseFloat(item.targetValue || 0); 
+        let rowMonthlyValues = new Array(activeMonthHeaders.length).fill(0);
+        
+        for (let i = 0; i < activeMonthHeaders.length; i++) {
+            let qVal = parseInt(item.achievedQtyValues[i] || 0);
+            rowMonthlyValues[i] = qVal * item.price;
+        }
+
+        let rowTotalAchieved = rowMonthlyValues.reduce((a, b) => a + b, 0);
+        let execPercent = totalVal > 0 ? ((rowTotalAchieved / totalVal) * 100).toFixed(1) : "0.0";
+
+        globalTargetValue += totalVal; globalAchievedValue += rowTotalAchieved;
+        rowMonthlyValues.forEach((v, i) => { globalMonthTotals[i] += v; });
+
+        let monthlyCellsHtml = rowMonthlyValues.map(v => 
+            `<td class="currency-cell green-text-live" style="text-align: right !important; padding-right: 14px !important; border: 1px solid black !important; padding: 10px 12px; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums; color: #27ae60;">€ ${v.toFixed(2)}</td>`
+        ).join('');
+
+        tr.innerHTML = `
+            <td style="text-align:center; border: 1px solid black !important; padding: 10px 4px;"><input type="radio" name="pickRowRadio" class="radio-custom" onclick="openInputModalInline(${index})"></td>
+            <td style="text-align:center; border: 1px solid black !important; padding: 10px 4px; font-weight:bold; color: black;">${index + 1}</td>
+            <td style="text-align:center; border: 1px solid black !important; padding: 10px 6px; font-weight: bold; color: black; white-space: nowrap;">${item.articleNo}</td>
+            <td style="text-align: left !important; padding-left: 14px !important; border: 1px solid black !important; padding: 10px 12px; color: black; font-size: 14px;"><b>${item.customerName.toUpperCase()}</b> - ${item.description}</td>
+            <td style="text-align: right !important; padding-right: 14px !important; border: 1px solid black !important; padding: 10px 12px; font-variant-numeric: tabular-nums; color: black;">€ ${item.price.toFixed(2)}</td>
+            <td style="text-align: right !important; padding-right: 14px !important; border: 1px solid black !important; padding: 10px 12px; font-variant-numeric: tabular-nums; color: #1d609c;">€ ${totalVal.toFixed(2)}<br><small style="color:gray;">(${item.targetQty} Pcs)</small></td>
+            ${monthlyCellsHtml}
+            <td style="text-align: right !important; padding-right: 14px !important; border: 1px solid black !important; padding: 10px 12px; font-variant-numeric: tabular-nums; color: green;">€ ${rowTotalAchieved.toFixed(2)}</td>
+            <td style="text-align: center; border: 1px solid black !important; padding: 10px 4px; color: ${parseFloat(execPercent) >= 100 ? 'green' : '#d94556'}; background-color: #fdf2f2;">${execPercent}%</td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    const tfoot = document.getElementById("brandwiseTableFoot");
+    if (!tfoot) return;
+    let footHtml = `
+        <tr style="background: #fcf8f2; font-weight: bold; border-top: 2px solid #2c3e50; border-bottom: 2px solid black;">
+            <td colspan="2" style="border: 1px solid black !important; color: black; font-size: 16px; text-align: center; padding: 15px 4px;">Σ</td>
+            <td colspan="2" style="text-align: left !important; padding-left: 15px; border: 1px solid black !important; color: RED; font-size: 14px; text-transform: uppercase; white-space: nowrap; vertical-align: middle;">CONSOLIDATED BRAND LEDGER:</td>
+            <td style="border: 1px solid black !important;">-</td>
+
+ <td class="currency-cell blue-text" style="text-align: right !important; padding-right: 14px !important; border: 1px solid black !important; padding: 12px; font-size: 14px; color: #1d609c; font-variant-numeric: tabular-nums;">€ ${globalTargetValue.toFixed(2)}</td>
+    `;
+
+    // மாதாந்திர கூட்டுத்தொகை செல்களை லூப் செய்து இணைக்கிறது
+    globalMonthTotals.forEach(mSum => {
+        footHtml += `<td class="currency-cell green-text-live" style="text-align: right !important; padding-right: 14px !important; border: 1px solid black !important; padding: 12px; font-size: 14px; color: #27ae60; font-variant-numeric: tabular-nums;">€ ${mSum.toFixed(2)}</td>`;
+    });
+
+    let overallExec = globalTargetValue > 0 ? ((globalAchievedValue / globalTargetValue) * 100).toFixed(1) : "0.0";
+    
+    footHtml += `
+            <td class="currency-cell Green-text" style="text-align: right !important; padding-right: 14px !important; border: 1px solid black !important; padding: 12px; font-size: 14px; color: green; font-variant-numeric: tabular-nums;">€ ${globalAchievedValue.toFixed(2)}</td>
+            <td class="currency-cell red-text" style="text-align: center; border: 1px solid black !important; background-color: #fdf2f2; font-size: 14px; vertical-align: middle; padding: 12px 4px;">
+                <div style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; width: 100%;">
+                    <span style="color: ${parseFloat(overallExec) >= 100 ? 'green' : '#d94556'}; font-weight: bold;">${overallExec}%</span> <span style="font-size: 12px;">🚀</span>
+                </div>
+            </td>
+        </tr>
+    `;
+    tfoot.innerHTML = footHtml;
+
+    // 📊 மேல் பகுதி வலது ஓரம் இருக்கும் லைவ் ஓவர்வியூ கார்டுகளைப் புதுப்பிக்கிறது
+    const turnoverEl = document.getElementById("overviewTurnover");
+    const portfolioEl = document.getElementById("overviewPortfolio");
+    const conversionEl = document.getElementById("overviewConversion");
+
+    if (turnoverEl) turnoverEl.textContent = `€ ${globalAchievedValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    if (portfolioEl) portfolioEl.textContent = `€ ${globalTargetValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    if (conversionEl) conversionEl.textContent = `${overallExec}%`;
+}
+
+// 📋 ரேடியோ பட்டனை அழுத்தும்போது டார்கெட் மாற்றும் பாப்-அப் விண்டோவைத் திறக்கும் இன்ஜின்
+function openInputModalInline(index) {
+    const item = filteredArticles[index];
+    if (!item) return;
+
+    document.getElementById("modalRowIndex").value = index;
+    document.getElementById("modalProductTitle").textContent = `Fix Target Qty: ${item.articleNo}`;
+    document.getElementById("inputTargetQty").value = item.targetQty || "";
+    
+    const container = document.getElementById("dynamicMonthlyInputContainer");
+    if (!container) return; 
+    container.innerHTML = "";
+
+    // தேர்ந்தெடுக்கப்பட்ட ரிப்போர்ட் கால அளவுக்கு ஏற்ப (1, 3, 6, 12 மாதங்கள்) பாப்-அப்பில் உள்ளீட்டுப் பெட்டிகளை உருவாக்குகிறது
+    activeMonthHeaders.forEach((monthLabel, i) => {
+        let currentMonthQty = item.achievedQtyValues[i] || 0;
+        
+        container.innerHTML += `
+            <div class="month-input-row">
+                <span style="font-size: 11px; font-weight: bold; color: #2c3e50;">📅 ${monthLabel}:</span>
+                <input type="number" class="monthly-modal-input" data-month-idx="${i}" value="${currentMonthQty}" placeholder="Qty">
+            </div>
+        `;
+    });
+
+    document.getElementById("inputModal").style.display = "flex";
+}
+
+// ❌ பாப்-அப் பெட்டியை மூடி ரேடியோ செலக்சனை அன்செக் செய்யும் ஃபங்க்ஷான்
+function closeInputModal() { 
+    document.getElementById("inputModal").style.display = "none"; 
+    const checkedRadio = document.querySelector('input[name="pickRowRadio"]:checked');
+    if(checkedRadio) checkedRadio.checked = false;
+}
+
+// 🎯 மாற்றியமைக்கப்பட்ட புதிய டார்கெட் மற்றும் அச்சீவ்ட் மதிப்புகளை ஃபயர்பேஸில் பல்க் அப்டேட் செய்யும் இன்ஜின்
+async function saveRowValuesFirebase() {
+    const index = document.getElementById("modalRowIndex").value;
+    if (index === "" || !filteredArticles[index]) return;
+
+    const currentActiveBudgetId = activeReportBudgetId || activeBudgetId;
+
+    if (!currentActiveBudgetId || currentActiveBudgetId.trim() === "") {
+        alert("பாதுகாப்பு எச்சரிக்கை: Budget ID கண்டறியப்படவில்லை!");
+        return;
+    }
+
+    const updatedQty = parseInt(document.getElementById("inputTargetQty").value) || 0;
+    const targetItem = filteredArticles[index];
+    const targetArticleNo = targetItem.articleNo.toUpperCase().trim();
+    
+    let updatedAchievedQtyArray = new Array(activeMonthHeaders.length).fill(0);
+    const inputElements = document.querySelectorAll(".monthly-modal-input");
+    let computed_monthQty = 0; 
+
+    inputElements.forEach(input => {
+        const mIdx = parseInt(input.getAttribute("data-month-idx"));
+        const qVal = parseInt(input.value) || 0;
+        updatedAchievedQtyArray[mIdx] = qVal;
+        computed_monthQty += qVal;
+    });
+
+    try {
+        const updatesContainer = {};
+        
+        // மாஸ்டர் டேபிளைத் தொந்தரவு செய்யாமல், டார்கெட்டுகளைத் தனியாக பட்ஜெட் மேட்ரிக்ஸ் நோட்டுக்குள் லாக் செய்கிறது
+        const targetMatrixLookupKey = `${targetItem.customerName.trim().toUpperCase()}_${targetArticleNo}`;
+        const nodePath = `vimag_followup/budget_matrix/${currentActiveBudgetId}/${targetMatrixLookupKey}`;
+
+        updatesContainer[nodePath] = {
+            qty: updatedQty,                        
+            monthQty: computed_monthQty,            
+            achievedQty: updatedAchievedQtyArray     
+        };
+
+        // 1. ஃபயர்பேஸ் கிளவுட் டேட்டாபேஸில் பாதுகாப்பாக ரைட் செய்கிறது
+        await cloudDB.ref().update(updatesContainer);
+
+        closeInputModal();
+        
+        // 2. புதிய கிளவுட் தரவை லோடு செய்து அட்டவணையை உடனடியாக ரீ-ரெண்டர் செய்கிறது
+        loadInlineUniversalCloudLiveData(currentActiveBudgetId);
+        console.log("மாற்றங்கள் வெற்றிகரமாக மேகக்கணினியில் ஒத்திசைக்கப்பட்டது! ⚡🔐");
+        alert("Target synchronized successfully! 🚀🔐");
+
+    } catch (err) {
+        console.error("Matrix Core Commit Mappings Failure: ", err);
+        alert("டேட்டாபேஸ் பிழை: மாற்றங்களைச் சேமிக்க முடியவில்லை.");
+    }
+}
+
+// 🏠 பிராண்ட்வைஸ் பக்கத்திலிருந்து மீண்டும் மாஸ்டர் ரிப்போர்ட் பகுதிக்குத் திரும்பும் ஃபங்க்ஷன்
+function backToMasterReport() {
+    document.getElementById('inlineBrandwisePage').style.display = 'none';
+    document.getElementById('targetReportPage').style.display = 'block';
+    
+    const currentActiveBudgetId = activeReportBudgetId || activeBudgetId;
+    // மாஸ்டர் ரிப்போர்ட்டை மீண்டும் ரெண்டர் செய்து கூட்டுத்தொகை மதிப்புகளைப் புதுப்பிக்கிறது
+    launchBudgetReportView(currentActiveBudgetId, document.getElementById('corporateReportTitle').innerText);
+}
+function getCurrencySymbol(code) { 
+    return code === "USD" || code === "$" ? "$" : "€"; 
+}
+// பாப்-அப் விண்டோவிற்கு வெளியே கறுப்பு நிழல் பகுதியில் கிளிக் செய்யும் போது தானாக மூடும் வசதி
+window.onclick = function(event) {
+    const modal = document.getElementById("inputModal");
+    if (event.target === modal) {
+        closeInputModal();
+    }
+};
+
     </script>
 </body>
 </html>
