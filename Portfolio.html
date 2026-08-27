@@ -73,6 +73,30 @@
         </thead>
         <tbody id="portfolioBody"></tbody>
     </table>
+<div id="vimagPortfolioEditModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 99999999; justify-content: center; align-items: center; box-sizing: border-box;">
+    <div style="background: white; border: 3px solid #27ae60; padding: 10px; border-radius: 25px; width: 450px; max-width: 90%; box-shadow: 0 15px 35px rgba(0,0,0,0.2); text-align: left; font-family: 'Times New Roman', serif; box-sizing: border-box;">
+        <h2 style="color: #27ae60; margin: 0 0 15px 0; font-weight: bold; text-transform: uppercase; font-size: 20px; border-bottom: 2px solid #27ae60; padding-bottom: 8px;">✏️ Update Product Metrics</h2>
+        <input type="hidden" id="editRowBrandKey"><input type="hidden" id="editRowCustomerKey"><input type="hidden" id="editRowProductIndexKey">
+        <div id="editRowMetaLabel" style="font-size: 15px; color: #7f8c8d; font-weight: bold; margin-bottom: 12px; padding: 5px; background: #fdfdf5; border-radius: 4px;">Brand / Customer</div>
+        <label style="font-weight: bold; display: block; margin-top: 10px; color: #2c3e50; font-size: 14px;">📦 PRODUCT ARTICLE DETAILS:</label>
+        <div id="editRowProductLabel" style="font-size: 14px; color: red; font-weight: bold; margin-bottom: 15px;">Product / Name</div>
+        <div style="margin-top: 15px; background: #f9f9f6; padding: 12px; border-radius: 8px; border: 1px dashed #27ae60;">
+            <label style="font-weight: bold; color: #2c3e50; font-size: 14px;">📉 Price Value (€):</label>
+            <input type="number" id="editRowPriceVal" step="0.01" style="width: 100%; padding: 8px; border-radius: 6px; border: 1.5px solid black; font-family: 'Times New Roman'; font-weight: bold; box-sizing: border-box; margin-top: 5px; margin-bottom: 12px; font-size: 14px; background: white;">
+            <label style="font-weight: bold; color: #2c3e50; font-size: 14px;">🎯 Target Qty (Mo):</label>
+            <input type="number" id="editRowTargetQty" style="width: 100%; padding: 8px; border-radius: 6px; border: 1.5px solid black; font-family: 'Times New Roman'; font-weight: bold; box-sizing: border-box; margin-top: 5px; margin-bottom: 12px; font-size: 14px; background: white;">
+            <label style="font-weight: bold; color: #2c3e50; font-size: 14px;">🏆 Achieved Qty (Month):</label>
+            <input type="number" id="editRowAchievedQty" style="width: 100%; padding: 8px; border-radius: 6px; border: 1.5px solid black; font-family: 'Times New Roman'; font-weight: bold; box-sizing: border-box; margin-top: 5px; margin-bottom: 12px; font-size: 14px; background: white;">
+            <input type="text" id="editRowRemarks" style="width: 100%; padding: 8px; border-radius: 6px; border: 1.5px solid black; font-family: 'Times New Roman'; font-weight: bold; box-sizing: border-box; margin-top: 5px; font-size: 14px; background: white;">
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px;">
+<button onclick="saveVimagPortfolioEdits()" style="padding: 10px 20px; background: #27ae60; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: 'Times New Roman'; font-weight: bold; font-size: 14px;">💾 UPDATE</button>
+            <button onclick="closeVimagPortfolioModal()" style="padding: 10px 20px; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: 'Times New Roman'; font-weight: bold; font-size: 14px;">DISCARD</button>
+            
+        </div>
+    </div>
+</div>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dexie/4.2.0/dexie.min.js"></script>
@@ -162,32 +186,80 @@ let masterData = []; // Store original data for sub-filtering
         el.innerHTML = html;
     }
 
-    function renderTable(data) {
+  function renderTable(data) {
         const tbody = document.getElementById('portfolioBody');
         let tT = 0, tA = 0, sym = "€";
-
         tbody.innerHTML = data.map((i, idx) => {
             const p = parseFloat(i.price || 0), target = parseInt(i.qty || 0), actual = parseInt(i.monthQty || 0);
-            const val = p * actual; sym = i.currency || "€";
-            tT += (p * target); tA += val;
-
-            return `<tr>
-                <td>${idx + 1}</td>
+            const val = p * actual; sym = i.currency || "€"; tT += (p * target); tA += val;
+            var cleanSafeStringKey = btoa(unescape(encodeURIComponent(i.customerName || '')));
+            var uniqueDataIdRefStringKey = btoa(unescape(encodeURIComponent(i.id || '')));
+            return `<tr style="border-bottom: 1px solid #eee; background: white; transition: 0.2s;">
+                <td style="padding: 10px; text-align: center; vertical-align: middle;"><input type="radio" name="vimagPortfolioSelectRadio" onclick="openVimagPortfolioModal('${i.brand}', '${i.customerName.replace(/'/g, "\\'")}', '${uniqueDataIdRefStringKey}')" style="cursor: pointer; width: 18px; height: 18px; accent-color: #27ae60; margin: 0 auto; display: block;"></td>
                 <td style="font-weight:bold; color:#2980b9;">${i.brand.toUpperCase()}</td>
-                <td style="font-weight:bold; text-align:left;">${i.customerName}</td>
-                <td style="font-weight:bold;">${i.artNo}</td>
-                <td style="text-align:left;">${i.name || '-'}</td>
-                <td>${sym}${p.toFixed(2)}</td>
-                <td>${target}</td>
-                <td style="font-weight:bold; color:${actual >= target ? 'green' : 'red'}">${actual}</td>
-                <td style="text-align:right; font-weight:bold; color:#c2185b;">${sym}${val.toLocaleString()}</td>
+                <td style="font-weight:bold; text-align:left;"><span onclick="window.location.href='index.html?view=sales&name=' + encodeURIComponent(decodeURIComponent(escape(atob('${cleanSafeStringKey}'))))" style="text-decoration:none; color:#000000; cursor:pointer;" onmouseover="this.style.textDecoration='underline'; this.style.color='#27ae60';" onmouseout="this.style.textDecoration='none'; this.style.color='#000000';">${i.customerName}</span></td>
+                <td>${i.artNo}</td><td style="text-align:left; font-size:13px;"><strong>${i.name || '-'}</strong></td><td>${sym}${p.toFixed(2)}</td><td>${target}</td><td style="font-weight:bold; color:${actual >= target ? 'green' : 'red'}">${actual}</td><td style="text-align:right; font-weight:bold; color:#c2185b;">${sym}${val.toLocaleString(undefined,{minimumFractionDigits:2})}</td>
             </tr>`;
         }).join('');
-
         document.getElementById('sumTarget').innerText = sym + " " + tT.toLocaleString(undefined, {minimumFractionDigits: 2});
         document.getElementById('sumAchieved').innerText = sym + " " + tA.toLocaleString(undefined, {minimumFractionDigits: 2});
         document.getElementById('statsLine').innerText = `Portfolio Analysis: ${data.length} Active Records`;
     }
+
+function loadInitialData() {
+    cloudDB.ref('vimag/brands').on('value', async (snapshot) => {
+        const allBrandsCloudData = snapshot.val(); masterData = [];
+        if (allBrandsCloudData) {
+            brands.forEach(brand => {
+                if (allBrandsCloudData[brand]) {
+                    const customersNode = allBrandsCloudData[brand];
+                    Object.keys(customersNode).forEach(custName => {
+                        if (custName === "SYSTEM" || custName === "_id_lock" || custName === "_identity") return;
+                        const productsList = customersNode[custName];
+                        Object.keys(productsList).forEach(pKey => {
+                            const item = productsList[pKey];
+                            if (item && item.artNo !== "SYSTEM" && item.id !== "_id_lock" && (item.handledBy || "").trim().toUpperCase() === staffName.trim().toUpperCase()) {
+                                masterData.push({ id: pKey, brand: brand, customerName: custName, artNo: item.artNo || '-', name: item.name || '-', price: item.price || "0", qty: item.qty || "0", monthQty: item.monthQty || "0", currency: item.currency || "€", handledBy: item.handledBy, remarks: item.remarks || '-' });
+                            }
+                        });
+                    });
+                }
+            });
+        }
+        try { await vimagDB.brands.clear(); if (masterData.length > 0) { await vimagDB.brands.bulkAdd(masterData.map(i => ({ id: i.id, brand: i.brand, customerName: i.customerName, artNo: i.artNo, name: i.name, price: i.price, qty: i.qty, monthQty: i.monthQty, currency: i.currency, handledBy: i.handledBy, remarks: i.remarks }))); } } catch (e) { console.warn(e); }
+        if (masterData.length === 0) { document.getElementById('portfolioBody').innerHTML = `<tr><td colspan="10" style="padding:50px; color:red; font-weight:bold;">No Active Portfolio Records Handled Registry!</td></tr>`; return; }
+        refreshView();
+    });
+}
+function openVimagPortfolioModal(brandName, customerName, uniqueDataIdRefStringKey) {
+    const dataRefStringId = decodeURIComponent(escape(atob(uniqueDataIdRefStringKey)));
+    const matchedRecordItem = masterData.find(i => i.id === dataRefStringId && i.brand === brandName && i.customerName === customerName);
+    if(!matchedRecordItem) return;
+    document.getElementById('editRowBrandKey').value = brandName; document.getElementById('editRowCustomerKey').value = customerName; document.getElementById('editRowProductIndexKey').value = dataRefStringId;
+    document.getElementById('editRowMetaLabel').innerText = `🏷️ ${brandName.toUpperCase()} ➡️ ${customerName}`;
+    document.getElementById('editRowProductLabel').innerHTML = `🔹 <strong>Art No:</strong> ${matchedRecordItem.artNo} <br> 🔹 <strong>Name:</strong> ${matchedRecordItem.name || '-'}`;
+    document.getElementById('editRowPriceVal').value = parseFloat(matchedRecordItem.price || 0).toFixed(2);
+    document.getElementById('editRowTargetQty').value = parseInt(matchedRecordItem.qty || 0);
+    document.getElementById('editRowAchievedQty').value = parseInt(matchedRecordItem.monthQty || 0);
+    document.getElementById('editRowRemarks').value = matchedRecordItem.remarks || '';
+    const modalView = document.getElementById('vimagPortfolioEditModal');
+    if(modalView) { modalView.style.display = 'flex'; modalView.style.setProperty('display', 'flex', 'important'); }
+}
+function closeVimagPortfolioModal() {
+    const modalView = document.getElementById('vimagPortfolioEditModal'); if(modalView) modalView.style.display = 'none';
+    const activeRadioElements = document.getElementsByName('vimagPortfolioSelectRadio'); activeRadioElements.forEach(radio => { if(radio) radio.checked = false; });
+}
+async function saveVimagPortfolioEdits() {
+    const bKey = document.getElementById('editRowBrandKey').value; const cKey = document.getElementById('editRowCustomerKey').value; const pIdKey = document.getElementById('editRowProductIndexKey').value;
+    const newPrice = parseFloat(document.getElementById('editRowPriceVal').value || 0); const newTarget = parseInt(document.getElementById('editRowTargetQty').value || 0); const newAchieved = parseInt(document.getElementById('editRowAchievedQty').value || 0); const newRemarks = document.getElementById('editRowRemarks').value.trim();
+    if(!bKey || !cKey || !pIdKey) return alert("System reference broken!");
+    try {
+        await vimagDB.brands.update(pIdKey, { price: newPrice.toString(), qty: newTarget.toString(), monthQty: newAchieved.toString(), remarks: newRemarks });
+        await cloudDB.ref(`vimag/brands/${bKey}/${cKey}/${pIdKey}`).update({ price: newPrice.toString(), qty: newTarget.toString(), monthQty: newAchieved.toString(), remarks: newRemarks });
+        closeVimagPortfolioModal(); if (typeof loadInitialData === "function") await loadInitialData();
+    } catch (writeErr) { alert("Transaction Failed! Cloud connection error."); }
+}
+
 </script>
 </body>
 </html>
