@@ -300,31 +300,46 @@
 
 <div id="masterReportPage" class="report-view">
 <div style="padding: 40px; background: url('Background1.jpeg') no-repeat center center / cover; min-height: 100vh; background-attachment: fixed;">
-        <div class="top-left-home"><button class="home-btn" onclick="showIndex()">🏠 HOME</button></div>
+<div class="top-left-home">
+    <button class="home-btn" 
+            style="background: GREEN; color: white; font-size: 13px; font-weight: bold !important; border: none !important; padding: 12px 20px !important; border-radius: 20px !important; cursor: pointer !important; box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4) !important; font-family: 'Times New Roman', serif !important; letter-spacing: 0.5px !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; transition: all 0.3s ease !important;" 
+            onclick="showIndex()">
+        🏠 HOME
+    </button>
+</div>
         <div class="top-right-btns">
 <select id="distAccDropdown" class="tool-btn" 
-        style="background:#c93e7f; color:white; border:none; width:auto; font-size:11px; cursor:pointer; padding:12px 10px; border-radius:15px; font-weight:bold;" 
+        style="background: linear-gradient(135deg, #ff007f, #ff758c) !important; color: black !important; border:none !important; width:auto !important; font-size:13px !important; cursor:pointer !important; padding:12px 18px !important; border-radius:20px !important; font-weight:bold !important; box-shadow: 0 5px 15px rgba(255, 0, 127, 0.35) !important; font-family: 'Times New Roman', serif !important;" 
         onchange="showDistributorAccounts(this.value)">
     <option value="">💳DIST.ACCOUNTS</option>
 </select>
-<button class="tool-btn" style="background:#54c3c7; color:BLACK; font-size: 11px; font-weight:bold;" onclick="window.location.href='Followup.html'">
+
+<button class="tool-btn" style="background:linear-gradient(135deg, #00b4db, #00f2fe) !important; color: black !important; font-size: 13px !important; font-weight:bold !important; border:none !important; padding:12px 18px !important; border-radius:20px !important; cursor:pointer !important; box-shadow: 0 5px 15px rgba(0, 242, 254, 0.35) !important; font-family: 'Times New Roman', serif !important;" onclick="window.location.href='Followup.html'">
     FOLLOW-UP</button>
-           <button class="tool-btn" style="background:blue; color:white; " onclick="drawPieChart()">📊PIE CHART</button>
-            <button class="tool-btn" style="background:#e3a874; color:black; " onclick="showBrandProgress()">📈BRAND PROGRESS</button>
-            <select id="staffDropdown" class="tool-btn" style="background: purple; color:white; border: none;" onchange="generateStaffReport(this.value)"><option value="">HANDLED BY</option></select>
-            <button class="tool-btn" style="background:#ebd981; color:black; " onclick="window.location.href='reports.html'">📊VIEW REPORTS</button>
-            <button class="tool-btn" style="background:red; color:white; " onclick="showDistPage()">🤝DISTRIBUTORS</button>
-            <button class="tool-btn" style="background:violet; color:white;" onclick="showSamplesPage()">📦SAMPLES</button>
+
+           <button class="tool-btn" style="background: linear-gradient(135deg, #f12711, #f5af19) !important; color: white !important; font-size: 13px !important; font-weight:bold !important; border:none !important; padding:12px 18px !important; border-radius:20px !important; cursor:pointer !important; box-shadow: 0 5px 15px rgba(245, 175, 25, 0.4) !important; font-family: 'Times New Roman', serif !important;"
+  onclick="drawPieChart()">📊PIE CHART</button>
+
+            <button class="tool-btn" style="background: linear-gradient(135deg, #b92b27, #1565c0) !important; color:white !important; border: none !important; width:auto !important; font-size:13px !important; cursor:pointer !important; padding:12px 18px !important; border-radius:20px !important; font-weight:bold !important; box-shadow: 0 5px 15px rgba(21, 101, 192, 0.35) !important; font-family: 'Times New Roman', serif !important;" 
+  onclick="showBrandProgress()">📈BRAND PROGRESS</button>
+
+            <select id="staffDropdown" class="tool-btn" style="background: purple; font-size: 13px; color:white; border: none;" onchange="generateStaffReport(this.value)"><option value="">HANDLED BY</option></select>
+
+            <button class="tool-btn" style="background: linear-gradient(135deg, #ff416c, #ff4b2b) !important; color:white !important; font-size: 13px; font-weight:bold !important; border:none !important; padding:12px 18px !important; border-radius:20px !important; cursor:pointer !important; box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4) !important; font-family: 'Times New Roman', serif !important;" 
+ onclick="showDistPage()">🤝DISTRIBUTORS</button>
+
+            <button class="tool-btn" style="background:linear-gradient(135deg, #7b1fa2, #e040fb) !important; color: white !important; font-size: 13px !important; font-weight:bold !important; border:none !important; padding:12px 15px !important; border-radius:15px !important; cursor:pointer !important; box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important; font-family: 'Times New Roman', serif !important;" onclick="showSamplesPage()">📦SAMPLES</button>
 
         </div>
+
 <div style="margin-top: 30px; margin-bottom: 20px; display: flex; justify-content: center;">
     <a href="Brand Network.html" 
        style="text-decoration: none; 
-              background: rgba(255, 255, 255, 0.8); 
+              background: linear-gradient(135deg, #fff5f5, #ffe3e3, #ffb3b3) !important;
               backdrop-filter: blur(10px); 
               padding: 12px 25px; 
               border-radius: 50px; 
-              color: #2c3e50; 
+              color: black; 
               font-weight: bold; 
               font-size: 14px; 
               box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
@@ -369,6 +384,54 @@
         <div class="card"><table><thead><tr><th>S.No</th><th>📝 Customer Name</th><th>Status</th></tr></thead><tbody id="tBody"></tbody></table></div>
     </div>
 </div>
+
+<div id="salesReportPage" class="report-view" style="display: none; background-color: #fff; padding: 30px; border-radius: 15px; min-height: 100vh;">
+
+    <!-- Green Border Header Container Grid -->
+    <div style="border: 3px solid #27ae60; padding: 25px; border-radius: 15px; text-align: center; margin-bottom: 30px; position: relative; background: white;">
+        
+        <!-- ⬅️ BACK BUTTON: Distributor/Samples polavae page refresh aagaama direct unga 100 customer database lists panels views-laea thaan hold pannum! -->
+        <button class="home-btn" onclick="hideSalesReportPage()" style="position: absolute; left: 15px; top: 15px; padding: 12px 25px; background: #2c3e50; color: white; border: none; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 16px; font-family: 'Times New Roman'; display: inline-flex; align-items: center; justify-content: center;">⬅ BACK</button>
+        <button class="tool-btn" onclick="window.print()" style="position: absolute; right: 15px; top: 15px; padding: 12px 25px; background: red; color: white; border: none; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 16px; font-family: 'Times New Roman';">🖨️ PRINT PDF</button>
+        
+        <img src="Logo.jpeg" alt="Logo" width="130"><br>
+        <div style="color: GREEN; font-size: 38px; font-weight: bold; margin: 5px 0; font-family: 'Times New Roman';">VIMAG TN REGION</div>
+        <div id="vimagCustHeaderLabel" style="font-size: 34px; color: red; margin: 10px 0; font-weight: bold; font-family: 'Times New Roman';">Customer Name</div>
+        <div style="font-size: 20px; color: blue; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; font-family: 'Times New Roman';">SALES PERFORMANCE REPORT</div>
+    </div>
+
+    <!-- Yellow Background Data Header Tables Elements -->
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; border: 2.5px solid #27ae60; background: white;">
+        <thead>
+            <tr style="background-color: yellow; color: black; text-transform: uppercase;">
+                <th style="border: 1px solid #27ae60; Background: yellow; padding: 15px; font-size: 15px; color: black;">S.No</th>
+                <th style="border: 1px solid #27ae60; Background: yellow; padding: 15px; font-size: 15px; color: black;">Brand Name</th>
+                <th style="border: 1px solid #27ae60; Background: yellow; padding: 15px; font-size: 15px; color: black;">Article No</th>
+                <th style="border: 1px solid #27ae60; Background: yellow; padding: 15px; font-size: 15px; color: black;">Product Name</th>
+                <th style="border: 1px solid #27ae60; Background: yellow; padding: 15px; font-size: 15px; color: black;">Price</th>
+                <th style="border: 1px solid #27ae60; Background: yellow; padding: 15px; font-size: 15px; color: black;">Qty/Mo</th>
+                <th style="border: 1px solid #27ae60; Background: yellow; padding: 15px; font-size: 15px; color: black;">Month Qty</th>
+                <th style="border: 1px solid #27ae60; Background: yellow; padding: 15px; font-size: 15px; color: black;">Total Value</th>
+                <th style="border: 1px solid #27ae60; Background: yellow; padding: 15px; font-size: 15px; color: black;">Achieved Value</th>
+                <th style="border: 1px solid #27ae60; Background: yellow; padding: 15px; font-size: 15px; color: black;">Balance</th>
+                <th style="border: 1px solid #27ae60; Background: yellow; padding: 15px; font-size: 15px; color: black;">Handled By</th>
+                <th style="border: 1px solid #27ae60; Background: yellow; padding: 15px; font-size: 15px; color: black;">Remarks</th>
+            </tr>
+        </thead>
+        <tbody id="vimagSalesContentGrid" style="color: black;"></tbody>
+        <tfoot>
+            <tr style="background: #27ae60 !important; color: white; font-weight: bold; font-size: 16px;">
+                <td colspan="7" style="text-align: right; padding: 14px; border: 1px solid white; color: white;">GRAND TOTAL:</td>
+                <td id="vimagGkGTotalVal" style="border: 1px solid white; padding: 14px; text-align: center; color: white;">$0.00</td>
+                <td id="vimagGkGAchievedVal" style="border: 1px solid white; padding: 14px; text-align: center; color: white;">$0.00</td>
+                <td id="vimagGkGBalanceVal" style="border: 1px solid white; padding: 14px; text-align: center; color: white;">$0.00</td>
+                <td colspan="2" style="border: 1px solid white;"></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
 <!-- Modern Brand List Modal -->
 <div id="brandModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index:1000; justify-content:center; align-items:center; transition: all 0.3s ease;">
     <div style="background:white; padding:0; border-radius:16px; width:340px; text-align:center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow:hidden; animation: slideUp 0.3s ease-out;">
@@ -389,6 +452,9 @@
         </div>
     </div>
 </div>
+
+
+
 <div id="samplesPage" class="report-view">
 <div style="padding: 40px; 
             background: url('Background3.jpeg') no-repeat center center; 
@@ -884,30 +950,28 @@ async function filter() {
 
         const sortedKeys = Object.keys(customerMap).sort();
 
-        // 3. UI RENDERING (1st Image madhiri link & names varum)
-        if (sortedKeys.length === 0) {
-            tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding:30px; color:white;'>No matches found! 🔍</td></tr>";
+     if (sortedKeys.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding:30px; color:black; background:white;'>No matches found! 🔍</td></tr>";
         } else {
             tbody.innerHTML = sortedKeys.map((key, index) => {
                 const info = customerMap[key];
-                const cName = info.realName; // 👈 Link matrum Display-kku indha name dhaan source
+                const cName = info.realName; 
                 const brandsList = info.brands.join(',');
                 
                 return `
-                    <tr style="border-bottom: 1px solid rgba(0,0,0,0.05); background: white;">
-                        <!-- 🔢 S.No FIX -->
-                        <td style="padding:15px; text-align:left; font-weight:bold; color:black;">${index + 1}</td>
+                    <tr style="border-bottom: 1px solid rgba(0,0,0,0.06); background: white;" class="gk-master-table-row">
+                        <td style="padding:15px; text-align:left; font-weight:bold; color:black;" class="gk-master-table-cell">${index + 1}</td>
                         
-                        <!-- 🏢 CUSTOMER NAME WITH WORKING LINK (1st Image Style) -->
-                        <td style="padding:15px; text-align:left;">
-                             <a href="Sales Report.html?name=${encodeURIComponent(cName)}" 
-                                style="text-decoration:none; color:#2c3e50; font-weight:bold; font-size:15px;">
+                        <!-- 🏢 CUSTOMER NAME LOGIC: Replaced separate file redirect links anchors with direct viewport swap triggers links -->
+                        <td style="padding:15px; text-align:left;" class="gk-master-table-cell">
+                             <span onclick="vimagOpenLiveSalesReport('${cName.replace(/'/g, "\\'")}')" 
+                                   style="text-decoration:none; color:#2c3e50; font-weight:bold; font-size:15px; cursor:pointer;" 
+                                   onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
                                 ${cName}
-                             </a>
+                             </span>
                         </td>
                         
-                        <!-- ℹ️ STATUS BUTTON -->
-                        <td style="padding: 15px; text-align:left;">
+                        <td style="padding: 15px; text-align:left;" class="gk-master-table-cell">
                             <span onclick="showBrands('${cName.replace(/'/g, "\\'")}', '${brandsList}')" 
                                   style="background:#27ae60; color:white; padding:8px 15px; border-radius:20px; font-size:12px; cursor:pointer; font-weight:bold; display:inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"> 
                                 ${info.brands.length} Brand(s) ℹ️
@@ -917,6 +981,102 @@ async function filter() {
             }).join('');
         }
     } catch (err) { console.error("Search Logic Error:", err); }
+}
+
+function vimagOpenLiveSalesReport(targetCustomer) {
+    if (!targetCustomer) return;
+
+    const masterView = document.getElementById('masterReportPage');
+    const salesView = document.getElementById('salesReportPage');
+    const headerSpan = document.getElementById('vimagCustHeaderLabel');
+    const tbodyGrid = document.getElementById('vimagSalesContentGrid');
+
+    if (!salesView || !tbodyGrid) return;
+
+    // ⚡ 1. View switches screen dynamic toggle arrays (Samples polavae memory display hold pannum)
+    if (masterView) masterView.style.display = 'none';
+    salesView.style.display = 'block';
+
+    if (headerSpan) headerSpan.innerText = targetCustomer;
+    tbodyGrid.innerHTML = "<tr><td colspan='12' style='padding:20px; font-size:18px; color:black; text-align:center; background:white;'>Compiling Real-time Cloud Metrics Grid Data... ⚡</td></tr>";
+
+    // 📡 FIREBASE REAL-TIME LISTENERS DATA ENGINE (Unga original report code logic calculations)
+    db.ref('vimag/brands').on('value', (snapshot) => {
+        const allBrandsData = snapshot.val();
+        
+        let rowsHtml = ""; 
+        let gTotalValue = 0, gAchievedValue = 0, gBalance = 0;
+        let serialNo = 1;
+
+        if (allBrandsData) {
+            brands.forEach(brand => {
+                if (allBrandsData[brand] && allBrandsData[brand][targetCustomer]) {
+                    const customerData = Object.values(allBrandsData[brand][targetCustomer]);
+                    
+                    customerData.forEach(item => {
+                        // 🛡️ Filter entries records
+                        if (!item.artNo || item.id === "_id_lock" || item.id.startsWith("CUST-") || item.artNo === "SYSTEM") {
+                            return; 
+                        }
+
+                        let price = parseFloat(item.price || 0);
+                        let qtyMo = parseInt(item.qty || 0);
+                        let monthQty = parseInt(item.monthQty || 0);
+                        let currency = item.currency || "$"; // Screenshot layout matching currency formats
+                        
+                        let totalValue = qtyMo * price;
+                        let achievedValue = monthQty * price;
+                        let balance = totalValue - achievedValue;
+
+                        gTotalValue += totalValue;
+                        gAchievedValue += achievedValue;
+                        gBalance += balance;
+
+                        rowsHtml += `
+                        <tr style="border-bottom:1px solid #ddd; background:white;">
+                            <td style="padding:14px; text-align:center; font-size:16px; color:black;">${serialNo++}</td>
+                            <td style="font-weight:bold; color:#c2185b; padding:14px; text-align:center; font-size:16px;">${brand}</td>
+                            <td style="padding:14px; text-align:center; font-size:16px; color:black;">${item.artNo || '-'}</td>
+                            <td style="text-align:left; padding:14px; font-size:16px; color:black;"><strong>${item.name || '-'}</strong></td>
+                            <td style="padding:14px; text-align:center; font-size:16px; color:black;">${currency}${price.toFixed(2)}</td>
+                            <td style="padding:14px; text-align:center; font-size:16px; color:black;">${qtyMo}</td>
+                            <td style="padding:14px; text-align:center; font-size:16px; color:black;">${monthQty}</td>
+                            <td style="color:#2980b9; font-weight:bold; padding:14px; text-align:center; font-size:16px;">${currency}${totalValue.toFixed(2)}</td>
+                            <td style="color:#27ae60; font-weight:bold; padding:14px; text-align:center; font-size:16px;">${currency}${achievedValue.toFixed(2)}</td>
+                            <td style="color:#e74c3c; font-weight:bold; padding:14px; text-align:center; font-size:16px;">${currency}${balance.toFixed(2)}</td>
+                            <td style="padding:14px; text-align:center; font-size:16px; color:black;">${item.handledBy || '-'}</td>
+                            <td style="font-size:14px; padding:14px; text-align:left; color:black;">${item.remarks || '-'}</td>
+                        </tr>`;
+                    });
+                }
+            });
+        }
+
+        // Table updates grid formats checks locks
+        if (tbodyGrid) tbodyGrid.innerHTML = rowsHtml || "<tr><td colspan='12' style='padding:30px; background:white; text-align:center; color:black;'>No Entries Found.</td></tr>";
+
+        // Grand total formats settings
+        const fmt = (num) => num.toFixed(2);
+        
+        const gTotalTarget = document.getElementById('vimagGkGTotalVal');
+        const gAchievedTarget = document.getElementById('vimagGkGAchievedVal');
+        const gBalanceTarget = document.getElementById('vimagGkGBalanceVal');
+
+        if(gTotalTarget) gTotalTarget.innerText = "$ " + fmt(gTotalValue);
+        if(gAchievedTarget) gAchievedTarget.innerText = "$ " + fmt(gAchievedValue);
+        if(gBalanceTarget) gBalanceTarget.innerText = "$ " + fmt(gBalance);
+    });
+}
+
+// ⬅️ BACK ACTION LAYER SWITCHER MODULE (Distributor / Samples polavae thappilaama unga 100 customer list-laye hold pannum)
+function hideSalesReportPage() {
+    document.getElementById('salesReportPage').style.display = 'none';
+    document.getElementById('masterReportPage').style.display = 'block';
+    
+    if (typeof fetchUniqueNames === "function") {
+        fetchUniqueNames();
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // 🏠 Startup Trigger
@@ -1055,8 +1215,9 @@ async function fetchUniqueNames() {
                     <td style="padding:12px;">${index + 1}</td>
                 <td align="left" style="padding:12px; text-align: left; font-weight:bold;">
 	                       
- <a href="Sales Report.html?name=${encodeURIComponent(name)}" style="text-decoration:none; color:#2c3e50;">${name}</a>
-                    </td>
+<span onclick="vimagOpenLiveSalesReport('${name.replace(/'/g, "\\'")}')" style="text-decoration:none; color:#2c3e50; cursor:pointer;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+        ${name}
+    </span>                    </td>
                     <td style="padding:12px; text-align:left;">
                         <span onclick="showBrands('${name}', '${brandsList}')" 
                               style="background:#27ae60; color:white; padding:6px 14px; border-radius:20px; font-size:12px; cursor:pointer;">
@@ -2198,10 +2359,11 @@ async function renderMasterTable() {
             <tr style="border-bottom: 1px solid #f0f0f0; transition: 0.2s;">
                 <td style="padding: 12px; color: #7f8c8d;">${index + 1}</td>
                 <td style="padding: 12px;">
-                    <a href="Sales Report.html?name=${encodeURIComponent(name)}" 
-                       style="text-decoration:none; color:#2c3e50; font-weight:bold; font-size:15px; display:block;">
+                    <span onclick="vimagOpenLiveSalesReport('${name.replace(/'/g, "\\'")}')" 
+                       style="text-decoration:none; color:#2c3e50; font-weight:bold; font-size:15px; cursor:pointer;"
+                       onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
                        ${name}
-                    </a>
+                    </span>
                 </td>
                 <td style="padding: 12px; text-align:center;">
                     <span onclick="showBrands('${name}', '${brandsList}')" 
@@ -2378,11 +2540,19 @@ async function openBrandNetwork() {
             )].sort();
 
             // S.No Numbered List Logic
+            // 🎯 THE EXACT CHANGE: Replaced separate external file a link tags with safe internal viewport switcher spans
             const numberedRows = custNames.length > 0 
                 ? custNames.map((name, idx) => `
                     <div class="network-row-item" style="padding:8px 0; border-bottom:1px solid #f1f1f1; display:flex; align-items:center; gap:10px;">
                         <span style="color:#27ae60; font-weight:bold; min-width:25px;">${(idx + 1).toString().padStart(2, '0')}.</span>
-                        <a href="Sales Report.html?name=${encodeURIComponent(name)}" style="text-decoration:none; color:#34495e; font-weight:500;">${name}</a>
+                        
+                        <!-- 🏢 INTERCEPT LAYER: Replaced file redirects anchors with direct layout function window switches -->
+                        <span onclick="vimagOpenLiveSalesReport('${name.replace(/'/g, "\\'")}')" 
+                              style="text-decoration:none; color:#34495e; font-weight:500; cursor:pointer;"
+                              onmouseover="this.style.textDecoration='underline'; this.style.color='#27ae60';" 
+                              onmouseout="this.style.textDecoration='none'; this.style.color='#34495e';">
+                            ${name}
+                        </span>
                     </div>`).join('')
                 : "<span style='color:#ccc; font-style:italic;'>No customers found</span>";
 
@@ -2411,7 +2581,6 @@ async function openBrandNetwork() {
         container.innerHTML = "<div style='color:red; text-align:center;'>Database Error! 🚩</div>";
     }
 }
-
 // 2. Close Page Logic
 function closeBrandNetwork() {
     document.getElementById('brandNetworkPage').style.display = 'none';
