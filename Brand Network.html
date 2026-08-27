@@ -251,6 +251,53 @@ table {
             <p style="text-align: center; color: white; padding: 50px;">Fetching Warehouse Data... ⚡</p>
         </div>
  </div>
+
+
+<div id="salesReportPage" style="display: none; background: white; border: 3px solid #27ae60; padding: 25px; border-radius: 25px; text-align: center; max-width: 1200px; margin: 30px auto; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.15);">
+    
+ <div class="master-header-box" style="margin: 0 0 30px 0; border: 3px solid #27ae60; padding: 25px; border-radius: 15px; text-align: center; position: relative; background: white; width: 100% !important; max-width: 100% !important; box-sizing: border-box; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
+
+        <!-- ⬅️ BACK BUTTON: Refresh aagaama page logic frames view-ah thookittu direct dynamic back network table view-vayae hold pannum! -->
+        <button class="action-btn close-btn" onclick="hideSalesReportInline()" style="position: absolute; left: 15px; top: 15px; padding: 0 25px; height: 40px; background: #2c3e50; color: white; border: none; cursor: pointer; border-radius: 8px; font-weight: bold; font-family: 'Times New Roman'; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;">⬅ BACK</button>
+        <button class="action-btn print-btn" onclick="window.print()" style="position: absolute; right: 15px; top: 15px; padding: 0 25px; height: 40px; background: red; color: white; border: none; cursor: pointer; border-radius: 8px; font-weight: bold; font-family: 'Times New Roman'; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;">🖨️ PRINT PDF</button>
+        
+        <img src="Logo.jpeg" alt="Logo" width="110" style="margin-bottom: 5px;"><br>
+        <div style="color: GREEN; font-size: 32px; font-weight: bold; margin: 5px 0; font-family: 'Times New Roman';">VIMAG TN REGION</div>
+        <div id="vimagCustHeaderLabel" style="font-size: 30px; color: red; margin: 5px 0; font-weight: bold; font-family: 'Times New Roman';">Customer Name</div>
+        <div style="font-size: 18px; color: blue; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 20px; font-family: 'Times New Roman';">Sales Performance Report</div>
+    </div>
+
+    <!-- Screenshot layout parameters style rules matching table columns codes grids -->
+    <table style="width: 100% !important; border-collapse: collapse; margin-top: 10px; border: 2.5px solid #27ae60; background: white; table-layout: auto;">
+        <thead>
+            <tr style="background: yellow; color: black; text-transform: uppercase;">
+                <th style="border: 1px solid #27ae60; padding: 15px; font-size: 15px; color: black; width: auto;">S.No</th>
+                <th style="border: 1px solid #27ae60; padding: 15px; font-size: 15px; color: black; width: auto;">Brand Name</th>
+                <th style="border: 1px solid #27ae60; padding: 15px; font-size: 15px; color: black; width: auto;">Article No</th>
+                <th style="border: 1px solid #27ae60; padding: 15px; font-size: 15px; color: black; width: auto;">Product Name</th>
+                <th style="border: 1px solid #27ae60; padding: 15px; font-size: 15px; color: black; width: auto;">Price</th>
+                <th style="border: 1px solid #27ae60; padding: 15px; font-size: 15px; color: black; width: auto;">Qty/Mo</th>
+                <th style="border: 1px solid #27ae60; padding: 15px; font-size: 15px; color: black; width: auto;">Month Qty</th>
+                <th style="border: 1px solid #27ae60; padding: 15px; font-size: 15px; color: black; width: auto;">Total Value</th>
+                <th style="border: 1px solid #27ae60; padding: 15px; font-size: 15px; color: black; width: auto;">Achieved Value</th>
+                <th style="border: 1px solid #27ae60; padding: 15px; font-size: 15px; color: black; width: auto;">Balance</th>
+                <th style="border: 1px solid #27ae60; padding: 15px; font-size: 15px; color: black; width: auto;">Handled By</th>
+                <th style="border: 1px solid #27ae60; padding: 15px; font-size: 15px; color: black; width: auto;">Remarks</th>
+            </tr>
+        </thead>
+        <tbody id="vimagSalesContentGrid" style="color: black;"></tbody>
+        <tfoot>
+            <tr style="background: #27ae60 !important; color: white; font-weight: bold; font-size: 15px;">
+                <td colspan="7" style="text-align: right; padding: 12px; border: 1px solid white; color: white;">GRAND TOTAL:</td>
+                <td id="vimagGkGTotalVal" style="border: 1px solid white; padding: 12px; text-align: center; color: white;">$ 0.00</td>
+                <td id="vimagGkGAchievedVal" style="border: 1px solid white; padding: 12px; text-align: center; color: white;">$ 0.00</td>
+                <td id="vimagGkGBalanceVal" style="border: 1px solid white; padding: 12px; text-align: center; color: white;">$ 0.00</td>
+                <td colspan="2" style="border: 1px solid white;"></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
 <div id="distributorSummaryOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index:999999; overflow-y:auto; padding:20px; box-sizing: border-box;">
     <div style="max-width:900px; margin: 30px auto; background:rgba(255,255,255,0.95); border-radius:25px; padding:30px; box-shadow:0 15px 35px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.3); box-sizing: border-box;">
         
@@ -341,7 +388,12 @@ const db = firebase.database();
                 const listRows = custNames.map((name, idx) => `
                     <div class="cust-row">
                         <span class="sno">${(idx + 1).toString().padStart(2, '0')}.</span>
-                        <a href="Sales Report.html?name=${encodeURIComponent(name)}" class="cust-link">${name}</a>
+                        <span onclick="vimagOpenLiveSalesReport('${name.replace(/'/g, "\\'")}')" 
+                              style="text-decoration:none; color:#2c3e50; font-weight:bold; font-size:15px; cursor:pointer;"
+                              onmouseover="this.style.textDecoration='underline'; this.style.color='#27ae60';" 
+                              onmouseout="this.style.textDecoration='none'; this.style.color='#2c3e50';">
+                           ${name}
+                        </span>
                     </div>`).join('');
 
                 html += `
@@ -363,6 +415,9 @@ const db = firebase.database();
         
         }
     }
+
+
+
 // 3. Simple Search inside Network
 function filterNetwork() {
     // Corrected ID to match your HTML 'search' input
@@ -413,7 +468,101 @@ function openTerritoryView(selectedLoc) {
     window.location.href = `Territory.html?region=${encodeURIComponent(selectedLoc)}`;
 }
 
+function vimagOpenLiveSalesReport(targetCustomer) {
+    if (!targetCustomer) return;
+    
+    const brandNetworkView = document.querySelector('.container');
+    const headerBoxView = document.querySelector('.master-header-box');
+    const salesReportView = document.getElementById('salesReportPage');
+    const tbodyGrid = document.getElementById('vimagSalesContentGrid');
+    const headerTitle = document.getElementById('vimagCustHeaderLabel');
+    
+    if(!salesReportView || !tbodyGrid) return;
 
+    // ⚡ View switches screen dynamic toggle arrays (Single viewport display hold engine)
+    if(brandNetworkView) brandNetworkView.style.display = 'none';
+    if(headerBoxView) headerBoxView.style.display = 'none';
+    salesReportView.style.display = 'block';
+    
+    if(headerTitle) headerTitle.innerText = targetCustomer;
+    tbodyGrid.innerHTML = "<tr><td colspan='12' style='padding:30px; font-size:16px; color:#555; text-align:center; background:white; font-family:\"Times New Roman\";'>Generating Accurate Report From Cloud Data... ⚡</td></tr>";
+
+    // 📡 FIREBASE REAL-TIME DATA REFRESH (Unga calculations formulas logic tracking)
+    db.ref('vimag/brands').on('value', (snapshot) => {
+        const allBrandsData = snapshot.val();
+        
+        let rowsHtml = ""; 
+        let gTotalValue = 0, gAchievedValue = 0, gBalance = 0;
+        let serialNo = 1;
+
+        if (allBrandsData) {
+            brands.forEach(brand => {
+                if (allBrandsData[brand] && allBrandsData[brand][targetCustomer]) {
+                    const customerData = Object.values(allBrandsData[brand][targetCustomer]);
+                    
+                    customerData.forEach(item => {
+                        // 🛡️ Filter identity lock records
+                        if (!item.artNo || item.id === "_id_lock" || item.id.startsWith("CUST-") || item.artNo === "SYSTEM") {
+                            return; 
+                        }
+
+                        let price = parseFloat(item.price || 0);
+                        let qtyMo = parseInt(item.qty || 0);
+                        let monthQty = parseInt(item.monthQty || 0);
+                        let currency = item.currency || "€"; // Screenshot matching Euro symbol format
+                        
+                        let totalValue = qtyMo * price;
+                        let achievedValue = monthQty * price;
+                        let balance = totalValue - achievedValue;
+
+                        gTotalValue += totalValue;
+                        gAchievedValue += achievedValue;
+                        gBalance += balance;
+
+                        rowsHtml += `
+                        <tr style="border-bottom:1px solid #ddd; background:white;">
+                            <td style="padding:14px; text-align:center; font-size:15px; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${serialNo++}</td>
+                            <td style="font-weight:bold; color:#c2185b; padding:14px; text-align:center; font-size:15px; font-family:'Times New Roman'; border:1px solid #27ae60;">${brand}</td>
+                            <td style="padding:14px; text-align:center; font-size:15px; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${item.artNo || '-'}</td>
+                            <td style="text-align:left; padding:14px; font-size:15px; color:black; font-family:'Times New Roman'; font-weight:bold; border:1px solid #27ae60;">${item.name || '-'}</td>
+                            <td style="padding:14px; text-align:center; font-size:15px; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${currency}${price.toFixed(2)}</td>
+                            <td style="padding:14px; text-align:center; font-size:15px; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${qtyMo}</td>
+                            <td style="padding:14px; text-align:center; font-size:15px; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${monthQty}</td>
+                            <td style="color:#2980b9; font-weight:bold; padding:14px; text-align:center; font-size:15px; font-family:'Times New Roman'; border:1px solid #27ae60;">${currency}${totalValue.toFixed(2)}</td>
+                            <td style="color:#27ae60; font-weight:bold; padding:14px; text-align:center; font-size:15px; font-family:'Times New Roman'; border:1px solid #27ae60;">${currency}${achievedValue.toFixed(2)}</td>
+                            <td style="color:#e74c3c; font-weight:bold; padding:14px; text-align:center; font-size:15px; font-family:'Times New Roman'; border:1px solid #27ae60;">${currency}${balance.toFixed(2)}</td>
+                            <td style="padding:14px; text-align:center; font-size:15px; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${item.handledBy || '-'}</td>
+                            <td style="font-size:14px; padding:14px; text-align:left; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${item.remarks || '-'}</td>
+                        </tr>`;
+                    });
+                }
+            });
+        }
+
+        tbodyGrid.innerHTML = rowsHtml || "<tr><td colspan='12' style='padding:30px; text-align:center; background:white; color:black; font-family:\"Times New Roman\"; font-weight:bold;'>No Product Entries Found for this Customer.</td></tr>";
+
+        // Summary formats targets
+        const fmt = (num) => num.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('vimagGkGTotalVal').innerText = "€ " + fmt(gTotalValue);
+        document.getElementById('vimagGkGAchievedVal').innerText = "€ " + fmt(gAchievedValue);
+        document.getElementById('vimagGkGBalanceVal').innerText = "€ " + fmt(gBalance);
+    });
+}
+
+// ⬅️ HIDE ACTION (Page refresh memory targets blocked completely!)
+function hideSalesReportInline() {
+    document.getElementById('salesReportPage').style.display = 'none';
+    
+    const brandNetworkView = document.querySelector('.container');
+    const headerBoxView = document.querySelector('.master-header-box');
+    
+    if(brandNetworkView) brandNetworkView.style.display = 'block';
+    if(headerBoxView) headerBoxView.style.display = 'block';
+    
+    if (typeof loadNetwork === "function") {
+        loadNetwork();
+    }
+}
 // ⚠️ மிக முக்கியமான திருத்தம்: கடைசியில் இருக்கும் window.onload-ஐ இப்படி மாற்றவும்
 window.onload = function() {
     loadNetwork();    // கஸ்டமர் லிஸ்ட்டை லோட் செய்ய
