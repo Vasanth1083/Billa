@@ -182,6 +182,57 @@ tr:hover {
     <div id="tableArea">
         <h3 style="text-align:center; color:#7f8c8d;">Connecting to Cloud... ⚡</h3>
     </div>
+
+<div id="salesReportPage" style="display: none; background: white; padding: 25px; border-radius: 25px; text-align: center; width: 100% !important; max-width: 100% !important; box-sizing: border-box; margin-top: 20px;">
+    
+    <!-- 🎯 THE FIX: Class dependency ".header-box"-ah thookittu explicit green outline inline style set panniyacha -->
+    <div style="margin: 0 auto 30px auto; border: 3px solid #27ae60; padding: 25px; border-radius: 25px; text-align: center; position: relative; background: #fafaf7; width: 100% !important; max-width: 100% !important; box-sizing: border-box; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
+        
+        <!-- 🏠 LEFT CORNER BACK BUTTON (Fixed overlapping positions layout) -->
+        <button onclick="hideSalesReportInline()" style="position: absolute; left: 20px; top: 25px; background: #2c3e50 !important; color: white !important; border: 2px solid black !important; border-radius: 8px !important; font-family: 'Times New Roman', serif; font-size: 14px !important; font-weight: bold !important; height: 40px; padding: 0 25px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">⬅ BACK</button>
+        
+        <!-- 🖨️ RIGHT CORNER PRINT BUTTON -->
+        <button onclick="window.print()" style="position: absolute; right: 20px; top: 25px; background: red !important; color: white !important; border: 2px solid black !important; border-radius: 8px !important; font-family: 'Times New Roman', serif; font-size: 14px !important; font-weight: bold !important; height: 40px; padding: 0 25px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">🖨️ PRINT PDF</button>
+        
+        <!-- 🏢 CENTER CONTENT ARRAYS -->
+        <img src="Logo.jpeg" alt="Logo" width="110" style="height: auto; margin-bottom: 5px; display: inline-block;"><br>
+        <div style="color: GREEN; font-size: 32px; font-weight: bold; margin: 5px 0; font-family: 'Times New Roman'; text-transform: uppercase;">VIMAG TN REGION</div>
+        <div id="vimagCustHeaderLabel" style="font-size: 30px; color: red; margin: 5px 0; font-weight: bold; font-family: 'Times New Roman'; text-transform: none;">Customer Name</div>
+        <div style="font-size: 18px; color: blue; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 5px; font-family: 'Times New Roman';">Sales Performance Report</div>
+    </div>
+
+    <!-- Wide Dimension Matrix Table (Yellow Background Headers with Green Outlines) -->
+    <table style="width: 100% !important; max-width: 100% !important; border-collapse: collapse; margin-top: 10px; border: 2.5px solid #27ae60; background: white; table-layout: auto; box-sizing: border-box; border-radius: 0; overflow: visible; box-shadow: none;">
+        <thead>
+            <tr style="background-color: #ffea00 !important; color: black !important; text-transform: uppercase;">
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman'; background: #ffea00 !important; text-align: center; letter-spacing: 0px;">S.No</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman'; background: #ffea00 !important; text-align: center; letter-spacing: 0px;">Brand Name</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman'; background: #ffea00 !important; text-align: center; letter-spacing: 0px;">Article No</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman'; background: #ffea00 !important; text-align: center; letter-spacing: 0px;">Product Name</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman'; background: #ffea00 !important; text-align: center; letter-spacing: 0px;">Price</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman'; background: #ffea00 !important; text-align: center; letter-spacing: 0px;">Qty/Mo</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman'; background: #ffea00 !important; text-align: center; letter-spacing: 0px;">Month Qty</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman'; background: #ffea00 !important; text-align: center; letter-spacing: 0px;">Total Value</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman'; background: #ffea00 !important; text-align: center; letter-spacing: 0px;">Achieved Value</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman'; background: #ffea00 !important; text-align: center; letter-spacing: 0px;">Balance</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman'; background: #ffea00 !important; text-align: center; letter-spacing: 0px;">Handled By</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman'; background: #ffea00 !important; text-align: center; letter-spacing: 0px;">Remarks</th>
+            </tr>
+        </thead>
+        <tbody id="vimagSalesContentGrid" style="color: black; font-weight: normal; background: white;"></tbody>
+        <tfoot>
+            <tr style="background: #27ae60 !important; color: white; font-weight: bold; font-size: 15px;">
+                <td colspan="7" style="text-align: right; padding: 14px; border: 1px solid #27ae60; color: white; font-family: 'Times New Roman'; background: #27ae60 !important;">GRAND TOTAL:</td>
+                <td id="vimagGkGTotalVal" style="border: 1px solid #27ae60; padding: 14px; text-align: center; color: white; font-family: 'Times New Roman'; font-weight: bold; background: #27ae60 !important;">€ 0.00</td>
+                <td id="vimagGkGAchievedVal" style="border: 1px solid #27ae60; padding: 14px; text-align: center; color: white; font-family: 'Times New Roman'; font-weight: bold; background: #27ae60 !important;">€ 0.00</td>
+                <td id="vimagGkGBalanceVal" style="border: 1px solid #27ae60; padding: 14px; text-align: center; color: white; font-family: 'Times New Roman'; font-weight: bold; background: #27ae60 !important;">€ 0.00</td>
+                <td colspan="2" style="border: 1px solid #27ae60; background: #27ae60 !important;"></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
 <!-- Firebase Scripts -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dexie/4.2.0/dexie.min.js"></script>
@@ -249,24 +300,129 @@ tr:hover {
                 <tbody>`;
 
             sortedNames.forEach((name, idx) => {
+                var cleanSafeStringKey = btoa(unescape(encodeURIComponent(name)));
+
                 html += `<tr>
                     <td align="center">${(idx + 1).toString().padStart(2, '0')}</td>
                    <td>
-    <a href="Sales Report.html?name=${encodeURIComponent(name)}" 
-       style="text-decoration:none; color:#c0392b; font-weight:bold;">
-       🏢 ${name}
-    </a></td>
+                        <span onclick="vimagOpenLiveSalesReport(decodeURIComponent(escape(atob('${cleanSafeStringKey}'))))" 
+                              style="text-decoration:none; color:#c0392b; font-weight:bold; cursor:pointer;"
+                              onmouseover="this.style.textDecoration='underline'; this.style.color='#962d22';" 
+                              onmouseout="this.style.textDecoration='none'; this.style.color='#c0392b';">
+                           🏢 ${name}
+                        </span>
+</td>
                     <td style="color:#2980b9;">📍 ${resultsMap[name].join(' | ')}</td>
                 </tr>`;
             });
 
             document.getElementById('tableArea').innerHTML = html + "</tbody></table>";
 
-        } catch (e) {
+        }
+
+catch (e) {
             console.error(e);
             document.getElementById('tableArea').innerHTML = "<h3 style='color:red;'>Sync Error! Check Internet Connection.</h3>";
         }
+
     };
+function vimagOpenLiveSalesReport(customerName) {
+    if (!customerName) return;
+    
+    // Explicit array setup to prevent any blank page initialization crash variables
+    const localSystemBrandsList = ["Rhodius", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Rexcut", "Shannon", "Starrett", "Voelkel"];
+    
+    const headerBoxView = document.querySelector('.header-box');
+    const currentMainTableView = document.querySelector('table');
+    const salesReportView = document.getElementById('salesReportPage');
+    const tbodyGrid = document.getElementById('vimagSalesContentGrid');
+    const headerTitle = document.getElementById('vimagCustHeaderLabel');
+    
+    if(!salesReportView || !tbodyGrid) return;
+
+    // ⚡ 1. View switches screen dynamic toggle layouts (Bypasses missing .container class conflict crashes)
+    if(headerBoxView) headerBoxView.style.display = 'none';
+    if(currentMainTableView) currentMainTableView.style.display = 'none';
+    salesReportView.style.display = 'block';
+    
+    if(headerTitle) headerTitle.innerText = customerName;
+    tbodyGrid.innerHTML = "<tr><td colspan='12' style='padding:30px; font-size:16px; color:#555; text-align:center; background:white; font-family:\"Times New Roman\";'>Generating Accurate Report From Cloud Data Store... ⚡</td></tr>";
+
+    // 📡 FIREBASE REAL-TIME LISTENERS PIPELINE SYNC CONNECTION
+    db.ref('vimag/brands').on('value', (snapshot) => {
+        const allBrandsData = snapshot.val();
+        
+        let rowsHtml = ""; 
+        let gTotalValue = 0, gAchievedValue = 0, gBalance = 0;
+        let serialNo = 1;
+
+        if (allBrandsData) {
+            localSystemBrandsList.forEach(brand => {
+                if (allBrandsData[brand] && allBrandsData[brand][customerName]) {
+                    const customerData = Object.values(allBrandsData[brand][customerName]);
+                    
+                    customerData.forEach(item => {
+                        // 🛡️ Accuracy filter checks
+                        if (!item.artNo || item.id === "_id_lock" || item.id.startsWith("CUST-") || item.artNo === "SYSTEM") {
+                            return; 
+                        }
+
+                        let price = parseFloat(item.price || 0);
+                        let qtyMo = parseInt(item.qty || 0);
+                        let monthQty = parseInt(item.monthQty || 0);
+                        let currency = item.currency || "€"; 
+                        
+                        let totalValue = qtyMo * price;
+                        let achievedValue = monthQty * price;
+                        let balance = totalValue - achievedValue;
+
+                        gTotalValue += totalValue;
+                        gAchievedValue += achievedValue;
+                        gBalance += balance;
+
+                        rowsHtml += `
+                        <tr style="border-bottom:1px solid #ddd; background:white; font-weight:normal;">
+                            <td style="padding:14px; text-align:center; font-size:15px; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${serialNo++}</td>
+                            <td style="font-weight:bold; color:#c2185b; padding:14px; text-align:center; font-size:15px; font-family:'Times New Roman'; border:1px solid #27ae60;">${brand}</td>
+                            <td style="padding:14px; text-align:center; font-size:15px; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${item.artNo || '-'}</td>
+                            <td style="text-align:left; padding:14px; font-size:15px; color:black; font-family:'Times New Roman'; font-weight:bold; border:1px solid #27ae60;">${item.name || '-'}</td>
+                            <td style="padding:14px; text-align:center; font-size:15px; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${currency}${price.toFixed(2)}</td>
+                            <td style="padding:14px; text-align:center; font-size:15px; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${qtyMo}</td>
+                            <td style="padding:14px; text-align:center; font-size:15px; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${monthQty}</td>
+                            <td style="color:#2980b9; font-weight:bold; padding:14px; text-align:center; font-size:15px; font-family:'Times New Roman'; border:1px solid #27ae60;">${currency}${totalValue.toFixed(2)}</td>
+                            <td style="color:#27ae60; font-weight:bold; padding:14px; text-align:center; font-size:15px; font-family:'Times New Roman'; border:1px solid #27ae60;">${currency}${achievedValue.toFixed(2)}</td>
+                            <td style="color:#e74c3c; font-weight:bold; padding:14px; text-align:center; font-size:15px; font-family:'Times New Roman'; border:1px solid #27ae60;">${currency}${balance.toFixed(2)}</td>
+                            <td style="padding:14px; text-align:center; font-size:15px; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${item.handledBy || '-'}</td>
+                            <td style="font-size:14px; padding:14px; text-align:left; color:black; font-family:'Times New Roman'; border:1px solid #27ae60;">${item.remarks || '-'}</td>
+                        </tr>`;
+                    });
+                }
+            });
+        }
+
+        tbodyGrid.innerHTML = rowsHtml || "<tr><td colspan='12' style='padding:30px; text-align:center; background:white; color:black; font-family:\"Times New Roman\"; font-weight:bold;'>No Product Entries Found for this Customer.</td></tr>";
+
+        const fmt = (num) => num.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+        document.getElementById('vimagGkGTotalVal').innerText = "€ " + fmt(gTotalValue);
+        document.getElementById('vimagGkGAchievedVal').innerText = "€ " + fmt(gAchievedValue);
+        document.getElementById('vimagGkGBalanceVal').innerText = "€ " + fmt(gBalance);
+    });
+}
+
+// ⬅️ HIDE ACTION (Fixed: Restoring original territory wrapper layouts properly without frame conflicts)
+function hideSalesReportInline() {
+    console.log("Sales inline view shutting down... Restoring central zonal directory grid... ⚡");
+
+    document.getElementById('salesReportPage').style.display = 'none';
+    
+    const headerBoxView = document.querySelector('.header-box');
+    const currentMainTableView = document.querySelector('table');
+
+    if (headerBoxView) headerBoxView.style.display = 'block';           
+    if (currentMainTableView) currentMainTableView.style.display = 'table'; 
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 </script>
 
 </body>
