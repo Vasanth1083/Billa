@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Rexcut Customer Status</title>
     <link rel="icon" href="Vimag.png" type="image/png">
-    
-<style>
+
+    <style>
         body { font-family: 'Times New Roman', serif; padding: 20px; background-color: palegoldenrod; }
         .header-box { border: 3px solid #27ae60; background: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; position: relative; }
         .action-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
@@ -63,7 +63,7 @@
             <th>Achieved Value</th>
             <th>Balance</th>
             <th>Distributor</th> <!-- ✨ Ithu thaan pudhu column header -->
-            <th>Remarks</th>
+            <th>STATUS</th>
             <th>Handled By</th> 
         </tr>
     </thead>
@@ -100,7 +100,13 @@
     <input type="text" id="inDistName" class="modal-input" placeholder="Enter Distributor Name" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
 </div>
         <label>Handled By:</label><input type="text" id="inHandledBy">
-        <label>Remarks:</label><input type="text" id="inRemarks">
+<label>Status:</label> <!-- 👈 Changed label name for professional alignment -->
+<select id="inSTATUS" style="width: 100%; padding: 7px; margin-top: 3px; border: 1px solid #ccc; border-radius: 6px; font-family: serif; box-sizing: border-box; font-size: 13px; font-weight: bold; color: black;">
+    <option value="INQUIRY">📝 INQUIRY</option>
+    <option value="TRIAL COMPLETED">🧪 TRIAL COMPLETED</option>
+    <option value="TRIAL ORDER">📦 TRIAL ORDER</option>
+    <option value="REGULAR ORDER">✅ REGULAR ORDER</option>
+</select>
         <div class="modal-footer">
             <button class="btn btn-save" onclick="saveData()">SAVE</button>
             <button class="btn btn-discard" onclick="closeModal()">DISCARD</button>
@@ -216,7 +222,7 @@ function saveData() {
         monthQty: document.getElementById('inMonthQty').value || 0,
         distributor: document.getElementById('inDistName').value,
         handledBy: document.getElementById('inHandledBy').value,
-        remarks: document.getElementById('inRemarks').value,
+        remarks: document.getElementById('inSTATUS').value,
         date: formattedDate 
     };
 
@@ -257,7 +263,7 @@ function prepareUpdate() {
     document.getElementById('inDistName').value = data.distributor || ""; 
     
     document.getElementById('inHandledBy').value = data.handledBy || "";
-    document.getElementById('inRemarks').value = data.remarks;
+    document.getElementById('inSTATUS').value = data.remarks;
     document.getElementById('modalHeader').innerText = "Update Product";
     document.getElementById('inputModal').style.display = "block";
 }
@@ -356,7 +362,7 @@ function renderTable() {
     if (distField) distField.value = data.distributor || ""; 
 
     document.getElementById('inHandledBy').value = data.handledBy || "";
-    document.getElementById('inRemarks').value = data.remarks || "";
+    document.getElementById('inSTATUS').value = data.remarks || "";
     
     document.getElementById('modalHeader').innerText = "Update Product Entry";
     document.getElementById('inputModal').style.display = "block";
