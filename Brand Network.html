@@ -58,31 +58,72 @@ body::before {
         }
 
 .container {
-    max-width: 900px;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0.3); 
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 35px; 
-    overflow: hidden; 
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-border: 1px solid gree6E;
+    max-width: 900px !important;
+    margin: 0 auto !important;
+    
+    /* ✨ ஒபாசிட்டி 0.3-லிருந்து 0.1 ஆகக் குறைக்கப்பட்டு அல்ட்ரா-ட்ரான்ஸ்பரன்ட் ஆக்கப்பட்டுள்ளது peer! */
+    background: rgba(255, 255, 255, 0.1) !important; 
+    backdrop-filter: blur(12px) !important; /* 👈 பின்னால இருக்கும் வால்பேப்பர் இன்னும் பளிச்சுனு தெரிய பிளர் லேசாகக் குறைக்கப்பட்டுள்ளது */
+    -webkit-backdrop-filter: blur(12px) !important;
+    
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* பார்டரையும் லேசான கண்ணாடி கோடாக மாத்தியாச்சு peer */
+    border-radius: 35px !important; 
+    overflow: hidden !important; 
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+    box-sizing: border-box !important;
 }
 
-        .action-btn {
-            padding: 10px 20px;
-            border-radius: 10px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-            transition: 0.3s;
-            font-family: 'Times New Roman';
-        }
+/* 📋 TABLES TRANSPARENCY CORE STYLES PACK peer */
+table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;    
+    background: transparent !important;
+    background-color: transparent !important;
+}
 
+th { 
+    background: rgba(255, 255, 0, 0.85) !important; /* ಹೆடர் எல்லோவையும் லேசான ட்ரான்ஸ்பரன்சி ஆக்கியாச்சு peer */
+    color: black !important; 
+    padding: 15px !important; 
+    text-transform: uppercase !important; 
+    font-family: 'Times New Roman', serif !important; 
+    font-size: 14px !important; 
+    border: 1px solid rgba(0,0,0,0.08) !important; 
+}
 
+.brand-name-cell { 
+    padding: 20px !important; 
+    font-weight: bold !important; 
+    width: 25% !important; 
+    border-right: 1px solid rgba(255,255,255,0.15) !important; 
+    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    font-family: 'Times New Roman', serif !important;
+    font-size: 15px !important;
+    background: transparent !important; 
+    background-color: transparent !important;
+    color: #2c3e50 !important;
+}
+
+.customer-list-cell { 
+    padding: 15px !important; 
+    border-bottom: 1px solid rgba(255,255,255,0.1) !important; 
+    background: transparent !important; 
+    background-color: transparent !important;
+}
+
+.brand-row {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+.cust-row { 
+    display: flex !important; 
+    align-items: center !important; 
+    padding: 5px 0 !important; 
+    background: transparent !important;
+    background-color: transparent !important;
+}
 /* 🏠 TOP LEFT */
 .top-left { position: absolute; top: 20px; left: 20px; }
 
@@ -90,14 +131,90 @@ border: 1px solid gree6E;
 .top-right { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; }
 
 /* 🔘 BUTTON & INPUT SIZES (Uniform) */
-.action-btn, #territoryFilter, #search {
-    height: 40px;
-    border-radius: 8px;
-    border: 1.5px solid BLACK;
-    font-family: 'Times New Roman', serif;
-    font-size: 13px;
-    font-weight: bold;
-    box-sizing: border-box;
+.action-btn, #territoryFilter, #allDistributorsMasterBtn, #customerTypeFilter {
+    height: 38px !important; /* 👈 ஹைட்டை 38px ஆக குறைச்சு கச்சிதமாக்கியாச்சு peer */
+    padding: 0 16px !important; /* 👈 பேடிங்கை குறைச்சதுனால பட்டன் நீளமா பெருசா போகாது */
+    border-radius: 50px !important; 
+    border: none !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    font-size: 13px !important; /* 👈 எழுத்துக்களை லேசாக சிறியதாக்கி கெத்தாக்கியாச்சு */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    font-family: 'Times New Roman', serif !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    color: white !important;
+    box-sizing: border-box !important;
+    outline: none !important;
+    width: auto !important; /* 👈 இதை குடுத்ததுனால பட்டன் ஸ்க்ரீன் முழுக்க பெருசா விரியாது! */
+}
+
+/* 🚛 Distributor Button Gradient */
+#allDistributorsMasterBtn {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad) !important;
+}
+#allDistributorsMasterBtn:hover {
+    background: linear-gradient(135deg, #8e44ad, #7d3c98) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 15px rgba(142, 68, 173, 0.35) !important;
+}
+
+/* 📍 Territory Dropdown Button Gradient */
+#territoryFilter {
+    background: linear-gradient(135deg, #ec407a, #d81b60) !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none; 
+    text-align: center;
+}
+#territoryFilter:hover {
+    background: linear-gradient(135deg, #d81b60, #ad1457) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 15px rgba(216, 27, 96, 0.35) !important;
+}
+
+/* 👥 உங்களுக்கு பிடிக்காத அந்த டிராப்டவுனையும் ஒரே ஹைட்டில் மாடர்ன் வட்ட வடிவில் மாற்றியாச்சு! */
+#customerTypeFilter {
+    background: linear-gradient(135deg, #3498db, #2980b9) !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    text-align: center;
+}
+#customerTypeFilter:hover {
+    background: linear-gradient(135deg, #2980b9, #2471a3) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 15px rgba(41, 128, 185, 0.35) !important;
+}
+
+/* 🔍 Search Input Premium Glass Shape */
+#search {
+    height: 38px !important;
+    width: 140px !important;
+    border-radius: 50px !important;
+    padding: 0 15px !important;
+    font-family: 'Times New Roman' !important;
+    font-size: 13px !important;
+    font-weight: bold !important;
+    outline: none !important;
+    transition: 0.3s !important;
+    box-sizing: border-box !important;
+    background: rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: black !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important;
+}
+#search:focus {
+    border-color: #27ae60 !important;
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2) !important;
+    width: 160px !important;
 }
 
 .action-btn { padding: 0 20px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; }
@@ -111,59 +228,130 @@ border: 1px solid gree6E;
     margin-top: 15px;
 }
 
-#search { width: 90px; text-align: center; background: WHITE; }
-#territoryFilter { width: 210px; background: #db1f6a; color: white; border: none; padding: 0 10px; cursor: pointer; }
 /* COLORS */
 .home-btn { background: green; color: white; }
 .print-btn { background: black; color: white; }
 .close-btn { background: red; color: white; }
 
 /* 🏗️ BOTTOM HEADER CONTENT */
-.header-bottom { margin-top: 10px; }        /* 📋 TABLE AREA */
-        .container { max-width: 900px; margin: 0 auto; }
+.header-bottom { margin-top: 10px; }        
+
+/* 📋 TABLE AREA */
+.container { max-width: 900px; margin: 0 auto; }
 table {
-    width: 100% !important; /* Screen size-ku etha maadhiri full-aa viriyum */
+    width: 100% !important; 
     border-collapse: collapse;
-    table-layout: fixed;    /* Columns orey alignment-la irukka idhu mukkiyam */
+    table-layout: fixed;    
     background: transparent;
     border: 2px ;
 }
-        th { background: yellow; color: black; padding: 15px; text-transform: uppercase; border: 1px; }
-        .brand-name-cell { background:  padding: 20px; font-weight: bold; width: 30%; border: 1px solid #eee; }
-        .customer-list-cell { padding: 15px; background: border-bottom: 1px solid #eee; }
+th { background: yellow; color: black; padding: 15px; text-transform: uppercase; border: 1px; }
+.brand-name-cell { padding: 20px; font-weight: bold; width: 30%; border: 1px solid #eee; }
+.customer-list-cell { padding: 15px; border-bottom: 1px solid #eee; }
 
-        .cust-row { display: flex; align-items: center; padding: 5px 0; }
+.cust-row { display: flex; align-items: center; padding: 5px 0; }
+.sno { color: #27ae60; font-weight: bold; min-width: 30px; }
+.cust-link { text-decoration: none; color: black; font-weight: 500; }
 
-        .sno { color: #27ae60; font-weight: bold; min-width: 30px; }
-        .cust-link { text-decoration: none; color: black; font-weight: 500; }
+/* 🔮 ULTRA-PREMIUM GLASS DROPDOWN MENU CONFIGURATION (உங்க கோடுல விடுபட்ட இந்த பகுதி இப்போ கச்சிதமா லாக் செய்யப்பட்டுள்ளது peer!) */
+.custom-glass-dropdown {
+    position: relative;
+    display: inline-block;
+}
+.dropdown-trigger-btn {
+    height: 38px;
+    padding: 0 18px;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Times New Roman', serif;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: white;
+    box-sizing: border-box;
+    transition: 0.3s;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.trigger-territory { background: rgba(216, 27, 96, 0.25) !important; border: 1px solid rgba(216, 27, 96, 0.4) !important; color: #db1f6a; !important; }
+.trigger-territory:hover { background: rgba(216, 27, 96, 0.4) !important; transform: translateY(-1px) !important; }
+
+.trigger-customertype { background: rgba(41, 128, 185, 0.25) !important; border: 1px solid rgba(41, 128, 185, 0.4) !important; color: #2980b9 !important; }
+.trigger-customertype:hover { background: rgba(41, 128, 185, 0.4) !important; transform: translateY(-1px) !important; }
+
+.dropdown-glass-menu {
+    display: none;
+    position: absolute;
+    top: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    min-width: 210px;
+    background: rgba(255, 255, 255, 0.3) !important; 
+    backdrop-filter: blur(20px) !important; 
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+    padding: 6px 0;
+    z-index: 99999;
+    list-style: none;
+    margin: 0;
+    overflow: hidden;
+}
+.dropdown-glass-menu li {
+    padding: 10px 20px;
+    color: #2c3e50 !important;
+    font-weight: bold;
+    font-family: 'Times New Roman', serif;
+    font-size: 13.5px;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s ease;
+    text-transform: uppercase;
+}
+
+/* 📍 Territory Network List Hover Color Pink Theme */
+#menuTerritory li:hover {
+    background: linear-gradient(135deg, #ec407a, #d81b60) !important;
+    color: white !important;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3);
+}
+
+/* 👥 Customer Type List Hover Color Blue Theme */
+#menuCustomerType li:hover {
+    background: linear-gradient(135deg, #3498db, #2980b9) !important;
+    color: white !important;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3);
+}
 
 @media print {
-    /* 1. தேவையில்லாத அனைத்தையும் முழுமையாக மறைக்க */
     body::before, .top-left, .top-right, .tool-row, .btn-container {
         display: none !important;
     }
-
-    /* 2. பாடி செட்டிங்ஸ் - நிழல்களை நீக்க */
     body {
         background: white !important;
         padding: 0 !important;
         margin: 0 !important;
-        -webkit-print-color-adjust: exact; /* கலர்கள் சரியாகத் தெரிய */
+        -webkit-print-color-adjust: exact; 
     }
-
-    /* 3. மெயின் ரேப்பர் - அவுட்டர் பாக்ஸ் நிழலை நீக்க */
     .main-wrapper {
         max-width: 100% !important;
         width: 100% !important;
         margin: 0 !important;
         padding: 10mm !important;
         background: white !important;
-        box-shadow: none !important; /* நிழலை நீக்கியாச்சு */
+        box-shadow: none !important; 
         border: none !important;
         border-radius: 0 !important;
     }
-
-    /* 4. ஹெடர் - நிழல் இல்லாமல் சுத்தமாக மாற்ற */
     .master-header-box {
         border: 1px solid #333 !important;
         background: white !important;
@@ -171,48 +359,39 @@ table {
         border-radius: 0 !important;
         margin-bottom: 20px !important;
     }
-
-    /* 5. டேபிள் ஏரியா - ஷேடிங் மற்றும் பிளர் நீக்கம் */
     .container {
         background: white !important;
-        backdrop-filter: none !important; /* அந்த பிளர் எஃபெக்ட் நீக்கம் */
+        backdrop-filter: none !important; 
         -webkit-backdrop-filter: none !important;
         box-shadow: none !important;
         border: none !important;
         border-radius: 0 !important;
         overflow: visible !important;
     }
-
     table {
         width: 100% !important;
         border-collapse: collapse !important;
         background: white !important;
-        table-layout: auto !important; /* பிரிண்டிற்கு ஏற்றவாறு அட்ஜஸ்ட் ஆகும் */
+        table-layout: auto !important; 
     }
-
-    /* 6. பார்டர்கள் - தெளிவான PDF லுக் */
     th, td {
-        border: 1px solid #000 !important; /* மெல்லிய கருப்பு பார்டர் */
+        border: 1px solid #000 !important; 
         color: black !important;
         padding: 8px !important;
         font-size: 12px !important;
     }
-
     th {
-        background-color: #f2f2f2 !important; /* ஹெடர் மட்டும் லேசான கிரே */
+        background-color: #f2f2f2 !important; 
     }
-
     .brand-name-cell {
         background-color: white !important;
         font-weight: bold !important;
     }
-
-    /* டேபிள் ரோக்கள் பிரிந்து அடுத்த பக்கத்திற்குச் செல்லும்போது உடையாமல் இருக்க */
     tr {
         page-break-inside: avoid !important;
     }
 }
-    </style>
+</style>
 </head>
 <body>
     <div class="main-wrapper"> <!-- This is the new outer white box -->
@@ -234,15 +413,32 @@ table {
     </div>
     <!-- 🔍 📍 TOOLS SECTION (Titles-ku keezha) -->
     <div class="tool-row">
-        <input type="text" id="search" placeholder="🔍 Search" onkeyup="filterNetwork()">
-<button class="action-btn" id="allDistributorsMasterBtn" onclick="window.location.href='DistributorSummary.html'" style="background-color: #8e44ad; color: white; border: none; font-weight: bold; cursor: pointer; height: 40px; padding: 0 20px; border-radius: 8px; font-family:'Times New Roman'; font-size:13px;">
+<input type="text" id="search" placeholder="🔍 Search" onkeyup="filterNetwork()">
+<button class="action-btn" id="allDistributorsMasterBtn" onclick="window.location.href='DistributorSummary.html'">
     🚛 Distributor Summary
 </button>
-        <select id="territoryFilter" onchange="openTerritoryView(this.value)">
-            <option value="ALL">📍TERRITORY NETWORK</option>
-        </select>
 
-    </div>
+<!-- 📍 1வது கஸ்டம் க்ளாஸ் டிராப்டவுன்: TERRITORY NETWORK -->
+<div class="custom-glass-dropdown">
+    <button class="dropdown-trigger-btn trigger-territory" onclick="toggleCustomDropdownMenu('menuTerritory')">
+        📍 Territory Network
+    </button>
+    <ul class="dropdown-glass-menu" id="menuTerritory">
+        <li onclick="selectCustomTerritory('ALL')">📍 Territory Network</li>
+    </ul>
+</div>
+
+<!-- 👥 2வது கஸ்டம் க்ளாஸ் டிராப்டவுன்: CUSTOMER TYPE -->
+<div class="custom-glass-dropdown">
+    <button class="dropdown-trigger-btn trigger-customertype" onclick="toggleCustomDropdownMenu('menuCustomerType')">
+        👥 Customer Type
+    </button>
+    <ul class="dropdown-glass-menu" id="menuCustomerType">
+        <li onclick="selectCustomCustomerType('ALL')">👥 All Channels</li>
+        <li onclick="selectCustomCustomerType('Tier 1')">💎 Tier 1 Channels</li>
+        <li onclick="selectCustomCustomerType('Tier 2')">⚡ Tier 2 Channels</li>
+    </ul>
+</div>    </div>
 
 </div>
    <!-- 🎯 THE MISSING CONTAINER (TABLE AREA) -->
@@ -362,61 +558,103 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+let centralFirebaseCache = {};
 
-    async function loadNetwork() {
-        try {
- await vimagDB.open(); 
-            console.log("Database Connected! ✅");
-            const allItems = await vimagDB.brands.toArray();
-            let html = `<table>
-                <thead>
-                    <tr>
-                        <th>BRAND</th>
-                        <th>🏢 CUSTOMER LIST</th>
-                    </tr>
-                </thead>
-                <tbody>`;
 
-            brands.forEach(b => {
-                // Fetch and sort unique customers
-                const custNames = [...new Set(allItems
-                    .filter(i => i.brand === b && i.id !== "_id_lock" && i.artNo !== "SYSTEM")
-                    .map(i => i.customerName)
-                )].sort();
-
-                // One by One Numbered List
-                const listRows = custNames.map((name, idx) => `
-                    <div class="cust-row">
-                        <span class="sno">${(idx + 1).toString().padStart(2, '0')}.</span>
-                        <span onclick="vimagOpenLiveSalesReport('${name.replace(/'/g, "\\'")}')" 
-                              style="text-decoration:none; color:#2c3e50; font-weight:bold; font-size:15px; cursor:pointer;"
-                              onmouseover="this.style.textDecoration='underline'; this.style.color='#27ae60';" 
-                              onmouseout="this.style.textDecoration='none'; this.style.color='#2c3e50';">
-                           ${name}
-                        </span>
-                    </div>`).join('');
-
-                html += `
-                    <tr class="brand-row">
-                        <td class="brand-name-cell">
-                            <div style="display:flex; align-items:center; gap:10px; font-weight:bold; color:#2c3e50;">
-                                📍 ${b.toUpperCase()}
-                            </div>
-                        </td>
-                        <td class="customer-list-cell">
-                            ${listRows || "<span style='color:#bdc3c7;'>No customers found</span>"}
-                        </td>
-                    </tr>`;
-            });
-            document.getElementById('networkContent').innerHTML = html + "</tbody></table>";
-        } catch (e) {
-            console.error(e);
-            document.getElementById('networkContent').innerHTML = "Database Connection Error! 🚩";
-        
-        }
+function filterCustomerType(selectedValue) {
+    if(!centralFirebaseCache || Object.keys(centralFirebaseCache).length === 0) {
+        console.warn("Firebase data stacks loading... ⚡");
+        return;
     }
+    
+    if (selectedValue === "ALL") {
+        renderStandardBrandGrid(centralFirebaseCache);
+    } else {
+        renderTierStatusReportGrid(centralFirebaseCache, selectedValue);
+    }
+}
 
+// 📋 நீங்க கேட்ட 7 காலம்கள் கொண்ட கஸ்டம் டேபிளை அதே பேஜில் டிஸ்ப்ளே செய்யும் ஃபங்க்ஷன்
+function renderStandardBrandGrid(data) {
+    // ⚡ FIXED: 'background: white' முழுமையாக நீக்கப்பட்டு, உங்க ஒரிஜினல் பிரீமியம் க்ளாஸ் பிளர் லுக் உள்ளே லாக் செய்யப்பட்டுள்ளது!
+    let html = `<table style="border: 2px solid rgba(255,255,255,0.3) !important; width:100% !important; border-collapse:collapse; background: rgba(255, 255, 255, 0.25) !important; backdrop-filter: blur(15px) !important; -webkit-backdrop-filter: blur(15px) !important; box-shadow: 0 10px 30px rgba(0,0,0,0.15); table-layout: fixed;">
+        <thead>
+            <tr style="background: yellow !important; color: black !important; font-family:'Times New Roman'; text-transform: uppercase;">
+                <th style="width:25%; border: 1px solid rgba(0,0,0,0.1) !important; padding:12px; color: black !important;">BRAND</th>
+                <th style="width:75%; text-align:left; padding:12px; padding-left:15px; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">🏢 CUSTOMER LIST</th>
+            </tr>
+        </thead>
+        <tbody style="background: transparent !important;">`; // 👈 டேபிள் பாடி பியூர் ட்ரான்ஸ்பரன்ட் ஆக்கப்பட்டது peer
 
+    brands.forEach(b => {
+        let uniqueCusts = new Set();
+        if (data[b]) {
+            Object.keys(data[b]).forEach(cName => {
+                if (cName !== "_id_lock" && cName !== "_identity" && cName !== "SYSTEM") {
+                    uniqueCusts.add(cName);
+                }
+            });
+        }
+        const custNames = [...uniqueCusts].sort();
+
+        const listRows = custNames.map((name, idx) => `
+            <div class="cust-row" style="display:flex; align-items:center; padding:5px 0; background: transparent !important;">
+                <span class="sno" style="color:#27ae60; font-weight:bold; min-width:30px; font-size:15px;">${(idx + 1).toString().padStart(2, '0')}.</span>
+                <span onclick="vimagOpenLiveSalesReport('${name.replace(/'/g, "\\'")}')" 
+                      style="text-decoration:none; color:#2c3e50; font-weight:bold; font-size:15px; cursor:pointer; font-family:'Times New Roman';"
+                      onmouseover="this.style.textDecoration='underline'; this.style.color='#27ae60';" 
+                      onmouseout="this.style.textDecoration='none'; this.style.color='#2c3e50';">
+                   🏢 ${name}
+                </span>
+            </div>`).join('');
+
+        // ⚡ FIXED: 'background: white' முற்றிலும் தூக்கப்பட்டு, செல்கள் அனைத்தும் 'transparent' ஆக மாற்றப்பட்டுள்ளது!
+// ⚡ FIXED STANDARD BASELINE: செல்கள் அனைத்தும் பியூர் கிளாஸ் டிரான்ஸ்பரன்ட் ஆக மாற்றப்பட்டு கம்பைலேஷன் லாக் செய்யப்பட்டுள்ளது peer!
+        html += `
+            <tr class="brand-row" style="background: transparent !important; border-bottom: 1px solid rgba(0,0,0,0.08) !important;">
+                <td class="brand-name-cell" style="background: transparent !important; font-family:'Times New Roman'; padding:15px; border-right: 1px solid rgba(0,0,0,0.08) !important; font-weight:bold; color:#2c3e50; font-size:15px; text-align:center; vertical-align:middle;">
+                    📍 ${b.toUpperCase()}
+                </td>
+                <td class="customer-list-cell" style="background: transparent !important; text-align:left; padding:15px; border-bottom: 1px solid rgba(0,0,0,0.08) !important;">
+                    ${listRows || "<span style='color:#bdc3c7; font-family:\"Times New Roman\"; font-weight:bold;'>No customers found</span>"}
+                </td>
+            </tr>`;
+    });
+    
+    document.getElementById('networkContent').innerHTML = html + "</tbody></table>";
+}
+async function loadNetwork() {
+    try {
+        await vimagDB.open(); 
+        console.log("Master Warehouse Memory Data Link Active! 🏰");
+        
+        // Firebase Realtime-la irundhu total database elements sync matrices cache layers loading...
+        db.ref('vimag/brands').on('value', (snapshot) => {
+            const data = snapshot.val() || {};
+            centralFirebaseCache = data; // Cache storage for quick memory trace matching loops
+            
+            // Standard dynamic master view generation logic setup tracking grids
+            renderStandardBrandGrid(data);
+            loadTerritories(data);
+        });
+    } catch (e) {
+        console.error("Dexie indexedDB bridge execution flow crash context:", e);
+        document.getElementById('networkContent').innerHTML = "<p style='text-align:center; padding:30px; color:white; font-weight:bold;'>Database Connection Error! 🚩</p>";
+    }
+}
+
+function openCustomerTierView(selectedTier) {
+    if (!selectedTier || selectedTier === "ALL") {
+        // Dropdown status default baseline refresh standard grid loops resets views parameters
+        renderStandardBrandGrid(centralFirebaseCache);
+        return;
+    }
+    
+    console.log("Validating dynamic tier classification route tracking query profile parameter node index:", selectedTier);
+    
+    // ⚡ REDIRECT FLOW CONTEXT: Mapped customer details memory paths values-ah auto-pull panni URL kulla pass pipeline push aagudhu!
+    window.location.href = `CustomerStatus.html?tier=${encodeURIComponent(selectedTier)}`;
+}
 
 // 3. Simple Search inside Network
 function filterNetwork() {
@@ -430,6 +668,48 @@ function filterNetwork() {
     });
 }
 
+function toggleCustomDropdownMenu(menuId) {
+    // 1. ஓப்பனா இருக்குற மத்த டிராப்டவுன் மெனுக்களை முதலில் மூடுகிறது
+    document.querySelectorAll('.dropdown-glass-menu').forEach(menu => {
+        if(menu.id !== menuId) menu.style.display = 'none';
+    });
+    
+    // 2. நம்ம கிளிக் பண்ண குறிப்பிட்ட டிராப்டவுன் மெனுவை மட்டும் லாக் ஆன் செய்யுது peer
+    const targetMenu = document.getElementById(menuId);
+    if(targetMenu) {
+        targetMenu.style.display = (targetMenu.style.display === 'block') ? 'none' : 'block';
+    }
+    
+    // ஈவென்ட் கிளாஷ் ஆகாமல் தடுத்து நிறுத்துகிறது
+    if (window.event) window.event.stopPropagation();
+}
+
+// 🌐 திரையில் வேறு எங்கும் கிளிக் செய்தால் டிராப்டவுன் மெனு தானாகவே மூடிக்கொள்ளும் லாஜிக்
+document.addEventListener('click', function() {
+    document.querySelectorAll('.dropdown-glass-menu').forEach(menu => menu.style.display = 'none');
+});
+
+// 📍 டெரிட்டரி செலக்ட் பண்ணும்போது Territory.html பக்கத்திற்கு கொண்டு செல்லும் லிங்க்
+function selectCustomTerritory(value) {
+    if (!value || value === "ALL") return;
+    window.location.href = `Territory.html?region=${encodeURIComponent(value)}`;
+}
+
+// 👥 கஸ்டமர் டைப் செலக்ட் பண்ணும்போது அதே பக்கத்தில் டேபிளை ஃபில்டர் செய்யும் லிங்க்
+function selectCustomCustomerType(value) {
+    if(!centralFirebaseCache || Object.keys(centralFirebaseCache).length === 0) {
+        console.warn("Firebase data stacks loading... ⚡");
+        return;
+    }
+
+    if (value === "ALL") {
+        renderStandardBrandGrid(centralFirebaseCache);
+    } else {
+        // ⚡ FIXED: 'renderTierStatusReportGrid' எர்ரர் நீக்கப்பட்டு, நேரடியாகப் புதிய தனி 'CustomerTierDirectory.html' விண்டோவை '_blank' டேப்பில் ஓப்பன் செய்கிறது peer!
+        window.open(`CustomerTierDirectory.html?tier=${encodeURIComponent(value)}`, '_blank');
+    }
+}
+// 📡 ஃபயர்பேஸ் ஊர்களை புதிய கஸ்டம் க்ளாஸ் லிஸ்ட்டுக்குள் ஆட்டோ-பாப்புலேட் செய்யும் புதுப்பிக்கப்பட்ட ஃபங்க்ஷன்
 async function loadTerritories() {
     const brandsList = ["Rhodius", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Rexcut", "Shannon", "Starrett", "Voelkel"];
     let territorySet = new Set();
@@ -450,16 +730,19 @@ async function loadTerritories() {
                 });
             }
         });
-        const drop = document.getElementById('territoryFilter');
-        if (drop) {
-            drop.innerHTML = '<option value="ALL">📍 TERRITORY NETWORK</option>';
+        
+        const menuList = document.getElementById('menuTerritory');
+        if (menuList) {
+            menuList.innerHTML = `<li onclick="selectCustomTerritory('ALL')">📍 Territory Network</li>`;
             [...territorySet].sort().forEach(region => {
-                drop.add(new Option(region, region));
+                let li = document.createElement('li');
+                li.innerText = "📍 " + region;
+                li.onclick = function() { selectCustomTerritory(region); };
+                menuList.appendChild(li);
             });
         }
     } catch (e) { console.error("Territory fetch error:", e); }
 }
-
 // 2. Select panna udane Territory.html-ku redirect panna indha function
 function openTerritoryView(selectedLoc) {
     if (!selectedLoc || selectedLoc === "ALL") return;
@@ -568,6 +851,27 @@ window.onload = function() {
     loadNetwork();    // கஸ்டமர் லிஸ்ட்டை லோட் செய்ய
     loadTerritories();
 };
+
+
+  function switchCustomerTypeToggle(selectedValue, element) {
+    document.querySelectorAll('.toggle-segment').forEach(btn => btn.classList.remove('active'));
+    if(element) element.classList.add('active');
+    
+    if (selectedValue === "ALL") {
+        renderStandardBrandGrid(centralFirebaseCache);
+    } else {
+        // ⚡ window.open வழியா புதிய தனி விண்டோ/டேப்பில் நீங்க கிரியேட் பண்ணிய 'CustomerTierDirectory.html' ஃபைலை ஓப்பன் செய்யுது peer!
+        window.open(`CustomerTierDirectory.html?tier=${encodeURIComponent(selectedValue)}`, '_blank');
+        
+        // மெயின் பக்கத்துல இருக்குற டாக்ள் பாரை மீண்டும் பழையபடி 'ALL CHANNELS'க்கு ரீசெட் செய்கிறது peer
+        setTimeout(() => {
+            document.querySelectorAll('.toggle-segment').forEach(btn => btn.classList.remove('active'));
+            if(document.getElementById('btnToggleAll')) document.getElementById('btnToggleAll').classList.add('active');
+            renderStandardBrandGrid(centralFirebaseCache);
+        }, 800);
+    }
+}
+
 </script>
 
 </body>
