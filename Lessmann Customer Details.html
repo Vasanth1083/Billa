@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lessmann Customer Details</title>
+    <title>Laco Customer Details</title>
     <link rel="icon" href="Vimag.png" type="image/png">
 
     <style>
@@ -82,7 +82,7 @@ body {
 <div class="container">
     <a href="index.html" class="home-btn">🏠 Home Hub</a>
 
-    <h2>Lessmann Customer Details</h2>
+    <h2>Laco Customer Details</h2>
 
     <div class="brand-summary">
         <h3>Brand Achieved Value</h3>
@@ -97,7 +97,10 @@ body {
 
         <input type="text" id="custName" placeholder="Type Customer Name here..." onkeypress="if(event.key==='Enter') addCustomer()">
     <input type="text" id="custRegion" placeholder="Enter Region (e.g. South, North)" style="flex: 0.5; margin-left: 10px;">
-
+<select id="custTier" class="tier-select" style="flex: 0.4; margin-left: 10px;">
+    <option value="Tier 1">Tier 1</option>
+    <option value="Tier 2">Tier 2</option>
+</select>
         <button class="btn add-btn" onclick="addCustomer()">+ Add</button>
 <button class="btn update-btn" id="mainUpdateBtn" onclick="triggerMainUpdate()" style="margin-left: 10px;" disabled>🔄 Update</button>
 
@@ -117,7 +120,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-    const BRAND = "Lessmann";
+    const BRAND = "Laco";
 const storageKey = BRAND + "_customers";
 let isSyncing = false;
 let syncTimer = null;
@@ -148,7 +151,7 @@ const G_SHEET_URL = "https://script.google.com/macros/s/AKfycbxt9YfMYA8PKNlC0Vb_
         }
 
         function displayCustomers() { 
-            const brandName = typeof BRAND !== 'undefined' ? BRAND : "Lessmann"; 
+            const brandName = typeof BRAND !== 'undefined' ? BRAND : "Laco"; 
             const customers = JSON.parse(localStorage.getItem(storageKey) || "[]"); 
             const listContainer = document.getElementById('customerList'); 
             if (!listContainer) return; 
@@ -210,74 +213,91 @@ const G_SHEET_URL = "https://script.google.com/macros/s/AKfycbxt9YfMYA8PKNlC0Vb_
             if (updateBtn) updateBtn.disabled = (checkboxes.length !== 1); 
         } 
 
-        function triggerMainUpdate() { 
-            const checkedBox = document.querySelector('.cust-checkbox:checked'); 
-            if (!checkedBox) { 
-                alert("Orey oru customer-ah mattum select panni update pannunga!"); 
-                return; 
-            } 
-            
-            const targetName = checkedBox.getAttribute('data-name'); 
-            if (!targetName) { 
-                alert("Selected customer name-ah track panna mudiyala!"); 
-                return; 
-            } 
-            
-            const storedItems = JSON.parse(localStorage.getItem(BRAND + '_data_' + targetName) || "[]"); 
-            const lockRow = storedItems.find(item => item && item.id === "_id_lock"); 
-            const currentRegion = lockRow ? lockRow.region : "General"; 
-            
-            enableRowEdit(targetName, currentRegion); 
-        } 
+function triggerMainUpdate() { 
+    const checkedBox = document.querySelector('.cust-checkbox:checked'); 
+    if (!checkedBox) { 
+        alert("Orey oru customer-ah mattum select panni update pannunga!"); 
+        return; 
+    } 
+    
+    const targetName = checkedBox.getAttribute('data-name'); 
+    if (!targetName) { 
+        alert("Selected customer name-ah track panna mudiyala!"); 
+        return; 
+    } 
+    
+    const storedItems = JSON.parse(localStorage.getItem(BRAND + '_data_' + targetName) || "[]"); 
+    const lockRow = storedItems.find(item => item && item.id === "_id_lock"); 
+    const currentRegion = lockRow ? lockRow.region : "General"; 
+    
+    // Stored matrix data node layer-la irundhu current tier status string fetch variable
+    const currentTier = lockRow && lockRow.tier ? lockRow.tier : "Tier 1"; 
+    
+    // Inga 3 parameters key elements configuration match clear-a pass aagudhu!
+    enableRowEdit(targetName, currentRegion, currentTier); 
+} 
 
-        function enableRowEdit(oldName, oldRegion) {
-            const htmlId = getSafeId(oldName);
-            const targetContainer = document.getElementById("content-" + htmlId);
-            
-            if (!targetContainer) {
-                console.error("Target slot missing context reference matching mapping index nodes!");
-                return;
-            }
+// Header function signature parameter arguments map definition exact dynamic update
+function enableRowEdit(oldName, oldRegion, oldTier) {
+    const htmlId = getSafeId(oldName);
+    const targetContainer = document.getElementById("content-" + htmlId);
+    
+    if (!targetContainer) {
+        console.error("Target slot missing context reference matching mapping index nodes!");
+        return;
+    }
 
-            targetContainer.innerHTML = `
-                <div class="inline-edit-box" style="width:100%;">
-                    <input type="text" class="inline-input" id="edit-name-${htmlId}" value="${oldName}" style="flex-grow:1;">
-                    <input type="text" class="inline-input" id="edit-region-${htmlId}" value="${oldRegion}" style="width:150px; flex:none;">
-                    <button class="action-save-btn" onclick="updateCustomerData('${oldName}')">💾 Save</button>
-                    <button class="action-cancel-btn" onclick="displayCustomers()">❌ Cancel</button>
-                </div>
-            `;
-        }
+    // Function loop signature definition parameters check security validation
+    const verifiedTier = oldTier || "Tier 1";
 
-        function addCustomer() { 
-            const input = document.getElementById('custName'); 
-            const regionInput = document.getElementById('custRegion'); 
-            const name = input.value.trim(); 
-            const region = regionInput.value.trim(); 
+    targetContainer.innerHTML = `
+        <div class="inline-edit-box" style="width:100%; display: flex; gap: 8px; align-items: center;">
+            <input type="text" class="inline-input" id="edit-name-${htmlId}" value="${oldName}" style="flex-grow:1; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+            <input type="text" class="inline-input" id="edit-region-${htmlId}" value="${oldRegion}" style="width:150px; flex:none; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
             
-            if (!name || !region) return alert("Please enter both Name and Region!"); 
-            
-            let customers = JSON.parse(localStorage.getItem(storageKey) || "[]"); 
-            if (customers.some(c => c.toLowerCase() === name.toLowerCase())) { 
-                alert(`⚠️ Customer "${name}" already exists!`); 
-                return; 
-            } 
-            
-            customers.push(name); 
-            localStorage.setItem(storageKey, JSON.stringify(customers)); 
-            
-            const fallbackLock = { id: "_id_lock", region: region || "General" };
-            localStorage.setItem(BRAND + '_data_' + name, JSON.stringify([fallbackLock]));
-            
-            displayCustomers(); 
-            sendCustomerToCloud(name, region); 
-            
-            input.value = ""; 
-            regionInput.value = ""; 
-            input.focus(); 
-        } 
+            <!-- Dynamic selection matrix target inject option list logic -->
+            <select class="inline-input" id="edit-tier-${htmlId}" style="width:100px; flex:none; padding: 6px; border: 1px solid #ccc; border-radius: 4px; background: white; font-family: 'Times New Roman'; font-size:15px;">
+                <option value="Tier 1" ${verifiedTier === 'Tier 1' ? 'selected' : ''}>Tier 1</option>
+                <option value="Tier 2" ${verifiedTier === 'Tier 2' ? 'selected' : ''}>Tier 2</option>
+            </select>
 
-        function sendCustomerToCloud(name, region) { 
+            <button class="action-save-btn" onclick="updateCustomerData('${oldName}')" style="background: #2ecc71; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">💾 Save</button>
+            <button class="action-cancel-btn" onclick="displayCustomers()" style="background: #e74c3c; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">❌ Cancel</button>
+        </div>
+    `;
+}
+function addCustomer() { 
+    const input = document.getElementById('custName'); 
+    const regionInput = document.getElementById('custRegion'); 
+    const name = input.value.trim(); 
+    const region = regionInput.value.trim(); 
+    
+    if (!name || !region) return alert("Please enter both Name and Region!"); 
+    
+    let customers = JSON.parse(localStorage.getItem(storageKey) || "[]"); 
+    if (customers.some(c => c.toLowerCase() === name.toLowerCase())) { 
+        alert(`⚠️ Customer "${name}" already exists!`); 
+        return; 
+    } 
+    
+    customers.push(name); 
+    localStorage.setItem(storageKey, JSON.stringify(customers)); 
+    
+    // ⚡ FIXED PORTION: Inga thaan 'tier: "Tier 1"' ஃபீல்ட உள்ள லாக் பண்ணி ஆட் பண்ணியிருக்கேன்!
+    // Idhனால neenga screen-la காட்டலனாலும், பேக்-எண்ட் மெமரில இந்த வேல்யூ பத்திரமா சேவ் ஆகிடும்.
+    const fallbackLock = { id: "_id_lock", region: region || "General", tier: "Tier 1" };
+    localStorage.setItem(BRAND + '_data_' + name, JSON.stringify([fallbackLock]));
+    
+    displayCustomers(); 
+    
+    // 📡 Cloud database-க்கு 'Tier 1' வேல்யூவையும் சேர்த்து பாஸ் (Pass) பண்றோம்
+    sendCustomerToCloud(name, region, "Tier 1"); 
+    
+    input.value = ""; 
+    regionInput.value = ""; 
+    input.focus(); 
+}
+ function sendCustomerToCloud(name, region, tier) { 
             isSyncing = true; 
             const customerId = "CUST-" + Date.now(); 
             localStorage.setItem(BRAND + '_id_' + name, customerId); 
@@ -286,11 +306,15 @@ const G_SHEET_URL = "https://script.google.com/macros/s/AKfycbxt9YfMYA8PKNlC0Vb_
             const fixedDate = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`; 
             const regionVal = region.trim() || "General"; 
             
+            // 💡 FIXED: Firebase lock note folder kulla 'tier' dynamic value-ah lock panrom!
+            const assignedTier = tier || "Tier 1";
+            
             db.ref(`vimag/brands/${BRAND}/${name}/_id_lock`).set({ 
                 id: "_id_lock", 
                 artNo: "SYSTEM", 
                 customerName: name, 
                 region: regionVal, 
+                tier: assignedTier,
                 date: fixedDate 
             }); 
             
@@ -299,6 +323,7 @@ const G_SHEET_URL = "https://script.google.com/macros/s/AKfycbxt9YfMYA8PKNlC0Vb_
                 customerName: name, 
                 id: customerId, 
                 brand: BRAND, 
+                tier: assignedTier,
                 apiKey: "VIMAG", 
                 date: fixedDate 
             }; 
@@ -313,6 +338,10 @@ const G_SHEET_URL = "https://script.google.com/macros/s/AKfycbxt9YfMYA8PKNlC0Vb_
             const htmlId = getSafeId(oldName);
             const newName = document.getElementById(`edit-name-${htmlId}`).value.trim();
             const newRegion = document.getElementById(`edit-region-${htmlId}`).value.trim();
+
+            // 💡 FIXED: Inline update drop boxes values collect system 
+            const tierField = document.getElementById(`edit-tier-${htmlId}`);
+            const newTier = tierField ? tierField.value : "Tier 1";
 
             if (!newName || !newRegion) return alert("Fields cannot be empty!");
 
@@ -336,13 +365,17 @@ const G_SHEET_URL = "https://script.google.com/macros/s/AKfycbxt9YfMYA8PKNlC0Vb_
             if(lockRow) {
                 lockRow.customerName = newName;
                 lockRow.region = newRegion;
+                lockRow.tier = newTier; // Secure storage update map configurations array variables keys
             } else {
-                lockRow = { id: "_id_lock", artNo: "SYSTEM", customerName: newName, region: newRegion, date: "" };
+                lockRow = { id: "_id_lock", artNo: "SYSTEM", customerName: newName, region: newRegion, tier: newTier, date: "" };
                 customerDataArray.push(lockRow);
             }
 
             customerDataArray.forEach(item => {
-                if(item) item.customerName = newName;
+                if(item) {
+                    item.customerName = newName;
+                    if(item.id === "_id_lock") item.tier = newTier;
+                }
             });
 
             localStorage.setItem(storageKey, JSON.stringify(customers));
@@ -367,7 +400,8 @@ const G_SHEET_URL = "https://script.google.com/macros/s/AKfycbxt9YfMYA8PKNlC0Vb_
             );
 
             const sheetTabName = BRAND.replace(/\s+/g, '') + "Customers"; 
-            fetch(G_SHEET_URL + `&action=save&sheetName=${sheetTabName}&id=${savedId}&customerName=${encodeURIComponent(newName)}&region=${encodeURIComponent(newRegion)}&apiKey=VIMAG`, { mode: 'no-cors' });
+            // Query map system contains tier variable layers setup configuration paths mappings
+            fetch(G_SHEET_URL + `&action=save&sheetName=${sheetTabName}&id=${savedId}&customerName=${encodeURIComponent(newName)}&region=${encodeURIComponent(newRegion)}&tier=${encodeURIComponent(newTier)}&apiKey=VIMAG`, { mode: 'no-cors' });
 
             displayCustomers();
 
@@ -375,7 +409,6 @@ const G_SHEET_URL = "https://script.google.com/macros/s/AKfycbxt9YfMYA8PKNlC0Vb_
             syncTimer = setTimeout(() => { isSyncing = false; }, 1000); 
             alert("Customer Updated Successfully! 🚀");
         }
-
         function deleteSelected() { 
             const checkboxes = document.querySelectorAll('.cust-checkbox:checked'); 
             if (checkboxes.length === 0) return alert("Select anyone!"); 
