@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laco Customer Details</title>
+    <title>Lessmann Customer Details</title>
     <link rel="icon" href="Vimag.png" type="image/png">
 
     <style>
@@ -82,7 +82,7 @@ body {
 <div class="container">
     <a href="index.html" class="home-btn">🏠 Home Hub</a>
 
-    <h2>Laco Customer Details</h2>
+    <h2>Lessmann Customer Details</h2>
 
     <div class="brand-summary">
         <h3>Brand Achieved Value</h3>
@@ -120,7 +120,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-    const BRAND = "Laco";
+    const BRAND = "Lessmann";
 const storageKey = BRAND + "_customers";
 let isSyncing = false;
 let syncTimer = null;
@@ -151,7 +151,7 @@ const G_SHEET_URL = "https://script.google.com/macros/s/AKfycbxt9YfMYA8PKNlC0Vb_
         }
 
         function displayCustomers() { 
-            const brandName = typeof BRAND !== 'undefined' ? BRAND : "Laco"; 
+            const brandName = typeof BRAND !== 'undefined' ? BRAND : "Lessmann"; 
             const customers = JSON.parse(localStorage.getItem(storageKey) || "[]"); 
             const listContainer = document.getElementById('customerList'); 
             if (!listContainer) return; 
