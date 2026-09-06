@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vimag Customer Tier Performance Directory</title>
+    <link rel="icon" href="Vimag.png" type="image/png">
+    <style>
+        /* 🌌 1. GLOBAL BASELINE & BACKGROUND GRAPHICS */
+        body { 
+            font-family: 'Times New Roman', serif; 
+            background: url('Background6.jpg') no-repeat center center fixed; 
+            background-size: cover; 
+            margin: 0; padding: 20px;
+        }
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('Background6.jpg') no-repeat center center fixed;
+            background-size: cover; filter: blur(10px); z-index: -1;
+        }
+
+        /* 🏢 CENTRAL HUB MASTER HEADER BOX */
+        .master-header-box {
+            max-width: 950px; margin: 0 auto 25px auto; background: rgba(255, 255, 255, 0.85);
+            border: 2px solid #27ae60; border-radius: 25px; padding: 25px;
+            text-align: center; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        /* 🎯 CAPSULE SYSTEM UNIFORM BUTTONS: மெயின் பேஜ் பட்டன் லுக் மாதிரியே மாத்தியாச்சு peer! */
+        .action-btn {
+            height: 38px; padding: 0 20px; border-radius: 50px; border: none;
+            font-weight: bold; cursor: pointer; font-size: 13px; font-family: 'Times New Roman', serif;
+            text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex;
+            align-items: center; justify-content: center; gap: 6px; color: white; transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .back-btn { position: absolute; left: 20px; top: 25px; background: linear-gradient(135deg, #34495e, #2c3e50); text-decoration: none; }
+        .back-btn:hover { background: linear-gradient(135deg, #2c3e50, #1a252f); transform: translateY(-1px); }
+        .print-btn { position: absolute; right: 20px; top: 25px; background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .print-btn:hover { background: linear-gradient(135deg, #c0392b, #a93226); transform: translateY(-1px); }
+
+        /* 🔮 2. PURE GLASSMORPHISM TABLE CONTAINER (உங்க பளபளப்பான கிளாஸ் லுக் புதிய பக்கத்திலும் லாக் செய்யப்பட்டது!) */
+        .container {
+            max-width: 950px; margin: 0 auto; 
+            background: rgba(255, 255, 255, 0.25) !important; /* 👈 பளபளப்பான கண்ணாடி போன்ற பேக்கிரவுண்ட் லாக் */
+            backdrop-filter: blur(15px) !important; /* 👈 டீப் பிளர் எஃபெக்ட் சரி செய்யப்பட்டது peer */
+            -webkit-backdrop-filter: blur(15px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important; 
+            border-radius: 35px !important; 
+            overflow: hidden; 
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        /* 📋 DYNAMIC MATRIX CHANNELS DISPLAY TABLE */
+        table { width: 100% !important; border-collapse: collapse; table-layout: fixed; background: transparent !important; }
+        
+        th { 
+            background: yellow !important; 
+            color: black !important; 
+            padding: 14px; 
+            text-transform: uppercase; 
+            font-family: 'Times New Roman'; 
+            font-size: 14px; 
+            border: 1px solid rgba(0,0,0,0.1) !important; 
+        }
+        
+        td { 
+            padding: 14px; 
+            border-bottom: 1px solid rgba(0,0,0,0.08) !important; 
+            border-right: 1px solid rgba(0,0,0,0.08) !important; 
+            font-family: 'Times New Roman'; 
+            font-size: 15px; 
+            text-align: center; 
+        }
+        
+        /* 🖨️ PDF PRINT MEDIA LAYOUT STABILIZATION PROPERTIES */
+        @media print {
+            body::before, .back-btn, .print-btn { display: none !important; }
+            body { background: white !important; padding: 0 !important; margin: 0 !important; -webkit-print-color-adjust: exact; }
+            .master-header-box { border: 1px solid #333 !important; background: white !important; box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; width: 100% !important; margin-bottom: 20px !important; }
+            .container { background: white !important; backdrop-filter: none !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; overflow: visible; max-width: 100% !important; width: 100% !important; }
+            table { width: 100% !important; border-collapse: collapse !important; background: white !important; table-layout: auto !important; }
+            th, td { border: 1px solid #000 !important; color: black !important; padding: 8px !important; font-size: 12px !important; }
+            th { background-color: #f2f2f2 !important; }
+            tr { page-break-inside: avoid !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="master-header-box">
+    <!-- ⬅️ BACK TO HUB MENU -->
+    <a class="action-btn back-btn" href="Brand Network.html">⬅ BACK</a>
+
+    <button class="action-btn print-btn" onclick="window.print()">🖨️ PRINT</button>
+    
+    <!-- 🏢 Neenga sonna Local Logo Drive Absolute URL Path locked -->
+    <img src="C:\Users\Vimag\OneDrive\Desktop\HTML\Logo.jpeg" width="120" style="margin-bottom: 5px;" onerror="this.src='Logo.jpeg';">
+    
+    <div style="color: #27ae60; font-size: 28px; font-weight: bold; margin: 5px 0; font-family: 'Times New Roman'; text-transform: uppercase; letter-spacing: 1px;">
+        🏢 CUSTOMER TIER DIRECTORY
+    </div>
+    <div id="dynamicTierHeadingTitle" style="font-family: 'Times New Roman'; font-size: 19px; font-weight: bold; color: #e67e22; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px;">
+        💎 LOADING TIER PROFILE...
+    </div>
+</div>
+
+<!-- 🔮 GLASS CLOUD CONTENT DATA MATRIX GRID -->
+<div class="container">
+    <table>
+        <thead>
+            <tr style="background: yellow !important; color: black !important; font-family:'Times New Roman'; text-transform: uppercase;">
+                <th style="width: 5%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">S.No</th>
+                <th style="width: 25%; text-align: left; padding-left: 15px; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">🏢 Company Name</th>
+                <th style="width: 12%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">📍 Region</th>
+                <th style="width: 20%; text-align: left; padding-left: 15px; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">📦 Represented Brand</th>
+                <th style="width: 13%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">👤 Authorized Person</th>
+                <th style="width: 12%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">🏢 Division</th>
+                <th style="width: 13%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">📱 Contact</th>
+            </tr>
+        </thead>
+        <tbody id="tierCloudContentGrid" style="color: black;">
+            <tr><td colspan="7" style="padding: 40px; color: gray; font-weight: bold; background: transparent !important;">Connecting Live Cloud Registry... ⚡</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Firebase Scripts -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dexie/4.2.0/dexie.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.6.10/firebase-app-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.6.10/firebase-database-compat.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBC9Ny5zLH2TBQK9r469OXAMeQ6AbiScn8", 
+    databaseURL: "https://vimag-database-default-rtdb.firebaseio.com",
+     projectId: "vimag-database",
+        appId: "1:9582238917:web:1f0af85f45123de2e4a4ac"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const brands = ["Rhodius", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Rexcut", "Shannon", "Starrett", "Voelkel"];
+    
+    // URL-ல இருந்து எந்த டயர் (Tier 1 / Tier 2) வரணும்னு கச்சிதமா எடுக்குது peer
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTier = urlParams.get('tier') || "Tier 1";
+
+    document.getElementById('dynamicTierHeadingTitle').innerText = `💎 CUSTOMER PROFILE: ${activeTier.toUpperCase()}`;
+
+    // 📡 INITIALIZER RUN
+    window.onload = function() {
+        startTierCloudScanner();
+    };
+
+function fetchUniqueTierContactsList(targetCustomerName, callbackFunction) {
+    if (!targetCustomerName) return;
+
+    const encCustId = btoa(encodeURIComponent(targetCustomerName)).replace(/=/g, "").replace(/\+/g, "").replace(/\//g, "");
+    
+    db.ref(`vimag/master_contacts/${encCustId}/staff_directory`).once('value', (snapshot) => {
+        let uniqueFilteredContactsArray = [];
+        const phoneTrackSet = new Set();
+
+        if (snapshot.exists()) {
+            const rawDirectory = snapshot.val();
+            Object.keys(rawDirectory).forEach(k => {
+                const item = rawDirectory[k];
+                const phoneStr = (item.contactNumber || item.contactNo || item.phone || "").trim();
+                
+                // 🏆 4 vaati number vanthaalum indha condition 1 time mattum thaan ulla vidum!
+                if(phoneStr && phoneStr !== "—" && phoneStr !== "-") {
+                    if (!phoneTrackSet.has(phoneStr)) {
+                        phoneTrackSet.add(phoneStr);
+                        uniqueFilteredContactsArray.push(item);
+                    }
+                } else if (!phoneStr || phoneStr === "—" || phoneStr === "-") {
+                    // Number illadha empty rows-ah normal-ah loop ulla inject panrom
+                    uniqueFilteredContactsArray.push(item);
+                }
+            });
+        }
+        
+        console.log("Tier Sync: Wiped out duplicates. Unique records count: " + uniqueFilteredContactsArray.length);
+        
+        // Data pull pannadhum, unga table layer-la display panna callback execute aagum
+        if (typeof callbackFunction === 'function') {
+            callbackFunction(uniqueFilteredContactsArray);
+        }
+    });
+}
+    function startTierCloudScanner() {
+        // 🚀 LIVE CLOUD DISPATCH: 11 பிராண்டுகளின் ஆன்லைன் க்ளவுட் டேட்டாபேஸையும் கனெக்ட் பண்ணி டேட்டாவை இழுக்குது peer!
+        db.ref('vimag/brands').on('value', (snapshot) => {
+            const data = snapshot.val() || {};
+            console.log("Firebase Live Sync Pipeline Successful! ⚡");
+            renderTierStatusReportGrid(data, activeTier);
+        });
+    }
+
+    // 📋 UNIVERSAL INLINE MATRIX GENERATOR FOR SEPARATE TIER GRID CODES
+function renderTierStatusReportGrid(data, targetTier) {
+    let serialCounter = 1;
+    let cleanTargetTier = String(targetTier).trim().toLowerCase();
+    let matchingCustomersMatrix = {};
+
+    let tableHtml = `
+        <table style="width:100% !important; border-collapse:collapse; table-layout:fixed; background:transparent;">
+            <thead>
+                <tr style="background: yellow !important; color: black !important; font-family:'Times New Roman'; text-transform: uppercase;">
+                    <th style="width: 5%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">S.No</th>
+                    <th style="width: 25%; text-align: left; padding-left: 15px; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">🏢 Company Name</th>
+                    <th style="width: 12%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">📍 Region</th>
+                    <th style="width: 20%; text-align: left; padding-left: 15px; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">📦 Represented Brand</th>
+                    <th style="width: 13%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">👤Authorized Person</th>
+                    <th style="width: 12%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">🏢 Division</th>
+                    <th style="width: 13%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">📱 Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    brands.forEach(bName => {
+        if (data[bName]) {
+            Object.keys(data[bName]).forEach(custName => {
+                if (custName === "_id_lock" || custName === "_identity" || custName === "SYSTEM") return;
+                
+                const profileData = data[bName][custName];
+                if (!profileData) return;
+
+                let lockBlock = profileData["_id_lock"] || null;
+                let checkTier = "";
+                let foundRegion = "General";
+
+                if (lockBlock) {
+                    checkTier = lockBlock.tier || "";
+                    foundRegion = lockBlock.region || foundRegion;
+                }
+
+                if (!checkTier && profileData.tier) {
+                    checkTier = profileData.tier;
+                    if(profileData.region) foundRegion = profileData.region;
+                }
+
+                if (checkTier && String(checkTier).trim().toLowerCase() === cleanTargetTier) {
+                    const uniqueKey = custName.trim().toUpperCase();
+                    
+                    // 👥 மல்டி-ஸ்டாஃப் விவரங்களை அரேவாக லாக் செய்கிறோம் peer
+                    let staffListArray = [];
+
+                    // 🔍 STAFF EXTRACTOR PIPELINE: கஸ்டமரின் அத்தனை 'STAFF-' சப்-நோடுகளையும் முழுமையாக ஸ்கேன் செய்து லிஸ்ட்டில் சேர்க்கிறது!
+                    Object.keys(profileData).forEach(key => {
+                        const nodeItem = profileData[key];
+                        if (key.startsWith("STAFF-") && nodeItem && typeof nodeItem === "object") {
+                            let staffName = nodeItem.staffName || nodeItem.staff_name || "";
+                            let department = nodeItem.department || nodeItem.dept || "";
+                            let contactNo = nodeItem.contactNumber || nodeItem.contactNo || "";
+
+                            if (staffName || department || contactNo) {
+                                staffListArray.push({
+                                    name: staffName || "—",
+                                    dept: department || "—",
+                                    phone: contactNo || "—"
+                                });
+                            }
+                        }
+                    });
+
+                    if (!matchingCustomersMatrix[uniqueKey]) {
+                        matchingCustomersMatrix[uniqueKey] = {
+                            companyName: custName,
+                            region: foundRegion,
+                            brandsArray: new Set([bName]),
+                            staffEntries: staffListArray // 🎯 மல்டி காண்டாக்ட் விபரங்கள் அத்தனையும் மெமரி மேட்ரிக்ஸில் லாக் ஆகிறது peer!
+                        };
+                    } else {
+    matchingCustomersMatrix[uniqueKey].brandsArray.add(bName);
+    
+    // 🌟 பிராண்டுகளின் காண்டாக்ட்களை ஓவர்ரைடு செய்யாமல், ஒன்றோடு ஒன்று கச்சிதமாக இணைக்கிறது!
+    if (staffListArray.length > 0) {
+        // ஏற்கனவே உள்ள லிஸ்ட்டுடன் புதிய Rexcut/பிற பிராண்ட் லிஸ்ட்டை சேர்க்கிறது
+        matchingCustomersMatrix[uniqueKey].staffEntries = matchingCustomersMatrix[uniqueKey].staffEntries.concat(staffListArray);
+        
+        // 🛡️ ஒரே நம்பர் இரண்டு முறை வராமல் தடுக்க டூப்ளிகேட் பில்டர் லேயர்
+        let uniqueStaffMap = {};
+        matchingCustomersMatrix[uniqueKey].staffEntries.forEach(st => {
+            let uniqueStaffKey = (st.name + "_" + st.phone).trim().toUpperCase();
+            uniqueStaffMap[uniqueStaffKey] = st;
+        });
+        matchingCustomersMatrix[uniqueKey].staffEntries = Object.values(uniqueStaffMap);
+    }
+}
+                }
+            });
+        }
+    });
+
+    const recordsList = Object.values(matchingCustomersMatrix).sort((a, b) => a.companyName.localeCompare(b.companyName));
+
+    if (recordsList.length === 0) {
+        const gridBox = document.getElementById('tableWrapperNode') || document.getElementById('tierCloudContentGrid');
+        if (gridBox) {
+            gridBox.innerHTML = `<tr><td colspan="7" style="padding:40px; text-align:center; font-weight:bold; color:black;">❌ No customer profiles currently tracked under this tier.</td></tr>`;
+        }
+        return;
+    }
+
+    recordsList.forEach(row => {
+        const representations = [...row.brandsArray].map(b => `
+            <span style="display:inline-block; padding:2px 8px; background: rgba(39, 174, 96, 0.15); color: black; border:1px solid rgba(39, 174, 96, 0.4); border-radius:50px; font-size:11px; font-weight:bold; margin:2px; font-family:'Times New Roman'; text-transform: uppercase;">
+                ${b}
+            </span>`).join(' ');
+
+        // 🎯 2 or More மல்டி காண்டாக்ட் செல்களை கச்சிதமான அலைன்மென்ட்டில் பிரிக்கும் லேயர் என்ஜின் peer!
+        let contactsHtml = "";
+        let deptsHtml = "";
+        let phonesHtml = "";
+
+        if (row.staffEntries && row.staffEntries.length > 0) {
+            row.staffEntries.forEach((staff, sIdx) => {
+                let borderStyle = sIdx > 0 ? "border-top: 1px dashed rgba(0,0,0,0.08); padding-top: 5px; margin-top: 5px;" : "";
+                
+                contactsHtml += `<div style="${borderStyle} font-weight:bold; color:#c0392b; text-transform:uppercase;">${staff.name}</div>`;
+                deptsHtml += `<div style="${borderStyle} color:black; font-weight:600;">${staff.dept}</div>`;
+                phonesHtml += `<div style="${borderStyle} font-weight:bold; color:#2980b9;">${staff.phone}</div>`;
+            });
+        } else {
+            contactsHtml = "—";
+            deptsHtml = "—";
+            phonesHtml = "—";
+        }
+
+        tableHtml += `
+            <tr class="brand-row" style="background: transparent !important; border-bottom: 1px solid rgba(0,0,0,0.08); text-align:center; vertical-align: middle;">
+                <td style="font-weight:bold; color:#27ae60; border-right: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px;">${serialCounter++}</td>
+                <td style="font-weight:bold; color:#2c3e50; text-align:left; padding:14px; padding-left:15px; border-right: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08); font-size:15px;">🏢 ${row.companyName}</td>
+                <td style="border-right: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; color: black !important;">${row.region}</td>
+                <td style="text-align:left; padding:14px; padding-left:15px; border-right: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08);">${representations}</td>
+                
+                <!-- 🎯 1வது காண்டாக்ட் செல் (Multi-line Name Array Inside Row Fixed!) -->
+                <td style="border-right: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; text-align:center;">${contactsHtml}</td>
+                
+                <!-- 🏢 2வது காண்டாக்ட் செல் (Multi-line Dept Array Inside Row Fixed!) -->
+                <td style="border-right: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; text-align:center;">${deptsHtml}</td>
+                
+                <!-- 📱 3வது காண்டாக்ட் செல் (Multi-line Mobile Array Inside Row Fixed!) -->
+                <td style="border-bottom: 1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; text-align:center;">${phonesHtml}</td>
+            </tr>
+        `;
+    });
+
+    tableHtml += `</tbody></table>`;
+    
+    const targetGrid = document.getElementById('tableWrapperNode') || document.getElementById('tierCloudContentGrid');
+    if (targetGrid) {
+        // ஐடி மேட்ச்சிங் எரர் இல்லாமல் கச்சிதமாக மெயின் கிளாஸ் கன்டைனர் பாக்ஸிற்குள் டேபிளை லோடு செய்யுது peer!
+        if (targetGrid.id === 'tableWrapperNode') {
+            targetGrid.innerHTML = tableHtml;
+        } else {
+            targetGrid.parentElement.parentElement.innerHTML = tableHtml;
+        }
+    }
+}
+</script>
+</body>
+</html>
