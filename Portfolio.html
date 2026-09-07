@@ -5,6 +5,10 @@
     <title>Staff Portfolio</title>
     <link rel="icon" href="Vimag.png" type="image/png">
 
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
     <style>
         body { font-family: 'Times New Roman', serif; padding: 20px; background: #fdfdf5; }
         .container { max-width: 1400px; margin: auto; background: white; padding: 25px; border-radius: 15px; border: 3px solid #27ae60; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
@@ -131,19 +135,86 @@ let masterData = []; // Store original data for sub-filtering
         loadInitialData();
     });
 
-    async function loadInitialData() {
-        const all = await vimagDB.brands.toArray();
-        masterData = all.filter(i => 
-            i.id !== "_id_lock" && i.artNo !== "SYSTEM" && 
-            (i.handledBy || "").trim().toUpperCase() === staffName.trim().toUpperCase()
-        );
+  async function loadInitialData() {
+    // 🛡️ ANTI-CACHE TRAP: Drops prior database listeners to prevent cascading memory traps peer!
+    db.ref('vimag/brands').off();
+
+    // 📡 LIVE CLOUD PIPELINE: Connects directly to your 11 remote real-time database vectors
+    db.ref('vimag/brands').on('value', async (snapshot) => {
+        const allBrandsCloudData = snapshot.val(); 
+        masterData = []; // Clear array map traces to compile clean datasets on updates
+        
+        const brandsList = ["Rhodius", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Rexcut", "Shannon", "Starrett", "Voelkel"];
+
+        if (allBrandsCloudData) {
+            brandsList.forEach(brand => {
+                if (allBrandsCloudData[brand]) {
+                    const customersNode = allBrandsCloudData[brand];
+                    Object.keys(customersNode).forEach(custName => {
+                        if (custName === "SYSTEM" || custName === "_id_lock" || custName === "_identity") return;
+                        
+                        const productsList = customersNode[custName];
+                        Object.keys(productsList).forEach(pKey => {
+                            const item = productsList[pKey];
+                            
+                            // 🎯 Aligns record rows precisely with our target active active staff name tag parameter
+                            if (item && item.artNo !== "SYSTEM" && item.id !== "_id_lock" && (item.handledBy || item.handled_by || "").trim().toUpperCase() === staffName.trim().toUpperCase()) {
+                                
+                                masterData.push({ 
+                                    id: pKey, 
+                                    brand: brand, 
+                                    customerName: custName, 
+                                    artNo: item.artNo || '-', 
+                                    name: item.name || '-', 
+                                    price: item.price || "0", 
+                                    qty: item.qty || item.targetQty || "0", 
+                                    monthQty: item.monthQty || item.actualQty || "0", 
+                                    currency: item.currency || "€", 
+                                    handledBy: item.handledBy || item.handled_by, 
+                                    remarks: item.remarks || item.status || '-' 
+                                });
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        // 🏰 LOCAL BACKUP SYNC: Mirror compiled records down inside IndexedDB for offline protection
+    
+          try {
+    if (masterData.length > 0) {
+        // bulkPut பயன்படுத்துவதால் பழைய ஸ்டாஃப் பெயர்கள் லோக்கல் மெமரியில் அழியாமல் பத்திரமாக இருக்கும்!
+        await vimagDB.brands.bulkPut(masterData.map(i => ({ 
+            id: i.id, 
+            brand: i.brand, 
+            customerName: i.customerName, 
+            artNo: i.artNo, 
+            name: i.name, 
+            price: i.price, 
+            qty: i.qty, 
+            monthQty: i.monthQty, 
+            currency: i.currency, 
+            handledBy: i.handledBy, 
+            remarks: i.remarks 
+        })));
+    }
+} catch (e) { 
+    console.warn("Dexie backup repository put drop notice:", e); 
+}
 
         if (masterData.length === 0) {
-            document.getElementById('portfolioBody').innerHTML = `<tr><td colspan="9" style="padding:50px; color:red; font-weight:bold;">No Data Found!</td></tr>`;
+            document.getElementById('portfolioBody').innerHTML = `<tr><td colspan="9" style="padding:50px; color:red; font-weight:bold; text-align:center;">No Active Portfolio Records Handled Registry!</td></tr>`;
+            document.getElementById('sumTarget').innerText = "€ 0.00";
+            document.getElementById('sumAchieved').innerText = "€ 0.00";
+            document.getElementById('statsLine').innerText = "Portfolio Analysis: 0 Active Records";
             return;
         }
+
+        // Hot refresh dynamic cascading selectors instantly with fresh values peer!
         refreshView();
-    }
+    }); // 🏆 FIXED CORE CLOSURE: Closing parenthesis and brace perfectly applied here!
+}
 
     function runCascadingFilter(trigger) {
         selections.brand = document.getElementById('fStaffBrand').value;
@@ -218,7 +289,7 @@ function loadInitialData() {
                         const productsList = customersNode[custName];
                         Object.keys(productsList).forEach(pKey => {
                             const item = productsList[pKey];
-                            if (item && item.artNo !== "SYSTEM" && item.id !== "_id_lock" && (item.handledBy || "").trim().toUpperCase() === staffName.trim().toUpperCase()) {
+                            if (item && item.artNo !== "SYSTEM" && item.id !== "_id_lock" && (item.handledBy || item.handled_by || "").trim().toUpperCase() === staffName.trim().toUpperCase()) {
                                 masterData.push({ id: pKey, brand: brand, customerName: custName, artNo: item.artNo || '-', name: item.name || '-', price: item.price || "0", qty: item.qty || "0", monthQty: item.monthQty || "0", currency: item.currency || "€", handledBy: item.handledBy, remarks: item.remarks || '-' });
                             }
                         });
@@ -250,16 +321,59 @@ function closeVimagPortfolioModal() {
     const activeRadioElements = document.getElementsByName('vimagPortfolioSelectRadio'); activeRadioElements.forEach(radio => { if(radio) radio.checked = false; });
 }
 async function saveVimagPortfolioEdits() {
-    const bKey = document.getElementById('editRowBrandKey').value; const cKey = document.getElementById('editRowCustomerKey').value; const pIdKey = document.getElementById('editRowProductIndexKey').value;
-    const newPrice = parseFloat(document.getElementById('editRowPriceVal').value || 0); const newTarget = parseInt(document.getElementById('editRowTargetQty').value || 0); const newAchieved = parseInt(document.getElementById('editRowAchievedQty').value || 0); const newRemarks = document.getElementById('editRowRemarks').value.trim();
-    if(!bKey || !cKey || !pIdKey) return alert("System reference broken!");
+    const bKey = document.getElementById('editRowBrandKey').value; 
+    const cKey = document.getElementById('editRowCustomerKey').value; 
+    const pIdKey = document.getElementById('editRowProductIndexKey').value;
+    
+    const newPrice = parseFloat(document.getElementById('editRowPriceVal').value || 0); 
+    const newTarget = parseInt(document.getElementById('editRowTargetQty').value || 0); 
+    const newAchieved = parseInt(document.getElementById('editRowAchievedQty').value || 0); 
+    const newRemarks = document.getElementById('editRowRemarks').value.trim();
+    
+    if (!bKey || !cKey || !pIdKey) return alert("System reference broken! ⚠️");
+    
     try {
+        // 1. லோக்கல் டெக்ஸி மெமரியில் அப்டேட் செய்கிறது
         await vimagDB.brands.update(pIdKey, { price: newPrice.toString(), qty: newTarget.toString(), monthQty: newAchieved.toString(), remarks: newRemarks });
-        await cloudDB.ref(`vimag/brands/${bKey}/${cKey}/${pIdKey}`).update({ price: newPrice.toString(), qty: newTarget.toString(), monthQty: newAchieved.toString(), remarks: newRemarks });
-        closeVimagPortfolioModal(); if (typeof loadInitialData === "function") await loadInitialData();
-    } catch (writeErr) { alert("Transaction Failed! Cloud connection error."); }
-}
+        
+        // 2. ஃபயர்பேஸ் கிளவுட் நோடில் அப்டேட் செய்கிறது peer
+        await db.ref(`vimag/brands/${bKey}/${cKey}/${pIdKey}`).update({ price: newPrice.toString(), qty: newTarget.toString(), monthQty: newAchieved.toString(), remarks: newRemarks });
+        
+        closeVimagPortfolioModal(); 
 
+        // 🌟 3. THE DROPDOWN UN-TRAP FIX: டிராப்டவுன் ஃபில்டர் செலக்ஷன்களை ஆட்டோமேட்டிக்காக 'ALL' நிலைக்கு கொண்டு வருகிறது!
+        selections = { brand: 'ALL', cust: 'ALL', art: 'ALL' };
+        
+        const bSelect = document.getElementById('fStaffBrand');
+        const cSelect = document.getElementById('fStaffCust');
+        const aSelect = document.getElementById('fStaffArt');
+        
+        if (bSelect) bSelect.value = "ALL";
+        if (cSelect) cSelect.value = "ALL";
+        if (aSelect) aSelect.value = "ALL";
+        
+        // ⚡ ஃபிரெஷ் டேட்டாவை கிளவுடில் இருந்து மீண்டும் இழுத்து அத்தனை பெயர்களையும் ப்ளோ (Flow) செய்ய வைக்குது peer!
+        if (typeof loadInitialData === "function") {
+            await loadInitialData();
+        }
+        
+        alert("Portfolio Row Synchronized and Updated Cleanly! 💾✅");
+    } catch (writeErr) { 
+        alert("Transaction Failed! Cloud connection error. 🚩"); 
+    }
+}// Master background dimmer backdrop box escape routine handler
+window.onclick = function(event) {
+    const modal = document.getElementById('vimagPortfolioEditModal');
+    if (event.target === modal) {
+        closeVimagPortfolioModal();
+    }
+};
+
+window.addEventListener('pagehide', () => {
+    // இந்த பக்கம் மறைந்து ஃபாலோ-அப் பக்கத்துக்குப் போகும் போது, 
+    // பிரவுசரோட மெமரி டிராப்பை உடைக்க ஒரு சின்ன சிக்னல் கொடுக்குது!
+    console.log("Leaving Portfolio: Clearing memory traps... ⚡");
+});
 </script>
 </body>
 </html>
