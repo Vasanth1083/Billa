@@ -40,38 +40,33 @@
 
         /* 🔮 2. PURE GLASSMORPHISM TABLE CONTAINER (உங்க பளபளப்பான கிளாஸ் லுக் புதிய பக்கத்திலும் லாக் செய்யப்பட்டது!) */
         .container {
-            max-width: 950px; margin: 0 auto; 
-            background: rgba(255, 255, 255, 0.25) !important; /* 👈 பளபளப்பான கண்ணாடி போன்ற பேக்கிரவுண்ட் லாக் */
-            backdrop-filter: blur(15px) !important; /* 👈 டீப் பிளர் எஃபெக்ட் சரி செய்யப்பட்டது peer */
-            -webkit-backdrop-filter: blur(15px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.3) !important; 
-            border-radius: 35px !important; 
-            overflow: hidden; 
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important;
-        }
+    width: max-content !important; /* 👈 டேபிளின் முழு அளவிற்கு தகுந்தவாறு கன்டைனர் பெருசாகும்! */
+    max-width: 95% !important; /* ஸ்கிரீனை விட்டு வெளியே போகாமல் தடுக்க ஒரு சேஃப்டி லாக் */
+    min-width: 90% !important; /* டேட்டா குறைவாக இருந்தால் ரொம்பவும் சுருங்கிவிடாமல் தடுக்க */
+    margin: 0 auto; 
+    background: rgba(255, 255, 255, 0.25) !important; 
+    backdrop-filter: blur(15px) !important; 
+    -webkit-backdrop-filter: blur(15px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important; 
+    border-radius: 35px !important; 
+    overflow: hidden; /* 👈 கார்னர் பார்டர் ரேடியஸ் கச்சிதமாக வளைந்து காட்டும் */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important;
+}
 
         /* 📋 DYNAMIC MATRIX CHANNELS DISPLAY TABLE */
-        table { width: 100% !important; border-collapse: collapse; table-layout: fixed; background: transparent !important; }
-        
-        th { 
-            background: yellow !important; 
-            color: black !important; 
-            padding: 14px; 
-            text-transform: uppercase; 
-            font-family: 'Times New Roman'; 
-            font-size: 14px; 
-            border: 1px solid rgba(0,0,0,0.1) !important; 
-        }
-        
-        td { 
-            padding: 14px; 
-            border-bottom: 1px solid rgba(0,0,0,0.08) !important; 
-            border-right: 1px solid rgba(0,0,0,0.08) !important; 
-            font-family: 'Times New Roman'; 
-            font-size: 15px; 
-            text-align: center; 
-        }
-        
+table { 
+    width: 100% !important; 
+    border-collapse: collapse; 
+    table-layout: auto !important; /* 👈 பத்திகளின் அகலத்தை டெக்ஸ்டிற்கு தகுந்தவாறு தானாகவே விரிய வைக்கும் */
+    background: transparent !important; 
+}
+
+/* உங்களுடைய டேபிளின் ஹெடர் மற்றும் டேட்டா செல்களுக்குள் இருக்கும் டெக்ஸ்ட் இடிக்காமல் இருக்க ஒரு சேஃப்டி பேடிங் */
+th, td {
+    padding: 14px 18px !important; /* பத்திகளுக்கு இடையே கூடுதல் கேப் (Gap) கொடுக்கும் */
+    word-break: normal !important;
+    overflow: visible !important;
+}        
         /* 🖨️ PDF PRINT MEDIA LAYOUT STABILIZATION PROPERTIES */
         @media print {
             body::before, .back-btn, .print-btn { display: none !important; }
@@ -87,40 +82,75 @@
 </head>
 <body>
 
-<div class="master-header-box">
-    <!-- ⬅️ BACK TO HUB MENU -->
-    <a class="action-btn back-btn" href="Brand Network.html">⬅ BACK</a>
+<div id="mainDirectoryViewLayout">
+    <div class="master-header-box">
+        <!-- ⬅️ BACK TO HUB MENU -->
+        <a class="action-btn back-btn" href="Brand Network.html">⬅ BACK</a>
 
-    <button class="action-btn print-btn" onclick="window.print()">🖨️ PRINT</button>
-    
-    <!-- 🏢 Neenga sonna Local Logo Drive Absolute URL Path locked -->
-    <img src="C:\Users\Vimag\OneDrive\Desktop\HTML\Logo.jpeg" width="120" style="margin-bottom: 5px;" onerror="this.src='Logo.jpeg';">
-    
-    <div style="color: #27ae60; font-size: 28px; font-weight: bold; margin: 5px 0; font-family: 'Times New Roman'; text-transform: uppercase; letter-spacing: 1px;">
-        🏢 CUSTOMER TIER DIRECTORY
+        <button class="action-btn print-btn" onclick="window.print()">🖨️ PRINT</button>
+        
+        <!-- 🏢 Local Logo Drive Path Fallback Locked -->
+        <img src="C:\Users\Vimag\OneDrive\Desktop\HTML\Logo.jpeg" width="120" style="margin-bottom: 5px;" onerror="this.src='Logo.jpeg';" alt="Logo">
+        
+        <div style="color: #27ae60; font-size: 28px; font-weight: bold; margin: 5px 0; font-family: 'Times New Roman', serif; text-transform: uppercase; letter-spacing: 1px;">
+            🏢 CUSTOMER TIER DIRECTORY
+        </div>
+        <div id="dynamicTierHeadingTitle" style="font-family: 'Times New Roman', serif; font-size: 19px; font-weight: bold; color: #e67e22; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px;">
+            💎 LOADING TIER PROFILE...
+        </div>
     </div>
-    <div id="dynamicTierHeadingTitle" style="font-family: 'Times New Roman'; font-size: 19px; font-weight: bold; color: #e67e22; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px;">
-        💎 LOADING TIER PROFILE...
+
+    <!-- 🔮 Glassmorphism Dynamic Data Grid Target Wrapper Box -->
+    <div class="container" id="tableWrapperNode">
+        <h3 style="text-align:center; color:#7f8c8d; padding:30px; font-family:'Times New Roman', serif;">Connecting to Cloud Registry... ⚡</h3>
     </div>
 </div>
 
-<!-- 🔮 GLASS CLOUD CONTENT DATA MATRIX GRID -->
-<div class="container">
-    <table>
+
+<!-- 📊 2. புதிய இன்லைன் சேல்ஸ் ரிப்போர்ட் லேயர் (ஆரம்பத்தில் இது மறைந்திருக்கும் - display: none) -->
+<div id="salesReportPage" style="display: none; background: white; padding: 25px; border-radius: 25px; text-align: center; width: 100%; box-sizing: border-box;">
+    
+    <div style="margin: 0 auto 20px auto; max-width:1200px; border: 3px solid #27ae60; padding: 25px; border-radius: 25px; text-align: center; position: relative; background: #fafaf7; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
+        <!-- ⬅️ BACK BUTTON TO RESTORE DIRECTORY LIST -->
+        <button onclick="hideSalesReportInline()" style="position: absolute; left: 20px; top: 25px; background: #2c3e50 !important; color: white !important; border: 2px solid black !important; border-radius: 8px !important; font-family: 'Times New Roman', serif; font-size: 14px !important; font-weight: bold !important; height: 40px; padding: 0 25px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">⬅ BACK</button>
+        
+        <!-- 🖨️ PRINT PDF INTERNAL BUTTON -->
+        <button onclick="window.print()" style="position: absolute; right: 20px; top: 25px; background: red !important; color: white !important; border: 2px solid black !important; border-radius: 8px !important; font-family: 'Times New Roman', serif; font-size: 14px !important; font-weight: bold !important; height: 40px; padding: 0 25px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">🖨️ PRINT PDF</button>
+        
+        <img src="Logo.jpeg" width="110" onerror="this.src='C:\\Users\\Vimag\\OneDrive\\Desktop\\HTML\\Logo.jpeg';"><br>
+        <div style="color: GREEN; font-size: 32px; font-weight: bold; margin: 5px 0; font-family: 'Times New Roman', serif; text-transform: uppercase;">VIMAG TN REGION</div>
+        <div id="vimagCustHeaderLabel" style="font-size: 30px; color: red; margin: 5px 0; font-weight: bold; font-family: 'Times New Roman', serif;">Customer Name</div>
+        <div style="font-size: 18px; color: blue; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 5px; font-family: 'Times New Roman', serif;">Sales Performance Report</div>
+    </div>
+
+    <!-- Wide Dimension Matrix Table (Yellow Background Headers with Green Outlines) -->
+    <table style="width: 100% !important; max-width: 100% !important; border-collapse: collapse; margin-top: 10px; border: 2.5px solid #27ae60; background: white; table-layout: auto; box-sizing: border-box; box-shadow: none;">
         <thead>
-            <tr style="background: yellow !important; color: black !important; font-family:'Times New Roman'; text-transform: uppercase;">
-                <th style="width: 5%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">S.No</th>
-                <th style="width: 25%; text-align: left; padding-left: 15px; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">🏢 Company Name</th>
-                <th style="width: 12%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">📍 Region</th>
-                <th style="width: 20%; text-align: left; padding-left: 15px; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">📦 Represented Brand</th>
-                <th style="width: 13%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">👤 Authorized Person</th>
-                <th style="width: 12%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">🏢 Division</th>
-                <th style="width: 13%; border: 1px solid rgba(0,0,0,0.1) !important; color: black !important;">📱 Contact</th>
+            <tr style="background-color: #ffea00 !important; color: black !important; text-transform: uppercase;">
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman', serif; background: #ffea00 !important;">S.No</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman', serif; background: #ffea00 !important;">Brand Name</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman', serif; background: #ffea00 !important;">Article No</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman', serif; background: #ffea00 !important;">Product Name</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman', serif; background: #ffea00 !important;">Price</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman', serif; background: #ffea00 !important;">Qty/Mo</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman', serif; background: #ffea00 !important;">Month Qty</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman', serif; background: #ffea00 !important;">Total Value</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman', serif; background: #ffea00 !important;">Achieved Value</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman', serif; background: #ffea00 !important;">Balance</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman', serif; background: #ffea00 !important;">Handled By</th>
+                <th style="border: 1px solid #27ae60 !important; padding: 15px; font-size: 14px; color: black !important; font-weight: bold; font-family: 'Times New Roman', serif; background: #ffea00 !important;">Remarks</th>
             </tr>
         </thead>
-        <tbody id="tierCloudContentGrid" style="color: black;">
-            <tr><td colspan="7" style="padding: 40px; color: gray; font-weight: bold; background: transparent !important;">Connecting Live Cloud Registry... ⚡</td></tr>
-        </tbody>
+        <tbody id="vimagSalesContentGrid" style="color: black; font-weight: normal; background: white;"></tbody>
+        <tfoot>
+            <tr style="background: #27ae60 !important; color: white; font-weight: bold; font-size: 15px;">
+                <td colspan="7" style="text-align: right; padding: 14px; border: 1px solid #27ae60; color: white; font-family: 'Times New Roman', serif; background: #27ae60 !important;">GRAND TOTAL:</td>
+                <td id="grandTotalDisplay" style="border: 1px solid #27ae60; padding: 14px; text-align: center; color: white; font-family: 'Times New Roman', serif; font-weight: bold; background: #27ae60 !important;">€ 0.00</td>
+                <td id="grandAchievedDisplay" style="border: 1px solid #27ae60; padding: 14px; text-align: center; color: white; font-family: 'Times New Roman', serif; font-weight: bold; background: #27ae60 !important;">€ 0.00</td>
+                <td id="grandBalanceDisplay" style="border: 1px solid #27ae60; padding: 14px; text-align: center; color: white; font-family: 'Times New Roman', serif; font-weight: bold; background: #27ae60 !important;">€ 0.00</td>
+                <td colspan="2" style="border: 1px solid #27ae60; background: #27ae60 !important;"></td>
+            </tr>
+        </tfoot>
     </table>
 </div>
 
@@ -151,6 +181,111 @@
     window.onload = function() {
         startTierCloudScanner();
     };
+function fetchAndRenderCustomerSalesStatus(base64CompanyName) {
+    try {
+        // Base64-ல் இருந்து கம்பெனி பெயரை கச்சிதமாக உடைத்தெடுக்கிறது peer
+        const targetCleanCustomerName = decodeURIComponent(escape(atob(base64CompanyName)));
+        console.log(`Tier Matrix Activation: Fetching active status values for: ${targetCleanCustomerName} 📡`);
+
+        // உங்களுடைய கஸ்டமர் ஸ்டேட்டஸ் டேபிளின் Tbody ID-ஐ இங்கே குறிவைக்கிறோம்
+        const tbody = document.getElementById('productTableBody') || document.getElementById('tierSalesTableBody');
+        if (!tbody) {
+            alert("Error: 'productTableBody' element உங்களுடைய பக்கத்தில் காணப்படவில்லை peer! ⚠️");
+            return;
+        }
+
+        // டேபிள் லோடு ஆகும் போது காட்டும் அனிமேஷன் லேயர்
+        tbody.innerHTML = `<tr><td colspan="12" style="padding:25px; text-align:center; font-weight:bold; color:#2c3e50; font-family:'Times New Roman';">
+            🔄 Fetching Sales Performance Metrics for ${targetCleanCustomerName}...
+        </td></tr>`;
+
+        // 11 பிராண்டுகளின் பெயர்கள் அடங்கிய மாஸ்டர் லிஸ்ட் - RHODIUS சேர்க்கப்பட்டுள்ளது!
+        const allBrandsList = ["Rhodius", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Rexcut", "Shannon", "Starrett", "Voelkel"];
+        
+        // 📡 Firebase Cloud-ன் மெயின் நோடில் இருந்து ஒருமுறை மட்டும் தரவுகளை இழுக்கிறது (once upgrade)
+        db.ref('vimag/brands').once('value', (snapshot) => {
+            if (!snapshot.exists()) {
+                tbody.innerHTML = `<tr><td colspan="12" style="padding:20px; text-align:center; color:red; font-weight:bold;">❌ Cloud node completely empty!</td></tr>`;
+                return;
+            }
+
+            const cloudDatabaseData = snapshot.val();
+            let compiledRowsHtml = "";
+            let serialNumCounter = 1;
+
+            let grandTotal = 0;
+            let grandAchieved = 0;
+            let grandBalance = 0;
+            let currentCurrency = "€"; // டீஃபால்ட் கரன்சி சிம்பல்
+
+            // 🌟 மேஜிக் லூப்: 11 பிராண்டுகளையும் அலசி, இந்த கஸ்டமரின் சேல்ஸ் லெட்ஜர்களை மட்டும் திரட்டுகிறது peer!
+            allBrandsList.forEach(bName => {
+                if (cloudDatabaseData[bName] && cloudDatabaseData[bName][targetCleanCustomerName]) {
+                    const customerBrandProfile = cloudDatabaseData[bName][targetCleanCustomerName];
+                    
+                    Object.keys(customerBrandProfile).forEach(idKey => {
+                        const itemRow = customerBrandProfile[idKey];
+                        
+                        // சிஸ்டம் பில்டர்கள் மற்றும் காலியான எண்ட்ரிகளைத் தவிர்க்கிறது
+                        if (!itemRow || idKey === "_id_lock" || itemRow.artNo === "SYSTEM" || !itemRow.artNo) return;
+
+                        let priceValue = parseFloat(itemRow.price || 0);
+                        let targetQtyValue = parseInt(itemRow.qty || itemRow.targetQty || 0);
+                        let actualQtyValue = parseInt(itemRow.monthQty || itemRow.actualQty || 0);
+                        currentCurrency = itemRow.currency || "€";
+
+                        // 🧮 நிதி கணித கணக்கீடுகள் (Financial Math Formulations)
+                        let totalValue = priceValue * targetQtyValue;
+                        let achievedValue = priceValue * actualQtyValue;
+                        let rowBalance = totalValue - achievedValue;
+
+                        grandTotal += totalValue;
+                        grandAchieved += achievedValue;
+                        grandBalance += rowBalance;
+
+                        let statusColor = (actualQtyValue >= targetQtyValue) ? "#27ae60" : "#e74c3c";
+                        let isAchieved = (actualQtyValue >= targetQtyValue);
+
+                        // 🎯 நீங்கள் அனுப்பிய இமேஜில் உள்ள அதே கச்சிதமான Sales Performance Table டிசைன்!
+                        compiledRowsHtml += `
+                            <tr style="text-align:center; font-family:'Times New Roman'; background: white; vertical-align: middle;">
+                                <td style="border:1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; font-weight:bold; color:#27ae60;">${serialNumCounter++}</td>
+                                <td style="border:1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; font-weight:bold; color:#2c3e50; text-transform:uppercase;">🏢 ${bName}</td>
+                                <td style="border:1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; font-weight:bold; color:black;">${itemRow.artNo}</td>
+                                <td style="border:1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; text-align:left; padding-left:15px; font-weight:500;">${itemRow.name || '—'}</td>
+                                <td style="border:1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; color:black;">${currentCurrency}${priceValue.toFixed(2)}</td>
+                                <td style="border:1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; color:black;">${targetQtyValue}</td>
+                                <td style="border:1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; font-weight:bold; color: ${statusColor};">${isAchieved ? '🏆 ' : ''}${actualQtyValue}</td>
+                                <td style="border:1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; font-weight:bold; color:#2980b9;">${currentCurrency}${totalValue.toFixed(2)}</td>
+                                <td style="border:1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; font-weight:bold; color:#27ae60;">${currentCurrency}${achievedValue.toFixed(2)}</td>
+                                <td style="border:1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; font-weight:bold; color:#e74c3c;">${currentCurrency}${rowBalance.toFixed(2)}</td>
+                                <td style="border:1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; color:black;">${itemRow.handledBy || '—'}</td>
+                                <td style="border:1px solid rgba(0,0,0,0.08); padding:14px; font-size:14px; font-style:italic; color:#555;">${itemRow.remarks || itemRow.status || '—'}</td>
+                            </tr>
+                        `;
+                    });
+                }
+            });
+
+            // திரையில் அட்டவணையை இன்ஜெக்ட் செய்கிறது peer
+            tbody.innerHTML = compiledRowsHtml || `<tr><td colspan="12" style="padding:30px; text-align:center; color:gray; font-weight:bold;">No sales performance entries logged for ${targetCleanCustomerName}.</td></tr>`;
+
+            // 📊 GRAND TOTAL DISPLAY CONTROLLERS
+            const gTot = document.getElementById('grandTotalDisplay');
+            const gAch = document.getElementById('grandAchievedDisplay');
+            const gBal = document.getElementById('grandBalanceDisplay');
+
+            if (gTot) gTot.innerText = currentCurrency + grandTotal.toFixed(2);
+            if (gAch) gAch.innerText = currentCurrency + grandAchieved.toFixed(2);
+            if (gBal) {
+                gBal.innerText = currentCurrency + grandBalance.toFixed(2);
+                gBal.style.color = (grandAchieved >= grandTotal) ? "#27ae60" : "#e74c3c";
+            }
+        });
+    } catch (err) {
+        console.error("Matrix compilation trap event exception:", err);
+    }
+}
 
 function fetchUniqueTierContactsList(targetCustomerName, callbackFunction) {
     if (!targetCustomerName) return;
@@ -199,6 +334,9 @@ function fetchUniqueTierContactsList(targetCustomerName, callbackFunction) {
 
     // 📋 UNIVERSAL INLINE MATRIX GENERATOR FOR SEPARATE TIER GRID CODES
 function renderTierStatusReportGrid(data, targetTier) {
+const displayContainer = document.getElementById('tableWrapperNode');
+if (displayContainer) displayContainer.innerHTML = "";
+
     let serialCounter = 1;
     let cleanTargetTier = String(targetTier).trim().toLowerCase();
     let matchingCustomersMatrix = {};
@@ -332,8 +470,18 @@ function renderTierStatusReportGrid(data, targetTier) {
         tableHtml += `
             <tr class="brand-row" style="background: transparent !important; border-bottom: 1px solid rgba(0,0,0,0.08); text-align:center; vertical-align: middle;">
                 <td style="font-weight:bold; color:#27ae60; border-right: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px;">${serialCounter++}</td>
-                <td style="font-weight:bold; color:#2c3e50; text-align:left; padding:14px; padding-left:15px; border-right: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08); font-size:15px;">🏢 ${row.companyName}</td>
-                <td style="border-right: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; color: black !important;">${row.region}</td>
+<td style="font-weight:bold; text-align:left; padding:14px; padding-left:15px; border-right: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08); font-size:15px;">
+    <span onclick="vimagOpenLiveSalesReport(\`${row.companyName.replace(/`/g, '\\`').replace(/'/g, "\\'")}\`)" 
+          style="text-decoration:none; color:#c0392b; font-weight:bold; cursor:pointer;"
+          onmouseover="this.style.textDecoration='underline'; this.style.color='#962d22';" 
+          onmouseout="this.style.textDecoration='none'; this.style.color='#c0392b';">
+        🏢 ${row.companyName}
+    </span>
+</td>
+<td style="border-right: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08); padding:14px; font-size:15px; color: black !important; font-weight:bold; text-align:center; line-height: 1.4;">
+    <!-- 🎯 Region பெயரில் பிளஸ் (+) இருந்தால், அதை அடுத்த வரிக்கு நேர்த்தியாக உடைத்துக் காட்டும் என்ஜின் -->
+    ${row.region.includes('+') ? row.region.split('+').join('<br><span style="color:#7f8c8d; font-size:13px;">+</span><br>') : row.region}
+</td>
                 <td style="text-align:left; padding:14px; padding-left:15px; border-right: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08);">${representations}</td>
                 
                 <!-- 🎯 1வது காண்டாக்ட் செல் (Multi-line Name Array Inside Row Fixed!) -->
@@ -359,6 +507,110 @@ function renderTierStatusReportGrid(data, targetTier) {
             targetGrid.parentElement.parentElement.innerHTML = tableHtml;
         }
     }
+}
+function vimagOpenLiveSalesReport(customerName) {
+    if (!customerName) return;
+
+    const mainView = document.getElementById('mainDirectoryViewLayout');
+    const salesView = document.getElementById('salesReportPage');
+    const tbodyGrid = document.getElementById('vimagSalesContentGrid');
+    const headerTitle = document.getElementById('vimagCustHeaderLabel');
+
+    if (!mainView || !salesView || !tbodyGrid) return;
+
+    // மெயின் பக்கத்தை மறைத்து, ரிப்போர்ட் பக்கத்தைக் காட்டுகிறது
+    mainView.style.display = 'none';
+    salesView.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (headerTitle) headerTitle.innerText = customerName;
+    tbodyGrid.innerHTML = "<tr><td colspan='12' style='padding:30px; font-size:16px; color:#555; text-align:center; background:white; font-family:\"Times New Roman\", serif;'>Generating Accurate Report From Cloud Data Store... ⚡</td></tr>";
+
+    // 📡 Firebase Cloud-ல் இருந்து 11 பிராண்டுகளின் லைவ் லெட்ஜர்களையும் இழுக்கிறது
+    db.ref('vimag/brands').once('value', (snapshot) => {
+        if (!snapshot.exists()) return;
+
+        const cloudDatabaseData = snapshot.val();
+        let compiledRowsHtml = "";
+        let serialNumCounter = 1;
+        let grandTotal = 0, grandAchieved = 0, grandBalance = 0;
+        let currentCurrency = "€";
+
+        brands.forEach(bName => {
+            // க்ளவுடில் பிராண்ட் பெயர் கேப்பிட்டல் லெட்டராக (Rhodius அல்லது RHODIUS) இருந்தால் அதைச் சரிசெய்யும் மேட்சிங்
+            let actualCloudNodeKey = Object.keys(cloudDatabaseData).find(key => key.trim().toLowerCase() === bName.trim().toLowerCase());
+            
+            if (actualCloudNodeKey && cloudDatabaseData[actualCloudNodeKey]) {
+                const brandNodeData = cloudDatabaseData[actualCloudNodeKey];
+                
+                // கஸ்டமர் பெயரில் கேப்பிட்டல் அல்லது ஸ்பேஸ் பிழைகள் இருந்தால் துல்லியமாக லாக் செய்யும் இன்ஜின்
+                let actualCustKey = Object.keys(brandNodeData).find(cKey => cKey.trim().toLowerCase() === customerName.trim().toLowerCase());
+                
+                if (actualCustKey && brandNodeData[actualCustKey]) {
+                    const customerBrandProfile = brandNodeData[actualCustKey];
+                    
+                    Object.keys(customerBrandProfile).forEach(idKey => {
+                        const itemRow = customerBrandProfile[idKey];
+                        if (!itemRow || idKey === "_id_lock" || itemRow.artNo === "SYSTEM" || !itemRow.artNo) return;
+
+                        let priceValue = parseFloat(itemRow.price || 0);
+                        let targetQtyValue = parseInt(itemRow.qty || itemRow.targetQty || 0);
+                        let actualQtyValue = parseInt(itemRow.monthQty || itemRow.actualQty || 0);
+                        currentCurrency = itemRow.currency || "€";
+
+                        let totalValue = priceValue * targetQtyValue;
+                        let achievedValue = priceValue * actualQtyValue;
+                        let rowBalance = totalValue - achievedValue;
+
+                        grandTotal += totalValue;
+                        grandAchieved += achievedValue;
+                        grandBalance += rowBalance;
+
+                        let statusColor = (actualQtyValue >= targetQtyValue) ? "#27ae60" : "#e74c3c";
+                        let isAchieved = (actualQtyValue >= targetQtyValue);
+
+                        compiledRowsHtml += `
+                            <tr style="text-align:center; font-family:'Times New Roman', serif; background: white; vertical-align: middle;">
+                                <td style="border:1px solid #27ae60; padding:14px; font-size:15px; font-weight:bold; color:#27ae60;">${serialNumCounter++}</td>
+                                <td style="border:1px solid #27ae60; padding:14px; font-size:15px; font-weight:bold; color:#2c3e50; text-transform:uppercase;">🏢 ${bName}</td>
+                                <td style="border:1px solid #27ae60; padding:14px; font-size:15px; font-weight:bold; color:black;">${itemRow.artNo}</td>
+                                <td style="border:1px solid #27ae60; padding:14px; font-size:15px; text-align:left; padding-left:15px; font-weight:500;">${itemRow.name || '—'}</td>
+                                <td style="border:1px solid #27ae60; padding:14px; font-size:15px; color:black;">${currentCurrency}${priceValue.toFixed(2)}</td>
+                                <td style="border:1px solid #27ae60; padding:14px; font-size:15px; color:black;">${targetQtyValue}</td>
+                                <td style="border:1px solid #27ae60; padding:14px; font-size:15px; font-weight:bold; color: ${statusColor};">${isAchieved ? '🏆 ' : ''}${actualQtyValue}</td>
+                                <td style="border:1px solid #27ae60; padding:14px; font-size:15px; font-weight:bold; color:#2980b9;">${currentCurrency}${totalValue.toFixed(2)}</td>
+                                <td style="border:1px solid #27ae60; padding:14px; font-size:15px; font-weight:bold; color:#27ae60;">${currentCurrency}${achievedValue.toFixed(2)}</td>
+                                <td style="border:1px solid #27ae60; padding:14px; font-size:15px; font-weight:bold; color:#e74c3c;">${currentCurrency}${rowBalance.toFixed(2)}</td>
+                                <td style="border:1px solid #27ae60; padding:14px; font-size:15px; color:black;">${itemRow.handledBy || '—'}</td>
+                                <td style="border:1px solid #27ae60; padding:14px; font-size:14px; font-style:italic; color:#555;">${itemRow.remarks || itemRow.status || '—'}</td>
+                            </tr>
+                        `;
+                    });
+                }
+            }
+        });
+
+        tbodyGrid.innerHTML = compiledRowsHtml || `<tr><td colspan='12' style='padding:30px; text-align:center; color:gray; font-weight:bold; font-family:"Times New Roman", serif;'>No active products or sales data logged for ${customerName} in database.</td></tr>`;
+
+        // நிதி கணித டோட்டல் லேயர் கால்குலேஷன்கள் (Grand Totals Display)
+        const gTot = document.getElementById('grandTotalDisplay');
+        const gAch = document.getElementById('grandAchievedDisplay');
+        const gBal = document.getElementById('grandBalanceDisplay');
+
+        if (gTot) gTot.innerText = currentCurrency + " " + grandTotal.toFixed(2);
+        if (gAch) gAch.innerText = currentCurrency + " " + grandAchieved.toFixed(2);
+        if (gBal) {
+            gBal.innerText = currentCurrency + " " + grandBalance.toFixed(2);
+            gBal.style.color = (grandAchieved >= grandTotal) ? "#27ae60" : "#e74c3c";
+        }
+    });
+}
+
+// ⬅ Lent Return Engine: ரிப்போர்ட்டை மூடிவிட்டு மீண்டும் பழையபடி மெயின் கஸ்டமர் லிஸ்ட்டைக் காட்டும் பங்க்ஷன்
+function hideSalesReportInline() {
+    document.getElementById('salesReportPage').style.display = 'none';
+    document.getElementById('mainDirectoryViewLayout').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
 </body>
