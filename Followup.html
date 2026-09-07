@@ -216,7 +216,11 @@
 
             a { text-decoration: none !important; color: black !important; }
         }
-   </style>
+#goLiveMenuPanel a:hover { background: #f0fdf4; color: #27ae60 !important; }
+.excel-brand-badge { background: rgba(142, 68, 173, 0.1); color: #8e44ad; padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 12px; text-transform: uppercase; border: 1px solid rgba(142, 68, 173, 0.2); }
+  
+
+ </style>
 <!-- 🏢 DYNAMIC CONTROLS TOOLBAR STYLES HOVER EXTENSION -->
     <style>
         .my-hover-btn {
@@ -290,8 +294,11 @@
                 </div>
             </div>
 
+
             <!-- 🛠️ ACTION BUTTONS -->
             <div style="margin-top: 30px; display: flex; gap: 20px; justify-content: center; width: 100%;">
+
+
                 <button class="btn btn-add" onclick="openDistModal()" style="padding: 10px 15px; background: #27ae60; color: white; border-radius: 10px;"> + Add Staff </button>
   <button class="btn my-hover-btn target-btn" onclick="window.location.href='Sales Budget.html'" style="background: #e67e22; color: white;"> 🎯 TARGET </button>
 
@@ -527,7 +534,10 @@ const pending = total - done;
     }
 }
 function startSync() {
-    // Firebase customers list-ai listen pannum
+    // 🛡️ மத்த ஸ்டாஃப் பெயர்களைத் திரும்பத் திரும்ப உள்ளே தள்ளி டூப்ளிகேட் செஞ்ச 
+    // பழைய 'vimag/brands' லூப் இங்கிருந்து முற்றிலும் நீக்கப்பட்டுள்ளது!
+
+    // 1. Firebase customers list-ai listen pannum
     cloudDB.ref('vimag_followup/customers').on('value', async (snap) => {
         const data = snap.val();
         if (data) {
@@ -537,7 +547,7 @@ function startSync() {
         }
     });
 
-    // Firebase logs list-ai listen pannum
+    // 2. Firebase logs list-ai listen pannum
     cloudDB.ref('vimag_followup/logs').on('value', async (snap) => {
         const data = snap.val();
         if (data) {
@@ -964,41 +974,102 @@ async function loadStaffToPortfolioDropdown() {
     if (!dropdown) return;
 
     try {
-        // Master Warehouse (Dexie) DB-ilirundhu entries edukkom
-        // Note: Unga DB name 'VimagMasterDB' nu check pannikonga
-        const vimagDB = new Dexie("VimagMasterDB");
-        vimagDB.version(1).stores({ brands: 'id, brand, customerName, artNo, handledBy' });
-        
-        const allEntries = await vimagDB.brands.toArray();
-        
-        // 11 brands-ilum work panra staff names-ai unique-ah filter panrom
-        const uniqueStaff = [...new Set(allEntries
-            .filter(i => i.handledBy && i.handledBy !== "" && i.id !== "_id_lock")
-            .map(i => i.handledBy.trim().toUpperCase())
-        )].sort();
+        // 1. டிராப்டவுன்ல ஏற்கனவே என்னென்ன பெயர்கள் இருக்குன்னு ஒருமுறை செக் பண்ணி லிஸ்ட் எடுக்குது
+        let existingDropdownNames = [];
+        Array.from(dropdown.options).forEach(opt => {
+            if(opt.value && opt.value.trim() !== "") {
+                existingDropdownNames.push(opt.value.trim().toUpperCase());
+            }
+        });
 
-        // Dropdown-la names flow aagum
-        uniqueStaff.forEach(name => {
+        let uniqueStaffNamesSet = new Set(); 
+        const brandsMasterList = ["Rhodius", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Rexcut", "Shannon", "Starrett", "Voelkel"];
+
+        console.log("Dropdown Engine: Fetching fresh names directly from live Firebase matrix... ☁️");
+        const snapshot = await cloudDB.ref('vimag/brands').once('value');
+        const allBrands = snapshot.val();
+
+        if (allBrands) {
+            brandsMasterList.forEach(brand => {
+                if (allBrands[brand]) {
+                    Object.keys(allBrands[brand]).forEach(cust => {
+                        if (cust === "SYSTEM" || cust === "_id_lock" || cust === "_identity") return;
+                        
+                        Object.keys(allBrands[brand][cust]).forEach(pKey => {
+                            const item = allBrands[brand][cust][pKey];
+                            if (item && item.artNo !== "SYSTEM" && item.id !== "_id_lock") {
+                                let rawStaffName = (item.handledBy || item.handled_by || "").toString().trim().toUpperCase();
+                                if (rawStaffName && rawStaffName !== "") {
+                                    uniqueStaffNamesSet.add(rawStaffName);
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        const uniqueStaffSortedArray = Array.from(uniqueStaffNamesSet).sort();
+
+        // 🌟 2. DOUBLE-CHECK INTERCEPTOR: டிராப்டவுனை காலி பண்றதுக்கு முன்னாடி, 
+        // புதுசா வந்த லிஸ்ட்டும் ஏற்கனவே டிராப்டவுன்ல இருக்குற லிஸ்ட்டும் ஒன்னான்னு செக் பண்ணுது!
+        // ரெண்டும் ஒன்னுன்னா, டிராப்டவுனை தொடவே தொடாது! இதனால 2 டைம்ஸ் டூப்ளிகேட் ஆகுறது 100% அடியோடு நின்றுவிடும்!
+        const isExactlyIdentical = uniqueStaffSortedArray.length === existingDropdownNames.length && 
+                                    uniqueStaffSortedArray.every((val, index) => val === existingDropdownNames[index]);
+
+        if (isExactlyIdentical) {
+            console.log("Dropdown Engine: List is already perfect. Trapping duplicates cleanly! 🛡️✅");
+            return; // லூப்பை இதோட கட் பண்ணி நிறுத்திடும்!
+        }
+
+        // 3. ஒருவேளை டேட்டாபேஸ்ல புதுசா ஏதாவது பேர் ஆட் ஆகியிருந்தா மட்டும், டிராப்டவுனை ரீசெட் பண்ணி லோடு பண்ணும்!
+        dropdown.options.length = 0; 
+
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = "";
+        defaultOpt.innerText = "👤 STAFF PORTFOLIO";
+        defaultOpt.style.background = "white";
+        defaultOpt.style.color = "black";
+        dropdown.appendChild(defaultOpt);
+
+        uniqueStaffSortedArray.forEach(name => {
             const opt = document.createElement('option');
             opt.value = name;
-            opt.innerText = name;
+            opt.innerText = `👤 ${name}`;
             opt.style.background = "white";
             opt.style.color = "black";
             dropdown.appendChild(opt);
         });
         
-        console.log("Portfolio Dropdown: " + uniqueStaff.length + " staff loaded.");
+        dropdown.value = ""; 
+        console.log("Portfolio Dropdown Hot-Synced Cleanly! Total Active Staff Mapped: " + uniqueStaffSortedArray.length);
     } catch (err) {
-        console.error("Staff flow error:", err);
+        console.error("Staff flow processing error:", err);
     }
 }
-
+// =========================================================================
+// 🔄 CACHE-PROOF LIFECYCLE RE-TRIGGER CONTROLLER
+// =========================================================================
+// 🌟 THE ANTI-CACHE TRAP: போர்ட்ஃபோலியோ பக்கத்தில் இருந்து BACK வரும் போதெல்லாம் டிராப்டவுனை ஃபிரெஷ்ஷாக ரீசெட் செய்யுது peer!
+window.addEventListener('pageshow', (event) => {
+    console.log("Lifecycle Signal Caught: Validating dropdown memory layers... ⚡");
+    
+    // பிரவுசர் பழைய கேச்சை லோடு செய்ய முயன்றால், அதைத் தடுத்து டிராப்டவுனை அத்தனை பெயர்களுடனும் ஃபிரெஷ்ஷாக லோடு செய்யும்!
+    if (event.persisted || (window.performance && window.performance.navigation.type === 2) || true) {
+        setTimeout(() => {
+            loadStaffToPortfolioDropdown();
+        }, 350);
+    }
+});
 // 2. Staff name click panna Portfolio.html-kku redirect panna
 function openStaffPortfolio(staffName) {
     if (!staffName) return;
     // URL-la staff name-ah anupi Portfolio.html report-ah open panrom
     window.location.href = `Portfolio.html?name=${encodeURIComponent(staffName)}`;
 }
+
+
+
 // Start the app
 window.onload = function() {
  
