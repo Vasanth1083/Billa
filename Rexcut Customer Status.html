@@ -285,7 +285,7 @@
 
         <div class="modal-footer" style="justify-content: space-between; margin-top: 20px;">
             <button class="btn btn-discard" style="flex: 1;" onclick="closeStaffModal()">Discard</button>
-            <button class="btn btn-delete" id="btnInModalDeleteStaff" style="flex: 1.2; display: none;" onclick="deleteStaffFromModal()">Are sure want to Delete 🗑️</button>
+            <button class="btn btn-delete" id="btnInModalDeleteStaff" style="flex: 1.2; display: none;" onclick="deleteStaffFromModal()">Delete 🗑️</button>
             <button class="btn btn-save" id="btnModalOnlySaveStaff" style="flex: 1.5; background: #27ae60; color: white;" onclick="saveStaffData()">Save</button>
             <button class="btn btn-save" id="btnModalSaveChangesStaff" style="flex: 1.5; background: #27ae60; color: white; display: none;" onclick="saveStaffData()">Update Staff</button>
         </div>    
@@ -925,48 +925,51 @@ async function saveStaffData() {
 }
 async function deleteStaffFromModal() {
     if (!editStaffIdx) {
-        alert("System Error: Staff profile pointer missing or lost memory trace! ⚠️");
+        alert("System Error: Staff profile pointer missing! ⚠️");
         return;
     }
     
     if (confirm("Are you sure you want to permanently delete this staff contact from ALL brands? 🗑️")) {
-        isSyncing = false; // ஃபயர்பேஸ் லைவ் ஸ்ட்ரீமை ரிலீஸ் செய்கிறோம் peer
+        isSyncing = false; 
 
-        // 11 பிராண்டுகளின் பெயர்கள் அடங்கிய மாஸ்டர் லிஸ்ட்
-        const allBrandsList = ["Rhodius", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Rexcut", "Shannon", "Starrett", "Voelkel"];
+        // 🎯 11 பிராண்டுகளின் துல்லியமான மாஸ்டர் லிஸ்ட் (டூப்ளிகேட் இல்லாமல்)
+        const allBrandsList = ["Rhodius", "Rexcut", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Shannon", "Starrett", "Voelkel"];
         
         try {
-            // 🌟 1. INSTANT UI FLASH-PURGE: க்ளவுடில் இருந்து அழியும் முன்பே, பிரவுசர் திரையில் இருந்து ரோவை அடியோடு நீக்குகிறது peer!
+            // 1. திரையில் இருந்து அந்த ரோவை உடனே நீக்குகிறது
             const rowToRemove = document.querySelector(`input[data-id="${editStaffIdx}"]`)?.closest('tr');
             if (rowToRemove) {
                 rowToRemove.remove(); 
             }
 
-            // 🌟 2. GLOBAL CLOUD WIPEOUT PIPELINE: 11 பிராண்டுகளின் நோடுகளையும் அலசி, இந்த ஸ்டாஃப் ஐடியை க்ளவுடில் இருந்து முற்றிலும் அழிக்கிறது!
+            // 2. குளோபல் மாஸ்டர் காண்டாக்ட்ஸ் நோடில் இருந்தும் நீக்குகிறது peer
+            const clientSafeHtmlId = btoa(encodeURIComponent(customerName)).replace(/=/g, "").replace(/\+/g, "").replace(/\//g, "");
             let deletionPromisesArray = [];
             
+            // மாஸ்டர் டைரக்டரியில் இருந்து நீக்கல்
+            deletionPromisesArray.push(db.ref(`vimag/master_contacts/${clientSafeHtmlId}/staff_directory/${editStaffIdx}`).remove());
+            
+            // 11 பிராண்டுகளின் நோடுகளையும் அலசி, இந்த ஸ்டாஃப் ஐடியை க்ளவுடில் இருந்து முற்றிலும் அழிக்கிறது!
             allBrandsList.forEach(bName => {
                 const globalPath = `vimag/brands/${bName}/${customerName}/${editStaffIdx}`;
-                // அத்தனை பிராண்டுகளின் டெலிட் கட்டளைகளையும் ஒரே பேட்சாகத் திரட்டுகிறது peer
                 deletionPromisesArray.push(db.ref(globalPath).remove());
             });
 
-            // 11 பிராண்டுகளிலும் டெலிட் ஆக்ஷன் 100% கம்ப்ளீட் ஆகும் வரை காத்திருக்கிறது peer
+            // அனைத்து பிராண்டுகளிலும் டெலிட் ஆக்ஷன் முடியும் வரை காத்திருக்கிறது
             await Promise.all(deletionPromisesArray);
-            console.log("Global Wipeout Complete: Flushed node from all tracking brands database. ✅");
+            console.log("Global Cross-Brand Wipeout Complete! ✅");
             
-            // 3. கூகுள் ஸ்பிரெட்ஷீட் மாஸ்டர் லெட்ஜருக்கும் நீக்கல் சிக்னலை அனுப்புகிறது
-            const sheetTabName = BRAND.replace(/\s+/g, '') + "Customers";
+            // 3. கூகுள் ஸ்பிரெட்ஷீட்டிற்கும் சிக்னல் அனுப்புகிறது
+            const sheetTabName = BRAND.replace(/\s+/g, '') + "Staff"; // அல்லது உங்களுடைய பொதுவான ஷீட் பெயர்
             const delParams = new URLSearchParams({ 
-                action: 'delete', 
-                id: editStaffIdx, 
+                action: 'deleteStaff', 
+                staffId: editStaffIdx, 
                 customerName: customerName, 
                 sheetName: sheetTabName, 
                 apiKey: "VIMAG" 
             }).toString();
             fetch(`${G_SHEET_URL}&${delParams}`, { mode: 'no-cors' });
 
-            // 4. மாடலை மூடிவிட்டு நினைவகத்தை சுத்தம் செய்கிறது
             closeStaffModal();
             alert("Staff Contact Permanently Deleted Across All Brands! 🗑️ Network Cleaned.");
             
@@ -975,7 +978,8 @@ async function deleteStaffFromModal() {
             alert("Delete failed! Check network connection. 🚩");
         }
     }
-}function deleteStaffItems() {
+}
+function deleteStaffItems() {
     const checked = document.querySelectorAll('#contactTableBody .row-check-staff:checked');
     if (checked.length === 0) return alert("Select any staff entry to delete! 🗑️");
 
@@ -983,7 +987,7 @@ async function deleteStaffFromModal() {
         isSyncing = true;
         document.getElementById('staffModal').style.display = "none";
         
-        const allBrandsList = ["Rhodius", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Rexcut", "Shannon", "Starrett", "Voelkel"];
+        const allBrandsList = ["Rexcut", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Rexcut", "Shannon", "Starrett", "Voelkel"];
         let bulkDeletePayload = {};
         const clientSafeHtmlId = btoa(encodeURIComponent(customerName)).replace(/=/g, "").replace(/\+/g, "").replace(/\//g, "");
 
