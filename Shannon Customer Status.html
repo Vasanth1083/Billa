@@ -343,7 +343,7 @@ window.onload = function() {
     if (typeof renderTable === "function") renderTable();
 
     // 11 பிராண்டுகளின் பெயர்கள் அடங்கிய மாஸ்டர் லிஸ்ட்
-    const allBrandsList = ["Rhodius", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Rexcut", "Shannon", "Starrett", "Voelkel"];
+    const allBrandsList = ["Rhodius", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Shannon", "Rexcut", "Starrett", "Voelkel"];
     
     // 🌟 ஒட்டுமொத்தப் பிராண்டுகளின் கிளவுட் நோடுகளையும் ஒரே பைப்லைனில் இணைக்கிறோம் peer!
     db.ref('vimag/brands').on('value', (snapshot) => {
@@ -933,7 +933,7 @@ async function deleteStaffFromModal() {
         isSyncing = false; // ஃபயர்பேஸ் லைவ் ஸ்ட்ரீமை ரிலீஸ் செய்கிறோம் peer
 
         // 11 பிராண்டுகளின் பெயர்கள் அடங்கிய மாஸ்டர் லிஸ்ட்
-        const allBrandsList = ["Shannon", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Shannon", "Shannon", "Starrett", "Voelkel"];
+        const allBrandsList = ["Rhodius", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Shannon", "Rexcut", "Starrett", "Voelkel"];
         
         try {
             // 🌟 1. INSTANT UI FLASH-PURGE: க்ளவுடில் இருந்து அழியும் முன்பே, பிரவுசர் திரையில் இருந்து ரோவை அடியோடு நீக்குகிறது peer!
@@ -983,7 +983,7 @@ async function deleteStaffFromModal() {
         isSyncing = true;
         document.getElementById('staffModal').style.display = "none";
         
-        const allBrandsList = ["Shannon", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Shannon", "Shannon", "Starrett", "Voelkel"];
+        const allBrandsList = ["Rhodius", "Laco", "Lessmann", "Capital Weld Cleaners", "Dedeco", "Einhell", "Peddinghaus", "Rexcut", "Shannon", "Starrett", "Voelkel"];
         let bulkDeletePayload = {};
         const clientSafeHtmlId = btoa(encodeURIComponent(customerName)).replace(/=/g, "").replace(/\+/g, "").replace(/\//g, "");
 
