@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+6<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -91,7 +91,13 @@
             <input type="number" id="editRowTargetQty" style="width: 100%; padding: 8px; border-radius: 6px; border: 1.5px solid black; font-family: 'Times New Roman'; font-weight: bold; box-sizing: border-box; margin-top: 5px; margin-bottom: 12px; font-size: 14px; background: white;">
             <label style="font-weight: bold; color: #2c3e50; font-size: 14px;">🏆 Achieved Qty (Month):</label>
             <input type="number" id="editRowAchievedQty" style="width: 100%; padding: 8px; border-radius: 6px; border: 1.5px solid black; font-family: 'Times New Roman'; font-weight: bold; box-sizing: border-box; margin-top: 5px; margin-bottom: 12px; font-size: 14px; background: white;">
-            <input type="text" id="editRowRemarks" style="width: 100%; padding: 8px; border-radius: 6px; border: 1.5px solid black; font-family: 'Times New Roman'; font-weight: bold; box-sizing: border-box; margin-top: 5px; font-size: 14px; background: white;">
+<label style="font-size: 16px; display: block; margin-top: 12px; font-weight: bold; color: #2c3e50;">Status:</label>
+<select id="editRowRemarks" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; font-family: serif; color: black; font-size: 12px; font-weight: bold; background: #fffaf0; outline: black; -webkit-appearance: menulist; appearance: menulist;">
+    <option value="INQUIRY">📝 INQUIRY</option>
+    <option value="TRIAL COMPLETED">🧪 TRIAL COMPLETED</option>
+    <option value="TRIAL ORDER">📦 TRIAL ORDER</option>
+    <option value="REGULAR ORDER">✅ REGULAR ORDER</option>
+</select>
         </div>
         <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px;">
 <button onclick="saveVimagPortfolioEdits()" style="padding: 10px 20px; background: #27ae60; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: 'Times New Roman'; font-weight: bold; font-size: 14px;">💾 UPDATE</button>
@@ -306,59 +312,154 @@ function openVimagPortfolioModal(brandName, customerName, uniqueDataIdRefStringK
     const dataRefStringId = decodeURIComponent(escape(atob(uniqueDataIdRefStringKey)));
     const matchedRecordItem = masterData.find(i => i.id === dataRefStringId && i.brand === brandName && i.customerName === customerName);
     if(!matchedRecordItem) return;
-    document.getElementById('editRowBrandKey').value = brandName; document.getElementById('editRowCustomerKey').value = customerName; document.getElementById('editRowProductIndexKey').value = dataRefStringId;
+    
+    document.getElementById('editRowBrandKey').value = brandName; 
+    document.getElementById('editRowCustomerKey').value = customerName; 
+    document.getElementById('editRowProductIndexKey').value = dataRefStringId;
+    
     document.getElementById('editRowMetaLabel').innerText = `🏷️ ${brandName.toUpperCase()} ➡️ ${customerName}`;
     document.getElementById('editRowProductLabel').innerHTML = `🔹 <strong>Art No:</strong> ${matchedRecordItem.artNo} <br> 🔹 <strong>Name:</strong> ${matchedRecordItem.name || '-'}`;
     document.getElementById('editRowPriceVal').value = parseFloat(matchedRecordItem.price || 0).toFixed(2);
     document.getElementById('editRowTargetQty').value = parseInt(matchedRecordItem.qty || 0);
     document.getElementById('editRowAchievedQty').value = parseInt(matchedRecordItem.monthQty || 0);
-    document.getElementById('editRowRemarks').value = matchedRecordItem.remarks || '';
+    
+    // 🎯 CRITICAL FIX: கிளவுட்ல இருக்குற அசல் ஸ்டேட்டஸை எடுத்து டிராப்-டவுன்ல ஆட்டோ-செலக்ட் (Selected) செய்யுது peer!
+    let rawStatus = (matchedRecordItem.remarks || matchedRecordItem.status || "INQUIRY").toString().trim().toUpperCase();
+    if (rawStatus === "ENQUIRY") rawStatus = "INQUIRY"; // Alias safe lock
+    
+    const dropdownSelect = document.getElementById('editRowRemarks');
+    if (dropdownSelect) {
+        dropdownSelect.value = rawStatus;
+    }
+    
     const modalView = document.getElementById('vimagPortfolioEditModal');
-    if(modalView) { modalView.style.display = 'flex'; modalView.style.setProperty('display', 'flex', 'important'); }
+    if(modalView) { 
+        modalView.style.display = 'flex'; 
+        modalView.style.setProperty('display', 'flex', 'important'); 
+    }
 }
+
 function closeVimagPortfolioModal() {
     const modalView = document.getElementById('vimagPortfolioEditModal'); if(modalView) modalView.style.display = 'none';
     const activeRadioElements = document.getElementsByName('vimagPortfolioSelectRadio'); activeRadioElements.forEach(radio => { if(radio) radio.checked = false; });
 }
 async function saveVimagPortfolioEdits() {
-    const bKey = document.getElementById('editRowBrandKey').value; 
-    const cKey = document.getElementById('editRowCustomerKey').value; 
-    const pIdKey = document.getElementById('editRowProductIndexKey').value;
+    const bKey = document.getElementById('editRowBrandKey').value.trim(); 
+    const cKey = document.getElementById('editRowCustomerKey').value.trim(); 
+    const pIdKey = document.getElementById('editRowProductIndexKey').value.trim();
     
     const newPrice = parseFloat(document.getElementById('editRowPriceVal').value || 0); 
     const newTarget = parseInt(document.getElementById('editRowTargetQty').value || 0); 
-    const newAchieved = parseInt(document.getElementById('editRowAchievedQty').value || 0); 
+    const newAchieved = parseInt(document.getElementById('editRowCheckQty') ? document.getElementById('editRowCheckQty').value : (document.getElementById('editRowAchievedQty') ? document.getElementById('editRowAchievedQty').value : 0)); 
     const newRemarks = document.getElementById('editRowRemarks').value.trim();
     
     if (!bKey || !cKey || !pIdKey) return alert("System reference broken! ⚠️");
     
+    // 🎯 db, cloudDB அல்லது நேரடி firebase கனெக்ஷன் எது இருந்தாலும் ஆட்டோ-பிரிட்ஜ் செய்யும்
+    const activeCloudBridge = (typeof db !== 'undefined') ? db : (typeof cloudDB !== 'undefined' ? cloudDB : firebase.database());
+    
     try {
-        // 1. லோக்கல் டெக்ஸி மெமரியில் அப்டேட் செய்கிறது
-        await vimagDB.brands.update(pIdKey, { price: newPrice.toString(), qty: newTarget.toString(), monthQty: newAchieved.toString(), remarks: newRemarks });
-        
-        // 2. ஃபயர்பேஸ் கிளவுட் நோடில் அப்டேட் செய்கிறது peer
-        await db.ref(`vimag/brands/${bKey}/${cKey}/${pIdKey}`).update({ price: newPrice.toString(), qty: newTarget.toString(), monthQty: newAchieved.toString(), remarks: newRemarks });
-        
-        closeVimagPortfolioModal(); 
+        isSyncing = true;
+        console.log(`3-Way Sync Engine: Executing matrix update from Portfolio for ID ➔ ${pIdKey}`);
 
-        // 🌟 3. THE DROPDOWN UN-TRAP FIX: டிராப்டவுன் ஃபில்டர் செலக்ஷன்களை ஆட்டோமேட்டிக்காக 'ALL' நிலைக்கு கொண்டு வருகிறது!
-        selections = { brand: 'ALL', cust: 'ALL', art: 'ALL' };
+        // 🎯 A. கிளவுட் ஃபோல்டரான 'vimag/brands' உள்ளே கேஸ்-சென்சிட்டிவ் போல்டர்களை அலசுகிறது peer!
+        const snapshot = await activeCloudBridge.ref('vimag/brands').once('value');
+        const brandsCloudData = snapshot.val() || {};
+
+        // 1. அசல் கேஸ்-சென்சிட்டிவ் பிராண்ட் பெயரைக் கண்டுபிடிக்கிறது (e.g. Voelkel / VOELKEL)
+        const matchedBrandKey = Object.keys(brandsCloudData).find(
+            k => k.trim().toUpperCase() === bKey.toUpperCase()
+        ) || bKey;
+
+        let matchedCustKey = cKey;
+        let oldPayloadNode = {};
+
+        if (brandsCloudData[matchedBrandKey]) {
+            const brandNode = brandsCloudData[matchedBrandKey];
+            
+            // 2. அசல் கேஸ்-சென்சிட்டிவ் கஸ்டமர் பெயரைக் கண்டுபிடிக்கிறது
+            matchedCustKey = Object.keys(brandNode).find(
+                k => k.trim().toUpperCase() === cKey.toUpperCase()
+            ) || cKey;
+
+            if (brandNode[matchedCustKey] && brandNode[matchedCustKey][pIdKey]) {
+                oldPayloadNode = brandNode[matchedCustKey][pIdKey];
+            }
+        }
+
+        // 13 காலம்களுக்கான புதிய கணக்கீடு பேலோடு தயாரிப்பு peer
+        // 🎯 UI MAPPING FIX: உங்க பச்சை டேபிள் வியூ தேடுற 'rawStatus' குள்ளயும் புதிய வேல்யூவை லாக் செய்கிறது!
+        const brandItemUpdatePayload = {
+            ...oldPayloadNode,
+            id: pIdKey,
+            brand: matchedBrandKey,
+            customerName: matchedCustKey,
+            price: newPrice.toString(),
+            qty: newTarget.toString(),
+            qtyMo: newTarget.toString(),
+            monthQty: newAchieved.toString(),
+            octQty: newAchieved.toString(),
+            totalValue: (newPrice * newTarget),
+            achievedValue: (newPrice * newAchieved),
+            balance: (newTarget - newAchieved),
+            remarks: newRemarks,
+            status: newRemarks,
+            inSTATUS: newRemarks,
+            rawStatus: newRemarks, // 👈 இந்த வரியை இப்போ கச்சிதமா லாக் பண்ணியாச்சு peer!
+            isDone: (newRemarks === "REGULAR ORDER" || newRemarks === "🏆 ACHIEVED" || newRemarks === "REGULAR")
+        };
+
+        // 🎯 1️⃣ WAY 1: லோக்கல் டெக்ஸி மெமரியில் கச்சிதமாக அப்டேட்
+        if (typeof vimagDB !== 'undefined' && vimagDB.brands) {
+            await vimagDB.brands.update(pIdKey, { price: newPrice.toString(), qty: newTarget.toString(), monthQty: newAchieved.toString(), remarks: newRemarks });
+        } else if (typeof localDB !== 'undefined' && localDB.brands) {
+            await localDB.brands.update(pIdKey, { price: newPrice.toString(), qty: newTarget.toString(), monthQty: newAchieved.toString(), remarks: newRemarks });
+        }
+
+        // 🎯 2️⃣ WAY 2: 'vimag/brands' அசல் கிளவுட் மெயின் பாத் 100% ஓவர்ரைட் (set) செய்யுது peer!
+        const finalCloudPath = `vimag/brands/${matchedBrandKey}/${matchedCustKey}/${pIdKey}`;
+        await activeCloudBridge.ref(finalCloudPath).set(brandItemUpdatePayload);
+        console.log(`Cloud Main Write Success ➔ ${finalCloudPath}`);
+
+        // 🎯 3️⃣ WAY 3: 'vimag/master_contacts' (போர்ட்ஃபோலியோ மாஸ்டர் வியூவிலும் உடனே அப்டேட் ஏறுது)
+        const encCustId = btoa(encodeURIComponent(matchedCustKey)).replace(/=/g, "").replace(/\+/g, "").replace(/\//g, "");
+        const masterDirectoryPath = `vimag/master_contacts/${encCustId}/staff_directory/${pIdKey}`;
         
+        await activeCloudBridge.ref(masterDirectoryPath).update({
+            status: newRemarks,
+            remarks: newRemarks,
+            price: newPrice,
+            qtyMo: newTarget,
+            octQty: newAchieved,
+            totalValue: (newPrice * newTarget),
+            achievedValue: (newPrice * newAchieved),
+            balance: (newTarget - newAchieved),
+            date: new Date().toLocaleDateString('en-GB')
+        });
+        console.log(`Portfolio Directory Sync Success ➔ ${masterDirectoryPath}`);
+
+        closeVimagPortfolioModal(); // மாடலை மூடுகிறது
+
+        // டிராப்டவுன் செலக்ஷன்களை 'ALL' நிலைக்கு ஆட்டோ-ரீசெட் செய்கிறது
+        selections = { brand: 'ALL', cust: 'ALL', art: 'ALL' };
         const bSelect = document.getElementById('fStaffBrand');
         const cSelect = document.getElementById('fStaffCust');
         const aSelect = document.getElementById('fStaffArt');
-        
         if (bSelect) bSelect.value = "ALL";
         if (cSelect) cSelect.value = "ALL";
         if (aSelect) aSelect.value = "ALL";
         
-        // ⚡ ஃபிரெஷ் டேட்டாவை கிளவுடில் இருந்து மீண்டும் இழுத்து அத்தனை பெயர்களையும் ப்ளோ (Flow) செய்ய வைக்குது peer!
+        isSyncing = false;
+        alert("Portfolio Row 3-Way Synchronized and Updated Cleanly! 💾✅");
+        
+        // ⚡ ஃபிரெஷ் டேட்டாவை கிளவுடில் இருந்து மீண்டும் இழுத்து வியூவை அப்டேட் செய்ய வைக்குது peer!
         if (typeof loadInitialData === "function") {
             await loadInitialData();
         }
-        
-        alert("Portfolio Row Synchronized and Updated Cleanly! 💾✅");
+
     } catch (writeErr) { 
+        isSyncing = false;
+        console.error("Critical 3-way synchronization breakdown:", writeErr);
         alert("Transaction Failed! Cloud connection error. 🚩"); 
     }
 }// Master background dimmer backdrop box escape routine handler
